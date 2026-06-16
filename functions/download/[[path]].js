@@ -6,7 +6,13 @@ export async function onRequest(context) {
         : (params.path || "");
 
     const incomingUrl = new URL(request.url);
-    const targetUrl = `${env.BACKEND_ORIGIN}/download/${path}${incomingUrl.search}`;
+    
+    // Normalize backend origin (remove trailing slash and trailing /api)
+    const backendOriginClean = (env.BACKEND_ORIGIN || "")
+        .replace(/\/api\/?$/, "")
+        .replace(/\/$/, "");
+
+    const targetUrl = `${backendOriginClean}/download/${path}${incomingUrl.search}`;
 
     const headers = new Headers(request.headers);
     headers.delete("host");

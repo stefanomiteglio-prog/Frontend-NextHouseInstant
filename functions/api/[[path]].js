@@ -6,7 +6,15 @@ export async function onRequest(context) {
         : (params.path || "");
 
     const incomingUrl = new URL(request.url);
-    const targetUrl = `${env.BACKEND_ORIGIN}/${path}${incomingUrl.search}`;
+    
+    // Normalize backend origin (remove trailing slash and trailing /api)
+    const backendOriginClean = (env.BACKEND_ORIGIN || "")
+        .replace(/\/api\/?$/, "")
+        .replace(/\/$/, "");
+
+    // The health check endpoint is at the backend root (/health), while other APIs are under /api
+    const targetPath = path === "health" ? "health" : `api/${path}`;
+    const targetUrl = `${backendOriginClean}/${targetPath}${incomingUrl.search}`;
 
     const headers = new Headers(request.headers);
     headers.delete("host");
