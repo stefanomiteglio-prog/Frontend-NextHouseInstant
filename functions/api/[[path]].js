@@ -1,4 +1,5 @@
 const BACKEND_ORIGIN = "http://static.44.52.233.167.clients.your-server.de:8080";
+const BACKEND_PREFIX = "/api";
 
 export async function onRequest(context) {
     try {
@@ -10,7 +11,8 @@ export async function onRequest(context) {
 
         const incomingUrl = new URL(request.url);
         const base = BACKEND_ORIGIN.replace(/\/+$/, "");
-        const targetUrl = `${base}/${path}${incomingUrl.search}`;
+        const prefix = BACKEND_PREFIX.replace(/\/+$/, "");
+        const targetUrl = `${base}${prefix}/${path}${incomingUrl.search}`;
 
         const headers = new Headers(request.headers);
         headers.delete("host");
@@ -18,9 +20,7 @@ export async function onRequest(context) {
         headers.delete("referer");
 
         for (const key of [...headers.keys()]) {
-            if (key.toLowerCase().startsWith("sec-")) {
-                headers.delete(key);
-            }
+            if (key.toLowerCase().startsWith("sec-")) headers.delete(key);
         }
 
         const response = await fetch(targetUrl, {
