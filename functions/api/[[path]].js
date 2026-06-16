@@ -1,17 +1,15 @@
+const BACKEND_ORIGIN = "http://167.233.52.44:8080";
+
 export async function onRequest(context) {
     try {
-        const { request, env, params } = context;
-
-        if (!env.BACKEND_ORIGIN) {
-            return new Response("Missing BACKEND_ORIGIN", { status: 500 });
-        }
+        const { request, params } = context;
 
         const path = Array.isArray(params.path)
             ? params.path.join("/")
             : (params.path || "");
 
         const incomingUrl = new URL(request.url);
-        const base = env.BACKEND_ORIGIN.replace(/\/+$/, "");
+        const base = BACKEND_ORIGIN.replace(/\/+$/, "");
         const targetUrl = `${base}/${path}${incomingUrl.search}`;
 
         const headers = new Headers(request.headers);
