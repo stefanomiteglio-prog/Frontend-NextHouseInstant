@@ -1,16 +1,16 @@
-const BACKEND_ORIGIN = "http://static.44.52.233.167.clients.your-server.de:8080";
 const BACKEND_PREFIX = "/api";
 
 export async function onRequest(context) {
     try {
-        const { request, params } = context;
+        const { request, params, env } = context;
 
         const path = Array.isArray(params.path)
             ? params.path.join("/")
             : (params.path || "");
 
+        const backendOrigin = env.BACKEND_ORIGIN || "http://static.44.52.233.167.clients.your-server.de:8080";
         const incomingUrl = new URL(request.url);
-        const base = BACKEND_ORIGIN.replace(/\/+$/, "");
+        const base = backendOrigin.replace(/\/+$/, "");
         const prefix = BACKEND_PREFIX.replace(/\/+$/, "");
         const targetUrl = `${base}${prefix}/${path}${incomingUrl.search}`;
 
