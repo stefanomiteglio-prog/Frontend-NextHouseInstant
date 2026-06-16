@@ -8,12 +8,12 @@ export async function onRequest(context) {
     if (segments.length <= 1) {
         const url = new URL(request.url);
         url.pathname = "/";
-        return context.next(new Request(url.toString(), request));
+        return fetch(url.toString(), request);
     }
 
     const path = segments.join("/");
     const incomingUrl = new URL(request.url);
-    
+
     // Normalize backend origin (remove trailing slash and trailing /api)
     const backendOriginClean = (env.BACKEND_ORIGIN || "http://static.44.52.233.167.clients.your-server.de:8080")
         .replace(/\/api\/?$/, "")
