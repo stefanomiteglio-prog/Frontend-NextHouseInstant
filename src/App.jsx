@@ -4,13 +4,7 @@ const getApiUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL || '';
   
   if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-    if (envUrl.includes('localhost')) {
-      return envUrl.replace('localhost', window.location.hostname);
-    }
-    if (envUrl.includes('127.0.0.1')) {
-      return envUrl.replace('127.0.0.1', window.location.hostname);
-    }
-    return `${window.location.protocol}//${window.location.hostname}:8080`;
+    return '';
   }
   
   return envUrl || 'http://localhost:8080';
