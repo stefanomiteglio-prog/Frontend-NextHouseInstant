@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import AdminLogin from './components/AdminLogin';
+import AdminDashboard from './components/AdminDashboard';
+import CustomerDownloadView from './components/CustomerDownloadView';
 
 const getApiUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL || '';
@@ -40,6 +43,113 @@ function App() {
   const [uploadLoading, setUploadLoading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [deletingStickerId, setDeletingStickerId] = useState(null);
+
+  // Client selection states
+  const [clientSelections, setClientSelections] = useState([]);
+  const [activeSelectedPhotoIds, setActiveSelectedPhotoIds] = useState(new Set());
+  const [submittingSelection, setSubmittingSelection] = useState(false);
+  const [selectionMessage, setSelectionMessage] = useState('');
+
+  // Admin print selections states
+  const [activeTab, setActiveTab] = useState('stickers'); // 'stickers' or 'prints'
+  const [selections, setSelections] = useState([]);
+  const [selectionsLoading, setSelectionsLoading] = useState(false);
+  const [filterSessionId, setFilterSessionId] = useState('');
+  const [detailSelection, setDetailSelection] = useState(null);
+  const [deletingSelectionId, setDeletingSelectionId] = useState(null);
+
+  const handleToggleSelectPhoto = (photoId) => {
+    setActiveSelectedPhotoIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(photoId)) {
+        next.delete(photoId);
+      } else {
+        next.add(photoId);
+      }
+      return next;
+    });
+  };
+
+  const handleClearActiveSelection = () => {
+    setActiveSelectedPhotoIds(new Set());
+  };
+
+  const fetchClientSelections = async (tokenVal = token) => {
+    if (!tokenVal) return;
+    try {
+      const response = await fetch(`${API_URL}/download/${tokenVal}/selections`);
+      if (response.ok) {
+        const data = await response.json();
+        setClientSelections(data);
+      }
+    } catch (err) {
+      console.error("Error fetching selections:", err);
+    }
+  };
+
+  const handleSubmitPrintRequest = async () => {
+    if (activeSelectedPhotoIds.size === 0) return;
+    setSubmittingSelection(true);
+    setSelectionMessage('');
+    try {
+      const response = await fetch(`${API_URL}/download/${token}/selections`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ photo_ids: Array.from(activeSelectedPhotoIds) })
+      });
+      if (response.ok) {
+        setSelectionMessage('Richiesta di stampa inviata con successo!');
+        setActiveSelectedPhotoIds(new Set());
+        fetchClientSelections(token);
+        // Clear message after 4 seconds
+        setTimeout(() => setSelectionMessage(''), 4000);
+      } else {
+        const errData = await response.json();
+        alert(`Errore: ${errData.detail || 'Impossibile inviare la richiesta.'}`);
+      }
+    } catch (err) {
+      console.error("Errore nell'inviare la richiesta di stampa:", err);
+      alert("Errore di connessione durante l'invio della richiesta.");
+    } finally {
+      setSubmittingSelection(false);
+    }
+  };
+
+  // Admin print selections helper
+  const fetchSelections = async (sessionId = '') => {
+    setSelectionsLoading(true);
+    try {
+      const url = sessionId 
+        ? `${API_URL}/api/selections?download_session_id=${sessionId}` 
+        : `${API_URL}/api/selections`;
+      const response = await authenticatedFetch(url);
+      if (response.ok) {
+        const data = await response.json();
+        setSelections(data);
+      }
+    } catch (err) {
+      console.error("Error fetching selections:", err);
+    } finally {
+      setSelectionsLoading(false);
+    }
+  };
+
+  const handleDeleteSelection = async (selectionId) => {
+    try {
+      const response = await authenticatedFetch(`${API_URL}/api/selections/${selectionId}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setSelections((prev) => prev.filter((s) => s.id !== selectionId));
+      } else {
+        alert("Impossibile eliminare la richiesta.");
+      }
+    } catch (err) {
+      console.error("Error deleting selection:", err);
+    } finally {
+      setDeletingSelectionId(null);
+    }
+  };
 
   // Authenticated fetch helper
   const authenticatedFetch = async (url, options = {}) => {
@@ -241,6 +351,7 @@ function App() {
         }
         const data = await response.json();
         setSession(data);
+        await fetchClientSelections(token);
       } catch (err) {
         const [title, desc] = err.message.split('|');
         setError({
@@ -254,6 +365,13 @@ function App() {
 
     fetchSession();
   }, [token, isAdminRoute]);
+
+  // Admin selections fetching effect
+  useEffect(() => {
+    if (user && isAdminRoute && activeTab === 'prints') {
+      fetchSelections(filterSessionId);
+    }
+  }, [user, activeTab, sessionToken]);
 
   useEffect(() => {
     if (!session?.expires_at || isAdminRoute) return;
@@ -319,204 +437,56 @@ function App() {
     }
 
     if (!user) {
-      // Login Form
       return (
-        <>
-          <div className="glow-bg"></div>
-          <header style={{ marginBottom: '1rem' }}>
-            <h1>Restricted Area</h1>
-            <p className="subtitle">Log in to manage NextHouseIstant stickers</p>
-          </header>
-          <main className="container" style={{ alignItems: 'center' }}>
-            <form onSubmit={handleLogin} className="admin-card">
-              <h2 className="admin-title">Admin Login</h2>
-              
-              <div className="form-group">
-                <label className="form-label" htmlFor="username">Username</label>
-                <input
-                  type="text"
-                  id="username"
-                  className="form-input"
-                  placeholder="Username"
-                  value={loginUsername}
-                  onChange={(e) => setLoginUsername(e.target.value)}
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label className="form-label" htmlFor="password">Password</label>
-                <input
-                  type="password"
-                  id="password"
-                  className="form-input"
-                  placeholder="Password"
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  required
-                />
-              </div>
-
-              {loginError && (
-                <div style={{ color: '#ef4444', fontSize: '0.9rem', textAlign: 'center', marginTop: '0.25rem' }}>
-                  {loginError}
-                </div>
-              )}
-
-              <button type="submit" className="btn btn-download" style={{ marginTop: '1rem' }} disabled={loginLoading}>
-                {loginLoading ? 'Logging in...' : 'Log In'}
-              </button>
-            </form>
-          </main>
-          <footer>
-            &copy; 2026 NextHouseIstant. All rights reserved.
-          </footer>
-        </>
+        <AdminLogin
+          loginUsername={loginUsername}
+          setLoginUsername={setLoginUsername}
+          loginPassword={loginPassword}
+          setLoginPassword={setLoginPassword}
+          loginError={loginError}
+          loginLoading={loginLoading}
+          handleLogin={handleLogin}
+        />
       );
     }
 
-    // Authenticated Admin Panel
     return (
-      <>
-        <div className="glow-bg"></div>
-        <header>
-          <h1>NextHouseIstant Stickers</h1>
-          <p className="subtitle">Manage decorative stickers for the external application</p>
-        </header>
-
-        <main className="container">
-          <div className="dashboard-header">
-            <div>
-              <span className="photos-count">Welcome, {user.username}</span>
-            </div>
-            <div>
-              <button onClick={handleLogout} className="btn btn-secondary">
-                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                </svg>
-                Sign Out
-              </button>
-            </div>
-          </div>
-
-          <div className="admin-upload-section">
-            <form onSubmit={handleUploadSticker} className="upload-grid">
-              <div className="form-group">
-                <label className="form-label">Sticker Name</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  placeholder="e.g. Main Logo"
-                  value={newStickerName}
-                  onChange={(e) => setNewStickerName(e.target.value)}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label className="form-label">Image (PNG, JPG, WebP)</label>
-                <div className="file-input-wrapper">
-                  <div className={`file-input-btn ${newStickerFile ? 'has-file' : ''}`}>
-                    <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    {newStickerFile ? newStickerFile.name : 'Select image...'}
-                  </div>
-                  <input
-                    type="file"
-                    id="sticker-file-input"
-                    className="file-input-hidden"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <button type="submit" className="btn btn-accent" disabled={uploadLoading} style={{ minWidth: '160px' }}>
-                  {uploadLoading ? 'Uploading...' : 'Upload Sticker'}
-                </button>
-              </div>
-            </form>
-            {uploadError && (
-              <div style={{ color: '#ef4444', fontSize: '0.9rem', marginTop: '1rem', textAlign: 'left' }}>
-                {uploadError}
-              </div>
-            )}
-          </div>
-
-          <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginTop: '1rem', textAlign: 'left' }}>Uploaded Stickers</h2>
-
-          {stickersLoading ? (
-            <div className="center-container" style={{ minHeight: '20vh' }}>
-              <div className="spinner" style={{ width: '35px', height: '35px' }}></div>
-              <p className="loading-text">Loading stickers...</p>
-            </div>
-          ) : stickers.length === 0 ? (
-            <div className="admin-upload-section" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-              No stickers uploaded in the system. Use the form above to upload one.
-            </div>
-          ) : (
-            <div className="grid">
-              {stickers.map((sticker) => (
-                <div key={sticker.id} className="card">
-                  <div className="img-container">
-                    <img 
-                      src={`${API_URL}/api/stickers/${sticker.id}/image`} 
-                      alt={sticker.name} 
-                      loading="lazy" 
-                    />
-                  </div>
-                  <div className="card-body">
-                    <div>
-                      <div className="filename" title={sticker.name}>
-                        {sticker.name}
-                      </div>
-                      <div className="filesize">{formatSize(sticker.file_size)}</div>
-                    </div>
-
-                    {deletingStickerId === sticker.id ? (
-                      <div className="confirm-delete-box">
-                        <button 
-                          onClick={() => handleDeleteSticker(sticker.id)} 
-                          className="btn btn-danger"
-                          style={{ padding: '0.5rem' }}
-                        >
-                          Confirm
-                        </button>
-                        <button 
-                          onClick={() => setDeletingStickerId(null)} 
-                          className="btn btn-secondary"
-                          style={{ padding: '0.5rem' }}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    ) : (
-                      <button 
-                        onClick={() => setDeletingStickerId(sticker.id)} 
-                        className="btn btn-danger"
-                        style={{ width: '100%' }}
-                      >
-                        <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </main>
-        <footer>
-          &copy; 2026 NextHouseIstant. All rights reserved.
-        </footer>
-      </>
+      <AdminDashboard
+        user={user}
+        handleLogout={handleLogout}
+        activeTab={activeTab}
+        setActiveTab={setActiveTab}
+        API_URL={API_URL}
+        stickers={stickers}
+        stickersLoading={stickersLoading}
+        newStickerName={newStickerName}
+        setNewStickerName={setNewStickerName}
+        newStickerFile={newStickerFile}
+        setNewStickerFile={setNewStickerFile}
+        uploadLoading={uploadLoading}
+        uploadError={uploadError}
+        setUploadError={setUploadError}
+        deletingStickerId={deletingStickerId}
+        setDeletingStickerId={setDeletingStickerId}
+        handleFileChange={handleFileChange}
+        handleUploadSticker={handleUploadSticker}
+        handleDeleteSticker={handleDeleteSticker}
+        selections={selections}
+        selectionsLoading={selectionsLoading}
+        filterSessionId={filterSessionId}
+        setFilterSessionId={setFilterSessionId}
+        detailSelection={detailSelection}
+        setDetailSelection={setDetailSelection}
+        deletingSelectionId={deletingSelectionId}
+        setDeletingSelectionId={setDeletingSelectionId}
+        fetchSelections={fetchSelections}
+        handleDeleteSelection={handleDeleteSelection}
+        formatSize={formatSize}
+      />
     );
   }
 
-  // --- ORIGINAL USER PHOTO DOWNLOAD PAGE ---
+  // --- USER VIEW ---
 
   if (loading) {
     return (
@@ -544,69 +514,20 @@ function App() {
   }
 
   return (
-    <>
-      <div className="glow-bg"></div>
-
-      <header>
-        <h1>NextHouseIstant</h1>
-        <p className="subtitle">Preview and download real estate photos</p>
-      </header>
-
-      <main className="container">
-        <div className="actions-bar">
-          <div>
-            <span className="photos-count">{session.photos?.length || 0} photos selected</span>
-          </div>
-          <div className="actions-right">
-            <span className="session-info">
-              Session expires in: <span className="countdown">{timeLeft || '--:--'}</span>
-            </span>
-            <a href={`${API_URL}/download/${token}/zip`} className="btn btn-secondary">
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-              </svg>
-              Download ZIP
-            </a>
-          </div>
-        </div>
-
-        <div className="grid">
-          {session.photos?.map((photo) => (
-            <div key={photo.id} className="card">
-              <div className="img-container">
-                <img 
-                  src={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                  alt={photo.original_filename} 
-                  loading="lazy" 
-                />
-              </div>
-              <div className="card-body">
-                <div>
-                  <div className="filename" title={photo.original_filename}>
-                    {photo.original_filename}
-                  </div>
-                  <div className="filesize">{formatSize(photo.file_size)}</div>
-                </div>
-                <a 
-                  href={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                  download={photo.original_filename} 
-                  className="btn btn-download"
-                >
-                  <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                  </svg>
-                  Download Photo
-                </a>
-              </div>
-            </div>
-          ))}
-        </div>
-      </main>
-
-      <footer>
-        &copy; 2026 NextHouseIstant. All rights reserved.
-      </footer>
-    </>
+    <CustomerDownloadView
+      session={session}
+      token={token}
+      timeLeft={timeLeft}
+      API_URL={API_URL}
+      clientSelections={clientSelections}
+      activeSelectedPhotoIds={activeSelectedPhotoIds}
+      submittingSelection={submittingSelection}
+      selectionMessage={selectionMessage}
+      handleToggleSelectPhoto={handleToggleSelectPhoto}
+      handleClearActiveSelection={handleClearActiveSelection}
+      handleSubmitPrintRequest={handleSubmitPrintRequest}
+      formatSize={formatSize}
+    />
   );
 }
 
