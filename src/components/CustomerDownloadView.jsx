@@ -91,7 +91,7 @@ function CustomerDownloadView({
                       <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
-                      In Stampa
+                      Printing
                     </div>
                   )}
                 </div>
@@ -107,7 +107,7 @@ function CustomerDownloadView({
                     download={photo.original_filename} 
                     className="btn btn-download"
                   >
-                    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
                     Download Photo
@@ -122,11 +122,11 @@ function CustomerDownloadView({
         <div className={`floating-selection-bar ${activeSelectedPhotoIds.size > 0 ? 'show' : ''}`}>
           <div className="selection-info-text">
             <span>{activeSelectedPhotoIds.size}</span>
-            {activeSelectedPhotoIds.size === 1 ? 'foto selezionata' : 'foto selezionate'} per la stampa
+            {activeSelectedPhotoIds.size === 1 ? 'selected photo' : 'selected photos'} for printing
           </div>
           <div className="floating-actions">
             <button onClick={handleClearActiveSelection} className="btn btn-secondary">
-              Annulla
+              Cancel
             </button>
             <button onClick={handleSubmitPrintRequest} className="btn btn-accent" disabled={submittingSelection}>
               {submittingSelection ? (
@@ -136,7 +136,7 @@ function CustomerDownloadView({
                   <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                   </svg>
-                  Ordina Stampe
+                  Order Prints
                 </>
               )}
             </button>
@@ -146,12 +146,12 @@ function CustomerDownloadView({
         {/* Past Requests Section */}
         {clientSelections.length > 0 && (
           <div className="past-requests-section">
-            <h2 className="past-requests-title">Le mie richieste di stampa</h2>
+            <h2 className="past-requests-title">My Print Requests</h2>
             <div className="requests-list">
               {clientSelections.map((sel) => (
                 <div key={sel.id} className="request-history-card">
                   <div className="request-meta">
-                    <span className="request-id">Richiesta #{sel.id}</span>
+                    <span className="request-id">Request #{sel.id}</span>
                     <span className="request-date">{new Date(sel.created_at).toLocaleString()}</span>
                   </div>
                   <div className="request-thumbnails">

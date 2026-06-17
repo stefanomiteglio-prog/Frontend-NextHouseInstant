@@ -35,7 +35,7 @@ function AdminDashboard({
       <div className="glow-bg"></div>
       <header>
         <h1>NextHouseIstant Dashboard</h1>
-        <p className="subtitle">Gestione sticker decorativi e richieste di stampa</p>
+        <p className="subtitle">Decorative stickers and print requests management</p>
       </header>
 
       <main className="container">
@@ -62,7 +62,7 @@ function AdminDashboard({
             <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            Stickers Decorativi
+            Decorative Stickers
           </button>
           <button 
             className={`admin-tab-btn ${activeTab === 'prints' ? 'active' : ''}`}
@@ -71,7 +71,7 @@ function AdminDashboard({
             <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
-            Richieste di Stampa
+            Print Requests
           </button>
         </div>
 
@@ -198,7 +198,7 @@ function AdminDashboard({
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="Filtra per ID sessione..."
+                  placeholder="Filter by Session ID..."
                   value={filterSessionId}
                   onChange={(e) => setFilterSessionId(e.target.value)}
                   onKeyDown={(e) => {
@@ -210,7 +210,7 @@ function AdminDashboard({
               </div>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
                 <button onClick={() => fetchSelections(filterSessionId)} className="btn btn-secondary">
-                  Filtra
+                  Filter
                 </button>
                 {filterSessionId && (
                   <button 
@@ -220,7 +220,7 @@ function AdminDashboard({
                     }} 
                     className="btn btn-secondary"
                   >
-                    Resetta
+                    Reset
                   </button>
                 )}
               </div>
@@ -229,11 +229,11 @@ function AdminDashboard({
             {selectionsLoading ? (
               <div className="center-container" style={{ minHeight: '20vh' }}>
                 <div className="spinner" style={{ width: '35px', height: '35px' }}></div>
-                <p className="loading-text">Caricamento richieste di stampa...</p>
+                <p className="loading-text">Loading print requests...</p>
               </div>
             ) : selections.length === 0 ? (
               <div className="admin-upload-section" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-                Nessuna richiesta di stampa trovata.
+                No print requests found.
               </div>
             ) : (
               <div className="admin-selections-grid">
@@ -241,8 +241,8 @@ function AdminDashboard({
                   <div key={sel.id} className="admin-selection-card">
                     <div className="admin-selection-header">
                       <div className="selection-info-group">
-                        <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Richiesta di Stampa #{sel.id}</span>
-                        <span className="selection-session-tag">Sessione #{sel.download_session_id}</span>
+                        <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request #{sel.id}</span>
+                        <span className="selection-session-tag">Session #{sel.download_session_id}</span>
                       </div>
                       <span className="request-date">
                         {new Date(sel.created_at).toLocaleString()}
@@ -264,11 +264,11 @@ function AdminDashboard({
 
                     <div className="admin-selection-actions">
                       <span className="photo-count-badge">
-                        {sel.photos.length} {sel.photos.length === 1 ? 'foto' : 'foto'}
+                        {sel.photos.length} {sel.photos.length === 1 ? 'photo' : 'photos'}
                       </span>
                       <div className="admin-card-buttons">
                         <button onClick={() => setDetailSelection(sel)} className="btn btn-secondary" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-                          Dettagli
+                          Details
                         </button>
                         
                         {deletingSelectionId === sel.id ? (
@@ -282,7 +282,7 @@ function AdminDashboard({
                           </div>
                         ) : (
                           <button onClick={() => setDeletingSelectionId(sel.id)} className="btn btn-danger" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
-                            Elimina
+                            Delete
                           </button>
                         )}
                       </div>
@@ -301,9 +301,9 @@ function AdminDashboard({
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Dettagli Richiesta #{detailSelection.id}</h2>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Request Details #{detailSelection.id}</h2>
                 <p className="subtitle" style={{ marginTop: '0.25rem' }}>
-                  Sessione ID: {detailSelection.download_session_id} | Inviato il: {new Date(detailSelection.created_at).toLocaleString()}
+                  Session ID: {detailSelection.download_session_id} | Submitted on: {new Date(detailSelection.created_at).toLocaleString()}
                 </p>
               </div>
               <button className="modal-close-btn" onClick={() => setDetailSelection(null)}>
@@ -330,7 +330,7 @@ function AdminDashboard({
                       className="btn btn-download"
                       style={{ padding: '0.5rem', fontSize: '0.85rem', marginTop: '0.5rem' }}
                     >
-                      Scarica
+                      Download
                     </a>
                   </div>
                 </div>
@@ -339,7 +339,7 @@ function AdminDashboard({
             
             <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
               <button onClick={() => setDetailSelection(null)} className="btn btn-secondary">
-                Chiudi
+                Close
               </button>
             </div>
           </div>

@@ -98,18 +98,18 @@ function App() {
         body: JSON.stringify({ photo_ids: Array.from(activeSelectedPhotoIds) })
       });
       if (response.ok) {
-        setSelectionMessage('Richiesta di stampa inviata con successo!');
+        setSelectionMessage('Print request submitted successfully!');
         setActiveSelectedPhotoIds(new Set());
         fetchClientSelections(token);
         // Clear message after 4 seconds
         setTimeout(() => setSelectionMessage(''), 4000);
       } else {
         const errData = await response.json();
-        alert(`Errore: ${errData.detail || 'Impossibile inviare la richiesta.'}`);
+        alert(`Error: ${errData.detail || 'Unable to submit the request.'}`);
       }
     } catch (err) {
-      console.error("Errore nell'inviare la richiesta di stampa:", err);
-      alert("Errore di connessione durante l'invio della richiesta.");
+      console.error("Error sending print request:", err);
+      alert("Connection error while submitting request.");
     } finally {
       setSubmittingSelection(false);
     }
@@ -142,7 +142,7 @@ function App() {
       if (response.ok) {
         setSelections((prev) => prev.filter((s) => s.id !== selectionId));
       } else {
-        alert("Impossibile eliminare la richiesta.");
+        alert("Unable to delete request.");
       }
     } catch (err) {
       console.error("Error deleting selection:", err);
