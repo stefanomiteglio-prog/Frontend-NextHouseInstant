@@ -16,7 +16,9 @@ function CustomerDownloadView({
 }) {
   return (
     <>
-      <div className="glow-bg"></div>
+      <div className="glow-bg-container">
+        <div className="glow-bg"></div>
+      </div>
 
       {selectionMessage && (
         <div style={{

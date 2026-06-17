@@ -104,12 +104,37 @@ function App() {
         // Clear message after 4 seconds
         setTimeout(() => setSelectionMessage(''), 4000);
       } else {
-        const errData = await response.json();
-        alert(`Error: ${errData.detail || 'Unable to submit the request.'}`);
+        let errorDetails = `HTTP ${response.status} ${response.statusText}`;
+        let responseBody = '';
+        try {
+          const errData = await response.json();
+          responseBody = errData.detail || JSON.stringify(errData);
+        } catch (jsonErr) {
+          try {
+            responseBody = await response.text();
+          } catch (textErr) {
+            responseBody = 'Failed to retrieve error details.';
+          }
+        }
+        
+        console.error("Print submission failed:", errorDetails, responseBody);
+        
+        alert(
+          `Print Request Error:\n` +
+          `---------------------\n` +
+          `Status: ${errorDetails}\n` +
+          `Response: ${responseBody.substring(0, 300)}${responseBody.length > 300 ? '...' : ''}\n\n` +
+          `Please share this error message with your developer.`
+        );
       }
     } catch (err) {
       console.error("Error sending print request:", err);
-      alert("Connection error while submitting request.");
+      alert(
+        `Connection / Network Error:\n` +
+        `---------------------\n` +
+        `Message: ${err.message || err}\n\n` +
+        `Please check your internet connection or backend server status.`
+      );
     } finally {
       setSubmittingSelection(false);
     }
