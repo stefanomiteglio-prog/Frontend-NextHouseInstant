@@ -264,7 +264,7 @@ function CustomerDownloadView({
                 <div key={sel.id} className="request-history-card" style={{ background: '#f9fafb', padding: '12px', borderRadius: '12px', border: '1px solid #f3f4f6' }}>
                   <div className="request-meta" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '11px', color: '#6b7280' }}>
                     <span className="request-id" style={{ fontWeight: '600', color: '#111827' }}>
-                      Request #{sel.id} 
+                      Print Request 
                       {parsedName && (
                         <span style={{ color: '#20a2ff', marginLeft: '6px' }}>
                           ({parsedName}{parsedBooking ? ` - Booking: ${parsedBooking}` : ''})

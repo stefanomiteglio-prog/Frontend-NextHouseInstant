@@ -259,8 +259,8 @@ function AdminDashboard({
                                 Selection for: <strong>{parsedName}</strong>
                               </h3>
                               {parsedBooking && (
-                                <h4 style={{ fontSize: '0.9rem', margin: '0.15rem 0', fontWeight: '500', color: 'var(--text-muted)' }}>
-                                  Booking: <strong style={{ color: '#fff' }}>{parsedBooking}</strong>
+                                <h4 style={{ fontSize: '0.9rem', margin: '0.15rem 0', fontWeight: '500', color: '#4b5563' }}>
+                                  Booking: <strong style={{ color: '#000' }}>{parsedBooking}</strong>
                                 </h4>
                               )}
                             </>
@@ -334,8 +334,8 @@ function AdminDashboard({
                         Selection for: <strong>{parsedName}</strong>
                       </h3>
                       {parsedBooking && (
-                        <h4 style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '500', color: 'var(--text-muted)' }}>
-                          Booking: <strong style={{ color: '#fff' }}>{parsedBooking}</strong>
+                        <h4 style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '500', color: '#4b5563' }}>
+                          Booking: <strong style={{ color: '#000' }}>{parsedBooking}</strong>
                         </h4>
                       )}
                     </>
