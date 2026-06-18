@@ -2270,3 +2270,173 @@ button.clickable-thumbnail:focus-visible {
   }
 }
 
+/* Point 2: Transitions & Micro-Animations */
+
+/* Toast notification styling and animations */
+.customer-toast-notification {
+  position: fixed;
+  top: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #10b981;
+  color: #ffffff;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 14px;
+  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  z-index: 2500;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: toastSlideIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.15) forwards;
+}
+
+.customer-toast-notification .toast-content {
+  padding: 0.85rem 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.customer-toast-notification .toast-progress-bar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.4);
+  width: 100%;
+  align-self: flex-start;
+  animation: toastProgress 4s linear forwards;
+}
+
+@keyframes toastProgress {
+  from { width: 100%; }
+  to { width: 0%; }
+}
+
+@keyframes toastSlideIn {
+  0% {
+    top: -50px;
+    opacity: 0;
+    transform: translateX(-50%) scale(0.9);
+  }
+  100% {
+    top: 24px;
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}
+
+/* Checkmark pop animations */
+.customer-checkmark-button.checked .checkmark-circle {
+  background: #20a2ff;
+  border-color: #20a2ff;
+  animation: checkmarkPop 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.customer-checkmark-button.checked .checkmark-circle svg {
+  opacity: 1;
+  animation: svgPop 0.2s ease-out 0.1s both;
+}
+
+@keyframes checkmarkPop {
+  0% {
+    transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes svgPop {
+  0% {
+    transform: scale(0.6);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Low timer countdown pulse */
+.customer-session-countdown .countdown.time-low {
+  color: #ef4444 !important;
+  animation: countdownPulse 1.2s ease-in-out infinite alternate;
+  display: inline-block;
+}
+
+@keyframes countdownPulse {
+  0% {
+    opacity: 0.75;
+    transform: scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    text-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+    transform: scale(1.06);
+  }
+}
+
+/* Mode toggles and animations */
+.customer-info-details {
+  animation: slideInUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.customer-back-button {
+  animation: fadeInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.customer-btn-single-download {
+  animation: fadeIn 0.25s ease-out;
+}
+
+.customer-checkmark-button {
+  animation: scaleIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.2) both;
+}
+
+.customer-footer-info {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.65);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+

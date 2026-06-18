@@ -132,20 +132,14 @@ function CustomerDownloadView({
   return (
     <div className="customer-view-page">
       {selectionMessage && (
-        <div style={{
-          position: 'fixed',
-          top: '24px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          background: '#10b981',
-          color: '#fff',
-          padding: '0.75rem 1.5rem',
-          borderRadius: '12px',
-          fontWeight: '600',
-          boxShadow: '0 4px 12px rgba(16, 185, 129, 0.3)',
-          zIndex: 110,
-        }}>
-          {selectionMessage}
+        <div className="customer-toast-notification">
+          <div className="toast-content">
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            <span>{selectionMessage}</span>
+          </div>
+          <div className="toast-progress-bar"></div>
         </div>
       )}
 
@@ -156,7 +150,7 @@ function CustomerDownloadView({
 
       {/* Countdown timer */}
       <div className="customer-session-countdown">
-        Session expires in: <span className="countdown">{timeLeft || '--:--'}</span>
+        Session expires in: <span className={`countdown ${timeLeft && timeLeft !== 'Expired' && (timeLeft.startsWith('00:') || timeLeft.startsWith('01:')) ? 'time-low' : ''}`}>{timeLeft || '--:--'}</span>
       </div>
 
       {/* View Title */}
