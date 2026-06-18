@@ -405,7 +405,7 @@ function App() {
     if (user && isAdminRoute && activeTab === 'prints') {
       fetchSelections(filterName);
     }
-  }, [user, activeTab, sessionToken]);
+  }, [user, activeTab, sessionToken, filterName]);
 
   // Admin auto refresh timer effect
   useEffect(() => {

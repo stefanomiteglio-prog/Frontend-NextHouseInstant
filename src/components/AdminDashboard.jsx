@@ -242,7 +242,6 @@ function AdminDashboard({
                   <button 
                     onClick={() => {
                       setFilterName('');
-                      fetchSelections('');
                     }} 
                     className="btn btn-secondary"
                   >
