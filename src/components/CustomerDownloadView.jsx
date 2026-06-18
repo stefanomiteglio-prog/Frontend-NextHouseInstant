@@ -20,7 +20,7 @@ function CustomerDownloadView({
     const guestNameInput = document.getElementById('guest-name');
     const guestNameVal = guestNameInput ? guestNameInput.value.trim() : guestName.trim();
     if (!guestNameVal) {
-      alert("Per favore, inserisci un nome o il numero del tavolo per identificare la tua selezione.");
+      alert("Please enter your name to identify your selection.");
       return;
     }
     handleSubmitPrintRequest(guestNameVal, () => {
@@ -155,11 +155,11 @@ function CustomerDownloadView({
           </div>
 
           <div className="input-group">
-            <label htmlFor="guest-name">Il tuo Nome / Tavolo</label>
+            <label htmlFor="guest-name">Your Name</label>
             <input 
               type="text" 
               id="guest-name" 
-              placeholder="Esempio: Marco - Tavolo 4" 
+              placeholder="Example: Marco" 
               required 
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}

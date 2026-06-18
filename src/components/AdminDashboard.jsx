@@ -244,7 +244,7 @@ function AdminDashboard({
                         <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request #{sel.id}</span>
                         {sel.name && (
                           <h3 className="selection-guest-title" style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
-                            Selezione per: <strong>{sel.name}</strong>
+                            Selection for: <strong>{sel.name}</strong>
                           </h3>
                         )}
                         <span className="selection-session-tag">Session #{sel.download_session_id}</span>
@@ -309,7 +309,7 @@ function AdminDashboard({
                 <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Request Details #{detailSelection.id}</h2>
                 {detailSelection.name && (
                   <h3 className="selection-guest-title" style={{ fontSize: '1.2rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
-                    Selezione per: <strong>{detailSelection.name}</strong>
+                    Selection for: <strong>{detailSelection.name}</strong>
                   </h3>
                 )}
                 <p className="subtitle" style={{ marginTop: '0.25rem' }}>
