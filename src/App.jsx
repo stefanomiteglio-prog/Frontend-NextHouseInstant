@@ -538,9 +538,6 @@ function App() {
           fetchSelections={fetchSelections}
           handleDeleteSelection={handleDeleteSelection}
           formatSize={formatSize}
-          autoRefresh={autoRefresh}
-          setAutoRefresh={setAutoRefresh}
-          refreshSecondsLeft={refreshSecondsLeft}
         />
       </div>
     );

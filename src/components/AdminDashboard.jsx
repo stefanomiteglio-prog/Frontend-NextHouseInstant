@@ -28,10 +28,7 @@ function AdminDashboard({
   setDeletingSelectionId,
   fetchSelections,
   handleDeleteSelection,
-  formatSize,
-  autoRefresh,
-  setAutoRefresh,
-  refreshSecondsLeft
+  formatSize
 }) {
   const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
 
@@ -78,60 +75,7 @@ function AdminDashboard({
           </div>
         </div>
 
-        {/* Statistics Panel */}
-        <div className="admin-stats-container">
-          <div className="admin-stat-card">
-            <div className="admin-stat-icon print-requests-icon">
-              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-              </svg>
-            </div>
-            <div className="admin-stat-details">
-              <span className="admin-stat-value">{selections.length}</span>
-              <span className="admin-stat-label">Print Requests</span>
-            </div>
-          </div>
 
-          <div className="admin-stat-card">
-            <div className="admin-stat-icon prints-count-icon">
-              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-            </div>
-            <div className="admin-stat-details">
-              <span className="admin-stat-value">
-                {selections.reduce((acc, curr) => acc + (curr.photos?.length || 0), 0)}
-              </span>
-              <span className="admin-stat-label">Total Prints</span>
-            </div>
-          </div>
-
-          <div className="admin-stat-card">
-            <div className="admin-stat-icon active-sessions-icon">
-              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 009 11m0 0V9a2 2 0 00-2-2M9 11H3m18 0h-6M12 2a10 10 0 110 20 10 10 0 010-20z" />
-              </svg>
-            </div>
-            <div className="admin-stat-details">
-              <span className="admin-stat-value">
-                {new Set(selections.map(s => s.download_session_id)).size}
-              </span>
-              <span className="admin-stat-label">Active Sessions</span>
-            </div>
-          </div>
-
-          <div className="admin-stat-card">
-            <div className="admin-stat-icon stickers-icon">
-              <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div className="admin-stat-details">
-              <span className="admin-stat-value">{stickers.length}</span>
-              <span className="admin-stat-label">Uploaded Stickers</span>
-            </div>
-          </div>
-        </div>
 
         {/* Admin Navigation Tabs */}
         <div className="admin-tabs">
@@ -289,41 +233,7 @@ function AdminDashboard({
                 />
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                {/* Auto Refresh Indicator */}
-                <div className="auto-refresh-indicator">
-                  <button 
-                    type="button" 
-                    onClick={() => setAutoRefresh(!autoRefresh)} 
-                    className="auto-refresh-toggle"
-                    title={autoRefresh ? "Pause Auto-Refresh" : "Resume Auto-Refresh"}
-                  >
-                    {autoRefresh ? (
-                      <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>
-                      </svg>
-                    ) : (
-                      <svg width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M8 5v14l11-7z"/>
-                      </svg>
-                    )}
-                  </button>
-                  <span className="auto-refresh-text">
-                    {autoRefresh ? `Sync in ${refreshSecondsLeft}s` : 'Sync paused'}
-                  </span>
-                  {autoRefresh && (
-                    <div className="refresh-spinner-ring">
-                      <svg width="16" height="16" viewBox="0 0 36 36">
-                        <circle cx="18" cy="18" r="16" fill="none" stroke="#cbcbcb" strokeWidth="2.5" />
-                        <circle cx="18" cy="18" r="16" fill="none" stroke="#20a2ff" strokeWidth="2.5" 
-                          strokeDasharray="100" 
-                          strokeDashoffset={100 - (refreshSecondsLeft / 30) * 100} 
-                          transform="rotate(-90 18 18)" 
-                          style={{ transition: 'stroke-dashoffset 1s linear' }}
-                        />
-                      </svg>
-                    </div>
-                  )}
-                </div>
+
 
                 <button onClick={() => fetchSelections(filterSessionId)} className="btn btn-secondary">
                   Filter
