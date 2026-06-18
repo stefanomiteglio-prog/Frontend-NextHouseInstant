@@ -58,6 +58,10 @@ function App() {
   const [detailSelection, setDetailSelection] = useState(null);
   const [deletingSelectionId, setDeletingSelectionId] = useState(null);
 
+  // Admin auto-refresh states
+  const [autoRefresh, setAutoRefresh] = useState(true);
+  const [refreshSecondsLeft, setRefreshSecondsLeft] = useState(30);
+
   const handleToggleSelectPhoto = (photoId) => {
     setActiveSelectedPhotoIds((prev) => {
       const next = new Set(prev);
@@ -147,6 +151,7 @@ function App() {
   // Admin print selections helper
   const fetchSelections = async (sessionId = '') => {
     setSelectionsLoading(true);
+    setRefreshSecondsLeft(30);
     try {
       const url = sessionId 
         ? `${API_URL}/api/selections?download_session_id=${sessionId}` 
@@ -385,7 +390,8 @@ function App() {
         const [title, desc] = err.message.split('|');
         setError({
           title: title || "Loading error",
-          description: desc || err.message
+          description: desc || err.message,
+          isExpired: err.message.toLowerCase().includes("expired") || err.message.toLowerCase().includes("limit")
         });
       } finally {
         setLoading(false);
@@ -401,6 +407,23 @@ function App() {
       fetchSelections(filterSessionId);
     }
   }, [user, activeTab, sessionToken]);
+
+  // Admin auto refresh timer effect
+  useEffect(() => {
+    if (!user || !isAdminRoute || activeTab !== 'prints' || !autoRefresh) return;
+    
+    const interval = setInterval(() => {
+      setRefreshSecondsLeft(prev => {
+        if (prev <= 1) {
+          fetchSelections(filterSessionId);
+          return 30;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    
+    return () => clearInterval(interval);
+  }, [user, isAdminRoute, activeTab, autoRefresh, filterSessionId, sessionToken]);
 
   useEffect(() => {
     if (!session?.expires_at || isAdminRoute) return;
@@ -419,7 +442,8 @@ function App() {
         setTimeLeft('Expired');
         setError({
           title: "Session Expired",
-          description: "The download session has expired. Links are valid for 5 minutes."
+          description: "The download session has expired. Links are valid for 5 minutes.",
+          isExpired: true
         });
         return false;
       } else {
@@ -514,6 +538,9 @@ function App() {
           fetchSelections={fetchSelections}
           handleDeleteSelection={handleDeleteSelection}
           formatSize={formatSize}
+          autoRefresh={autoRefresh}
+          setAutoRefresh={setAutoRefresh}
+          refreshSecondsLeft={refreshSecondsLeft}
         />
       </div>
     );
@@ -531,6 +558,22 @@ function App() {
   }
 
   if (error) {
+    if (error.isExpired) {
+      return (
+        <div className="center-container">
+          <div className="expired-container">
+            <div className="expired-icon">
+              <svg width="64" height="64" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" style={{ margin: '0 auto' }}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+            </div>
+            <h2 className="expired-title">{error.title}</h2>
+            <p className="expired-desc">{error.description}</p>
+          </div>
+        </div>
+      );
+    }
+
     return (
       <div className="center-container">
         <div className="error-container">
