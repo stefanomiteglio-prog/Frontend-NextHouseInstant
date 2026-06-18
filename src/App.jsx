@@ -54,7 +54,7 @@ function App() {
   const [activeTab, setActiveTab] = useState('prints'); // 'stickers' or 'prints'
   const [selections, setSelections] = useState([]);
   const [selectionsLoading, setSelectionsLoading] = useState(false);
-  const [filterSessionId, setFilterSessionId] = useState('');
+  const [filterName, setFilterName] = useState('');
   const [detailSelection, setDetailSelection] = useState(null);
   const [deletingSelectionId, setDeletingSelectionId] = useState(null);
 
@@ -148,13 +148,12 @@ function App() {
     }
   };
 
-  // Admin print selections helper
-  const fetchSelections = async (sessionId = '') => {
+  const fetchSelections = async (name = '') => {
     setSelectionsLoading(true);
     setRefreshSecondsLeft(30);
     try {
-      const url = sessionId 
-        ? `${API_URL}/api/selections?download_session_id=${sessionId}` 
+      const url = name 
+        ? `${API_URL}/api/selections?name=${encodeURIComponent(name)}` 
         : `${API_URL}/api/selections`;
       const response = await authenticatedFetch(url);
       if (response.ok) {
@@ -404,7 +403,7 @@ function App() {
   // Admin selections fetching effect
   useEffect(() => {
     if (user && isAdminRoute && activeTab === 'prints') {
-      fetchSelections(filterSessionId);
+      fetchSelections(filterName);
     }
   }, [user, activeTab, sessionToken]);
 
@@ -415,7 +414,7 @@ function App() {
     const interval = setInterval(() => {
       setRefreshSecondsLeft(prev => {
         if (prev <= 1) {
-          fetchSelections(filterSessionId);
+          fetchSelections(filterName);
           return 30;
         }
         return prev - 1;
@@ -423,7 +422,7 @@ function App() {
     }, 1000);
     
     return () => clearInterval(interval);
-  }, [user, isAdminRoute, activeTab, autoRefresh, filterSessionId, sessionToken]);
+  }, [user, isAdminRoute, activeTab, autoRefresh, filterName, sessionToken]);
 
   useEffect(() => {
     if (!session?.expires_at || isAdminRoute) return;
@@ -529,8 +528,8 @@ function App() {
           handleDeleteSticker={handleDeleteSticker}
           selections={selections}
           selectionsLoading={selectionsLoading}
-          filterSessionId={filterSessionId}
-          setFilterSessionId={setFilterSessionId}
+          filterName={filterName}
+          setFilterName={setFilterName}
           detailSelection={detailSelection}
           setDetailSelection={setDetailSelection}
           deletingSelectionId={deletingSelectionId}

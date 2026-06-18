@@ -20,8 +20,8 @@ function AdminDashboard({
   handleDeleteSticker,
   selections,
   selectionsLoading,
-  filterSessionId,
-  setFilterSessionId,
+  filterName,
+  setFilterName,
   detailSelection,
   setDetailSelection,
   deletingSelectionId,
@@ -223,11 +223,11 @@ function AdminDashboard({
                   type="text"
                   className="form-input"
                   placeholder="Filter by name..."
-                  value={filterSessionId}
-                  onChange={(e) => setFilterSessionId(e.target.value)}
+                  value={filterName}
+                  onChange={(e) => setFilterName(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter') {
-                      fetchSelections(filterSessionId);
+                      fetchSelections(filterName);
                     }
                   }}
                 />
@@ -235,13 +235,13 @@ function AdminDashboard({
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
 
 
-                <button onClick={() => fetchSelections(filterSessionId)} className="btn btn-secondary">
+                <button onClick={() => fetchSelections(filterName)} className="btn btn-secondary">
                   Filter
                 </button>
-                {filterSessionId && (
+                {filterName && (
                   <button 
                     onClick={() => {
-                      setFilterSessionId('');
+                      setFilterName('');
                       fetchSelections('');
                     }} 
                     className="btn btn-secondary"
@@ -249,7 +249,7 @@ function AdminDashboard({
                     Reset
                   </button>
                 )}
-                <button onClick={() => fetchSelections(filterSessionId)} className="btn btn-secondary" title="Refresh List" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <button onClick={() => fetchSelections(filterName)} className="btn btn-secondary" title="Refresh List" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>

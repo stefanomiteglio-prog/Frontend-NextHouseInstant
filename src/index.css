@@ -893,7 +893,8 @@ footer {
   max-width: 400px;
 }
 
-.search-input-wrapper input {
+.search-input-wrapper input,
+.admin-view-page .search-input-wrapper input {
   width: 100%;
   padding-left: 3rem !important;
 }
