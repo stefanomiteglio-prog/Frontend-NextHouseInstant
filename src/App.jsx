@@ -51,7 +51,7 @@ function App() {
   const [selectionMessage, setSelectionMessage] = useState('');
 
   // Admin print selections states
-  const [activeTab, setActiveTab] = useState('stickers'); // 'stickers' or 'prints'
+  const [activeTab, setActiveTab] = useState('prints'); // 'stickers' or 'prints'
   const [selections, setSelections] = useState([]);
   const [selectionsLoading, setSelectionsLoading] = useState(false);
   const [filterSessionId, setFilterSessionId] = useState('');

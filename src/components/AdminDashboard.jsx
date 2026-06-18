@@ -65,15 +65,6 @@ function AdminDashboard({
         {/* Admin Navigation Tabs */}
         <div className="admin-tabs">
           <button 
-            className={`admin-tab-btn ${activeTab === 'stickers' ? 'active' : ''}`}
-            onClick={() => setActiveTab('stickers')}
-          >
-            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            Decorative Stickers
-          </button>
-          <button 
             className={`admin-tab-btn ${activeTab === 'prints' ? 'active' : ''}`}
             onClick={() => setActiveTab('prints')}
           >
@@ -81,6 +72,15 @@ function AdminDashboard({
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
             Print Requests
+          </button>
+          <button 
+            className={`admin-tab-btn ${activeTab === 'stickers' ? 'active' : ''}`}
+            onClick={() => setActiveTab('stickers')}
+          >
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Decorative Stickers
           </button>
         </div>
 
@@ -232,6 +232,12 @@ function AdminDashboard({
                     Reset
                   </button>
                 )}
+                <button onClick={() => fetchSelections(filterSessionId)} className="btn btn-secondary" title="Refresh List" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                  </svg>
+                  Refresh
+                </button>
               </div>
             </div>
 
