@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 
 function CustomerDownloadView({
   session,
@@ -14,6 +14,28 @@ function CustomerDownloadView({
   handleSubmitPrintRequest,
   formatSize
 }) {
+  const [guestName, setGuestName] = useState('');
+
+  const onSubmit = () => {
+    const guestNameInput = document.getElementById('guest-name');
+    const guestNameVal = guestNameInput ? guestNameInput.value.trim() : guestName.trim();
+    if (!guestNameVal) {
+      alert("Per favore, inserisci un nome o il numero del tavolo per identificare la tua selezione.");
+      return;
+    }
+    handleSubmitPrintRequest(guestNameVal, () => {
+      setGuestName('');
+      if (guestNameInput) {
+        guestNameInput.value = '';
+      }
+    });
+  };
+
+  const onCancel = () => {
+    handleClearActiveSelection();
+    setGuestName('');
+  };
+
   return (
     <>
       <div className="glow-bg-container">
@@ -122,27 +144,40 @@ function CustomerDownloadView({
 
         {/* Floating Selection Bar */}
         <div className={`floating-selection-bar ${activeSelectedPhotoIds.size > 0 ? 'show' : ''}`}>
-          <div className="selection-info-text">
-            <span>{activeSelectedPhotoIds.size}</span>
-            {activeSelectedPhotoIds.size === 1 ? 'selected photo' : 'selected photos'} for printing
-          </div>
-          <div className="floating-actions">
-            <button onClick={handleClearActiveSelection} className="btn btn-secondary">
+          <div className="floating-bar-header">
+            <div className="selection-info-text">
+              <span>{activeSelectedPhotoIds.size}</span>
+              {activeSelectedPhotoIds.size === 1 ? 'selected photo' : 'selected photos'} for printing
+            </div>
+            <button onClick={onCancel} className="btn btn-secondary btn-sm" style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}>
               Cancel
             </button>
-            <button onClick={handleSubmitPrintRequest} className="btn btn-accent" disabled={submittingSelection}>
-              {submittingSelection ? (
-                <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px', margin: 0, display: 'inline-block' }}></span>
-              ) : (
-                <>
-                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                  </svg>
-                  Order Prints
-                </>
-              )}
-            </button>
           </div>
+
+          <div className="input-group">
+            <label htmlFor="guest-name">Il tuo Nome / Tavolo</label>
+            <input 
+              type="text" 
+              id="guest-name" 
+              placeholder="Esempio: Marco - Tavolo 4" 
+              required 
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+            />
+          </div>
+
+          <button onClick={onSubmit} className="btn btn-accent" disabled={submittingSelection} style={{ width: '100%' }}>
+            {submittingSelection ? (
+              <span className="spinner" style={{ width: '16px', height: '16px', borderWidth: '2px', margin: 0, display: 'inline-block' }}></span>
+            ) : (
+              <>
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                </svg>
+                Order Prints
+              </>
+            )}
+          </button>
         </div>
 
         {/* Past Requests Section */}
@@ -153,7 +188,7 @@ function CustomerDownloadView({
               {clientSelections.map((sel) => (
                 <div key={sel.id} className="request-history-card">
                   <div className="request-meta">
-                    <span className="request-id">Request #{sel.id}</span>
+                    <span className="request-id">Request #{sel.id} {sel.name && <span className="request-guest-name">({sel.name})</span>}</span>
                     <span className="request-date">{new Date(sel.created_at).toLocaleString()}</span>
                   </div>
                   <div className="request-thumbnails">

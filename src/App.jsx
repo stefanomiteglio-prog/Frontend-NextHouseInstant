@@ -87,7 +87,7 @@ function App() {
     }
   };
 
-  const handleSubmitPrintRequest = async () => {
+  const handleSubmitPrintRequest = async (guestName, onSuccess) => {
     if (activeSelectedPhotoIds.size === 0) return;
     setSubmittingSelection(true);
     setSelectionMessage('');
@@ -95,12 +95,16 @@ function App() {
       const response = await fetch(`${API_URL}/download/${token}/selections`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ photo_ids: Array.from(activeSelectedPhotoIds) })
+        body: JSON.stringify({ 
+          photo_ids: Array.from(activeSelectedPhotoIds),
+          name: guestName
+        })
       });
       if (response.ok) {
         setSelectionMessage('Print request submitted successfully!');
         setActiveSelectedPhotoIds(new Set());
         fetchClientSelections(token);
+        if (onSuccess) onSuccess();
         // Clear message after 4 seconds
         setTimeout(() => setSelectionMessage(''), 4000);
       } else {
