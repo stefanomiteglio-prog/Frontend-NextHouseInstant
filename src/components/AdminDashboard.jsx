@@ -30,6 +30,15 @@ function AdminDashboard({
   handleDeleteSelection,
   formatSize
 }) {
+  const parseName = (fullName) => {
+    if (!fullName) return { name: '', booking: '' };
+    const parts = fullName.split(' | Booking: ');
+    if (parts.length > 1) {
+      return { name: parts[0], booking: parts[1] };
+    }
+    return { name: fullName, booking: '' };
+  };
+
   return (
     <>
       <div className="glow-bg"></div>
@@ -242,11 +251,21 @@ function AdminDashboard({
                     <div className="admin-selection-header">
                       <div className="selection-info-group">
                         <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request #{sel.id}</span>
-                        {sel.name && (
-                          <h3 className="selection-guest-title" style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
-                            Selection for: <strong>{sel.name}</strong>
-                          </h3>
-                        )}
+                        {sel.name && (() => {
+                          const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
+                          return (
+                            <>
+                              <h3 className="selection-guest-title" style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
+                                Selection for: <strong>{parsedName}</strong>
+                              </h3>
+                              {parsedBooking && (
+                                <h4 style={{ fontSize: '0.9rem', margin: '0.15rem 0', fontWeight: '500', color: 'var(--text-muted)' }}>
+                                  Booking: <strong style={{ color: '#fff' }}>{parsedBooking}</strong>
+                                </h4>
+                              )}
+                            </>
+                          );
+                        })()}
                         <span className="selection-session-tag">Session #{sel.download_session_id}</span>
                       </div>
                       <span className="request-date">
@@ -307,11 +326,21 @@ function AdminDashboard({
             <div className="modal-header">
               <div>
                 <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Request Details #{detailSelection.id}</h2>
-                {detailSelection.name && (
-                  <h3 className="selection-guest-title" style={{ fontSize: '1.2rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
-                    Selection for: <strong>{detailSelection.name}</strong>
-                  </h3>
-                )}
+                {detailSelection.name && (() => {
+                  const { name: parsedName, booking: parsedBooking } = parseName(detailSelection.name);
+                  return (
+                    <>
+                      <h3 className="selection-guest-title" style={{ fontSize: '1.2rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
+                        Selection for: <strong>{parsedName}</strong>
+                      </h3>
+                      {parsedBooking && (
+                        <h4 style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '500', color: 'var(--text-muted)' }}>
+                          Booking: <strong style={{ color: '#fff' }}>{parsedBooking}</strong>
+                        </h4>
+                      )}
+                    </>
+                  );
+                })()}
                 <p className="subtitle" style={{ marginTop: '0.25rem' }}>
                   Session ID: {detailSelection.download_session_id} | Submitted on: {new Date(detailSelection.created_at).toLocaleString()}
                 </p>
