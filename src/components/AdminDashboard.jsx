@@ -222,7 +222,7 @@ function AdminDashboard({
                 <input
                   type="text"
                   className="form-input"
-                  placeholder="Filter by Session ID..."
+                  placeholder="Filter by name..."
                   value={filterSessionId}
                   onChange={(e) => setFilterSessionId(e.target.value)}
                   onKeyDown={(e) => {
