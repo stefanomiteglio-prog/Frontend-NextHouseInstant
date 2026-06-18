@@ -1210,7 +1210,8 @@ footer {
 .customer-files-card {
   background: #ffffff;
   width: 470px;
-  height: 625px;
+  max-height: 625px;
+  height: auto;
   border-radius: 45px;
   box-shadow: -4px 4px 45px rgba(0, 0, 0, 0.25);
   display: flex;
@@ -1223,7 +1224,7 @@ footer {
 
 /* Expanded height for print selection mode */
 .customer-files-card.print-mode {
-  height: 697px;
+  max-height: 697px;
 }
 
 /* Scrollable area */
@@ -1625,5 +1626,349 @@ footer {
   .customer-card-bottom {
     padding: 15px;
   }
+}
+
+/* Admin View Page Styles (matching customer colors and shapes) */
+.admin-view-page {
+  background-color: #d4d4d4;
+  color: #000000;
+  min-height: 100vh;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+  z-index: 10;
+  overflow-y: auto;
+}
+
+.admin-view-page h1 {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 2.25rem;
+  color: #000000 !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+  text-shadow: none !important;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.admin-view-page .subtitle {
+  color: #4b5563 !important;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+}
+
+.admin-view-page .admin-card {
+  background: #ffffff;
+  border: none;
+  border-radius: 45px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 480px;
+  margin: 2rem auto;
+  box-shadow: -4px 4px 45px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  color: #000000;
+}
+
+.admin-view-page .admin-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.75rem;
+  text-align: center;
+  margin-bottom: 0.5rem;
+  color: #000000 !important;
+  background: none !important;
+  -webkit-text-fill-color: initial !important;
+}
+
+.admin-view-page .form-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #000000 !important;
+}
+
+.admin-view-page .form-input {
+  background: #cbcbcb !important;
+  border: none !important;
+  border-radius: 60px !important;
+  padding: 0.85rem 1.25rem !important;
+  color: #000000 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-size: 0.95rem !important;
+  height: 44px !important;
+  outline: none !important;
+  box-sizing: border-box !important;
+}
+
+.admin-view-page .form-input::placeholder {
+  color: rgba(131, 131, 131, 0.8) !important;
+}
+
+.admin-view-page .form-input:focus {
+  border: 2px solid #20a2ff !important;
+  box-shadow: none !important;
+}
+
+/* Dashboard Header & Container */
+.admin-view-page .container {
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.admin-view-page .dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: none;
+  padding: 1.25rem 2rem;
+  border-radius: 30px;
+  box-shadow: -4px 4px 30px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  color: #000000;
+}
+
+.admin-view-page .photos-count {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #000000 !important;
+}
+
+/* Tab Bar */
+.admin-view-page .admin-tabs {
+  display: flex;
+  width: 100%;
+  border-bottom: 2px solid #cbcbcb;
+  margin-bottom: 2rem;
+  gap: 1rem;
+  padding-bottom: 0;
+}
+
+.admin-view-page .admin-tab-btn {
+  background: none;
+  border: none;
+  color: #6b7280 !important;
+  font-family: 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.admin-view-page .admin-tab-btn:hover {
+  color: #000000 !important;
+}
+
+.admin-view-page .admin-tab-btn.active {
+  color: #20a2ff !important;
+}
+
+.admin-view-page .admin-tab-btn::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: #20a2ff;
+  transform: scaleX(0);
+  transition: transform 0.2s ease;
+}
+
+.admin-view-page .admin-tab-btn.active::after {
+  transform: scaleX(1);
+}
+
+/* Upload Section */
+.admin-view-page .admin-upload-section {
+  background: #ffffff;
+  border: none;
+  border-radius: 35px;
+  padding: 2rem;
+  box-shadow: -4px 4px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  color: #000000;
+}
+
+.admin-view-page .file-input-btn {
+  background: #cbcbcb !important;
+  border: none !important;
+  border-radius: 60px !important;
+  padding: 0.85rem 1.25rem !important;
+  color: #4b5563 !important;
+  height: 44px !important;
+}
+
+.admin-view-page .file-input-btn.has-file {
+  background: rgba(16, 185, 129, 0.1) !important;
+  color: #10b981 !important;
+  border: 1px solid #10b981 !important;
+}
+
+/* Buttons */
+.admin-view-page .btn {
+  border-radius: 60px !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.admin-view-page .btn:hover {
+  transform: translateY(-2px);
+}
+
+.admin-view-page .btn-secondary {
+  background: #cbcbcb !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+.admin-view-page .btn-secondary:hover {
+  background: #b5b5b5 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.admin-view-page .btn-accent {
+  background: #20a2ff !important;
+  color: #000000 !important;
+}
+
+.admin-view-page .btn-accent:hover {
+  background: #1890e6 !important;
+  box-shadow: 0 4px 12px rgba(32, 162, 255, 0.3) !important;
+}
+
+.admin-view-page .btn-danger {
+  background: #ff6434 !important;
+  color: #000000 !important;
+}
+
+.admin-view-page .btn-danger:hover {
+  background: #e65223 !important;
+  box-shadow: 0 4px 12px rgba(255, 100, 52, 0.3) !important;
+}
+
+.admin-view-page .btn-download {
+  background: #20a2ff !important;
+  color: #000000 !important;
+}
+
+.admin-view-page .btn-download:hover {
+  background: #1890e6 !important;
+  box-shadow: 0 4px 12px rgba(32, 162, 255, 0.3) !important;
+}
+
+/* Card & Selections Grid */
+.admin-view-page .card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 30px !important;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.05) !important;
+}
+
+.admin-view-page .card-body {
+  color: #000000 !important;
+}
+
+.admin-view-page .filename {
+  color: #000000 !important;
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 700 !important;
+}
+
+.admin-view-page .admin-selections-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr));
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.admin-view-page .admin-selection-card {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 30px !important;
+  padding: 1.5rem !important;
+  box-shadow: 0px 4px 20px rgba(0,0,0,0.05) !important;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: left;
+}
+
+.admin-view-page .admin-selection-header {
+  border-bottom: 1px solid #f1f1f1 !important;
+  padding-bottom: 0.75rem !important;
+  color: #000000 !important;
+}
+
+.admin-view-page .selection-session-tag {
+  background: rgba(0,0,0,0.05) !important;
+  color: #6b7280 !important;
+  border: 1px solid #e5e7eb !important;
+}
+
+.admin-view-page .admin-selection-thumb {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+}
+
+.admin-view-page .photo-count-badge {
+  background: rgba(32, 162, 255, 0.15) !important;
+  color: #1890e6 !important;
+  font-weight: 700 !important;
+  border-radius: 20px !important;
+}
+
+/* Modal styling matching customer view */
+.admin-view-page .modal-overlay {
+  background: rgba(0,0,0,0.4) !important;
+}
+
+.admin-view-page .modal-content {
+  background: #ffffff !important;
+  border-radius: 45px !important;
+  box-shadow: -4px 4px 45px rgba(0,0,0,0.25) !important;
+  color: #000000 !important;
+  border: none !important;
+}
+
+.admin-view-page .modal-close-btn {
+  color: #000000 !important;
+  background: rgba(0,0,0,0.05) !important;
+}
+
+.admin-view-page .modal-close-btn:hover {
+  background: rgba(0,0,0,0.1) !important;
+}
+
+.admin-view-page .modal-photo-card {
+  background: #f9fafb !important;
+  border: 1px solid #e5e7eb !important;
+  border-radius: 20px !important;
+}
+
+.admin-view-page .modal-photo-thumb {
+  border-bottom: 1px solid #e5e7eb !important;
 }
 

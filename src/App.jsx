@@ -467,51 +467,55 @@ function App() {
 
     if (!user) {
       return (
-        <AdminLogin
-          loginUsername={loginUsername}
-          setLoginUsername={setLoginUsername}
-          loginPassword={loginPassword}
-          setLoginPassword={setLoginPassword}
-          loginError={loginError}
-          loginLoading={loginLoading}
-          handleLogin={handleLogin}
-        />
+        <div className="admin-view-page">
+          <AdminLogin
+            loginUsername={loginUsername}
+            setLoginUsername={setLoginUsername}
+            loginPassword={loginPassword}
+            setLoginPassword={setLoginPassword}
+            loginError={loginError}
+            loginLoading={loginLoading}
+            handleLogin={handleLogin}
+          />
+        </div>
       );
     }
 
     return (
-      <AdminDashboard
-        user={user}
-        handleLogout={handleLogout}
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        API_URL={API_URL}
-        stickers={stickers}
-        stickersLoading={stickersLoading}
-        newStickerName={newStickerName}
-        setNewStickerName={setNewStickerName}
-        newStickerFile={newStickerFile}
-        setNewStickerFile={setNewStickerFile}
-        uploadLoading={uploadLoading}
-        uploadError={uploadError}
-        setUploadError={setUploadError}
-        deletingStickerId={deletingStickerId}
-        setDeletingStickerId={setDeletingStickerId}
-        handleFileChange={handleFileChange}
-        handleUploadSticker={handleUploadSticker}
-        handleDeleteSticker={handleDeleteSticker}
-        selections={selections}
-        selectionsLoading={selectionsLoading}
-        filterSessionId={filterSessionId}
-        setFilterSessionId={setFilterSessionId}
-        detailSelection={detailSelection}
-        setDetailSelection={setDetailSelection}
-        deletingSelectionId={deletingSelectionId}
-        setDeletingSelectionId={setDeletingSelectionId}
-        fetchSelections={fetchSelections}
-        handleDeleteSelection={handleDeleteSelection}
-        formatSize={formatSize}
-      />
+      <div className="admin-view-page">
+        <AdminDashboard
+          user={user}
+          handleLogout={handleLogout}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          API_URL={API_URL}
+          stickers={stickers}
+          stickersLoading={stickersLoading}
+          newStickerName={newStickerName}
+          setNewStickerName={setNewStickerName}
+          newStickerFile={newStickerFile}
+          setNewStickerFile={setNewStickerFile}
+          uploadLoading={uploadLoading}
+          uploadError={uploadError}
+          setUploadError={setUploadError}
+          deletingStickerId={deletingStickerId}
+          setDeletingStickerId={setDeletingStickerId}
+          handleFileChange={handleFileChange}
+          handleUploadSticker={handleUploadSticker}
+          handleDeleteSticker={handleDeleteSticker}
+          selections={selections}
+          selectionsLoading={selectionsLoading}
+          filterSessionId={filterSessionId}
+          setFilterSessionId={setFilterSessionId}
+          detailSelection={detailSelection}
+          setDetailSelection={setDetailSelection}
+          deletingSelectionId={deletingSelectionId}
+          setDeletingSelectionId={setDeletingSelectionId}
+          fetchSelections={fetchSelections}
+          handleDeleteSelection={handleDeleteSelection}
+          formatSize={formatSize}
+        />
+      </div>
     );
   }
 
