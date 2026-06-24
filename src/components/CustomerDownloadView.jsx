@@ -131,6 +131,10 @@ function CustomerDownloadView({
 
   return (
     <div className="customer-view-page">
+      <div className="glow-bg-container">
+        <div className="glow-bg"></div>
+        <div className="glow-bg-secondary"></div>
+      </div>
       {selectionMessage && (
         <div className="customer-toast-notification">
           <div className="toast-content">
@@ -328,7 +332,7 @@ function CustomerDownloadView({
                     <span className="request-id" style={{ fontWeight: '600', color: '#111827' }}>
                       Print Request 
                       {parsedName && (
-                        <span style={{ color: '#20a2ff', marginLeft: '6px' }}>
+                        <span style={{ color: 'var(--primary)', marginLeft: '6px' }}>
                           ({parsedName}{parsedBooking ? ` - Booking: ${parsedBooking}` : ''})
                         </span>
                       )}
