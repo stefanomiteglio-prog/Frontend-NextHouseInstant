@@ -268,11 +268,11 @@ function AdminDashboard({
               </div>
             ) : (
               <div className="admin-selections-grid">
-                {selections.map((sel) => (
+                {[...selections].sort((a, b) => b.id - a.id).map((sel) => (
                   <div key={sel.id} className="admin-selection-card">
                     <div className="admin-selection-header">
                       <div className="selection-info-group">
-                        <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request #{sel.id}</span>
+                        <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request</span>
                         {sel.name && (() => {
                           const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
                           return (
@@ -378,7 +378,7 @@ function AdminDashboard({
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Request Details #{detailSelection.id}</h2>
+                <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Request Details</h2>
                 {detailSelection.name && (() => {
                   const { name: parsedName, booking: parsedBooking } = parseName(detailSelection.name);
                   return (
