@@ -371,6 +371,10 @@ function CustomerDownloadView({
         </div>
       )}
 
+      <footer className="customer-page-footer">
+        <a href="/privacy" className="privacy-link">Privacy Policy</a>
+      </footer>
+
       {/* Lightbox Overlay */}
       {activePhoto && (
         <div 

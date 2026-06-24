@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerDownloadView from './components/CustomerDownloadView';
+import PrivacyPolicy from './components/PrivacyPolicy';
 
 const getApiUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL || '';
@@ -18,6 +19,7 @@ const API_URL = getApiUrl();
 function App() {
   const path = window.location.pathname;
   const isAdminRoute = path === '/admin';
+  const isPrivacyRoute = path === '/privacy' || path === '/privacy-policy';
 
   // State for user photo download page (original logic)
   const [token, setToken] = useState('');
@@ -477,6 +479,10 @@ function App() {
   };
 
   // --- RENDERING ROUTER ---
+
+  if (isPrivacyRoute) {
+    return <PrivacyPolicy />;
+  }
 
   if (isAdminRoute) {
     if (authLoading) {
