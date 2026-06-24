@@ -152,9 +152,11 @@ function CustomerDownloadView({
         <img src={nexthouseLogo} alt="NextHouse Logo" />
       </div>
 
-      {/* Countdown timer */}
-      <div className="customer-session-countdown">
-        Session expires in: <span className={`countdown ${timeLeft && timeLeft !== 'Expired' && (timeLeft.startsWith('00:') || timeLeft.startsWith('01:')) ? 'time-low' : ''}`}>{timeLeft || '--:--'}</span>
+      {/* Countdown timer badge */}
+      <div className={`customer-session-countdown-badge ${timeLeft && timeLeft !== 'Expired' && (timeLeft.startsWith('00:') || timeLeft.startsWith('01:')) ? 'time-low' : ''}`}>
+        <span className="pulse-dot"></span>
+        <span className="badge-text">Session: </span>
+        <span className="countdown-time">{timeLeft || '--:--'}</span>
       </div>
 
       {/* View Title */}
@@ -190,14 +192,22 @@ function CustomerDownloadView({
             const isActivelySelected = activeSelectedPhotoIds.has(photo.id);
 
             return (
-              <div key={photo.id} className="customer-grid-item">
+              <div key={photo.id} className={`customer-grid-item ${isActivelySelected ? 'selected' : ''}`}>
                 <div className="customer-grid-thumbnail-wrapper">
                   <img 
                     src={`${API_URL}/download/${token}/photos/${photo.id}`} 
                     alt="Photobooth capture" 
                     loading="lazy"
                     className="customer-grid-img"
-                    onClick={() => setActiveLightboxPhotoId(photo.id)}
+                    onClick={() => {
+                      if (isPrintMode) {
+                        if (!isAlreadyPrinted) {
+                          handleToggleSelectPhoto(photo.id);
+                        }
+                      } else {
+                        setActiveLightboxPhotoId(photo.id);
+                      }
+                    }}
                   />
                   
                   {/* Action Overlay */}

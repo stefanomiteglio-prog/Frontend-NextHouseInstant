@@ -1295,7 +1295,7 @@ footer {
   border-radius: 16px;
   overflow: hidden;
   background: #f9fafb;
-  border: 1px solid #f3f4f6;
+  border: 2px solid #f3f4f6;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -1303,6 +1303,16 @@ footer {
 .customer-grid-item:hover {
   transform: translateY(-2px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.customer-grid-item.selected {
+  border-color: #10b981;
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.25);
+  transform: scale(0.97);
+}
+
+.customer-grid-item.selected .customer-grid-img {
+  filter: brightness(0.9);
 }
 
 .customer-grid-thumbnail-wrapper {
@@ -1573,26 +1583,95 @@ footer {
 
 
 
-/* Session countdown badge at top of customer page */
-.customer-session-countdown {
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  color: #000000;
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 11px;
+/* Floating Session Countdown Badge */
+.customer-session-countdown-badge {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 100;
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 15px;
-  flex-shrink: 0;
+  gap: 8px;
+  background: rgba(11, 15, 25, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-main);
+  padding: 8px 16px;
+  border-radius: 99px;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.customer-session-countdown .countdown {
-  color: #ff6434;
+.customer-session-countdown-badge .pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+  display: inline-block;
+  animation: pulseDotGreen 1.6s infinite alternate;
+}
+
+.customer-session-countdown-badge .countdown-time {
   font-weight: 700;
+  color: #10b981;
+}
+
+/* Time low state */
+.customer-session-countdown-badge.time-low {
+  border-color: rgba(239, 68, 68, 0.3);
+  background: rgba(239, 68, 68, 0.08);
+}
+
+.customer-session-countdown-badge.time-low .pulse-dot {
+  background: #ef4444;
+  animation: pulseDotRed 1.6s infinite alternate;
+}
+
+.customer-session-countdown-badge.time-low .countdown-time {
+  color: #ef4444;
+}
+
+@keyframes pulseDotGreen {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+@keyframes pulseDotRed {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+  }
+  70% {
+    transform: scale(1.1);
+    box-shadow: 0 0 0 6px rgba(239, 68, 68, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+  }
+}
+
+@media (max-width: 640px) {
+  .customer-session-countdown-badge {
+    top: 16px;
+    right: 50%;
+    transform: translateX(50%);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  }
 }
 
 /* Past requests section */
