@@ -179,74 +179,61 @@ function CustomerDownloadView({
           </div>
         )}
 
-        {/* Scrollable list of files */}
-        <div className="customer-files-list">
+        {/* Responsive grid of photos */}
+        <div className="customer-photo-grid">
           {session.photos?.map((photo) => {
             const isAlreadyPrinted = clientSelections.some(sel => sel.photos.some(p => p.id === photo.id));
             const isActivelySelected = activeSelectedPhotoIds.has(photo.id);
 
             return (
-              <div key={photo.id} className="customer-file-row">
-                {/* Thumbnail */}
-                <button 
-                  type="button" 
-                  className="customer-file-thumbnail clickable-thumbnail"
-                  onClick={() => setActiveLightboxPhotoId(photo.id)}
-                  title="Click to view full screen"
-                >
+              <div key={photo.id} className="customer-grid-item">
+                <div className="customer-grid-thumbnail-wrapper">
                   <img 
                     src={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                    alt={photo.original_filename} 
-                    loading="lazy" 
+                    alt="Photobooth capture" 
+                    loading="lazy"
+                    className="customer-grid-img"
+                    onClick={() => setActiveLightboxPhotoId(photo.id)}
                   />
-                </button>
-
-                {/* Info (Filename and Size) */}
-                <div className="customer-file-name-container">
-                  <div className="customer-file-name" title={photo.original_filename}>
-                    {photo.original_filename}
-                  </div>
-                  <div className="customer-file-size">
-                    {formatSize(photo.file_size)}
+                  
+                  {/* Action Overlay */}
+                  <div className="customer-grid-action-overlay">
+                    {!isPrintMode ? (
+                      /* Download button overlay */
+                      <a 
+                        href={`${API_URL}/download/${token}/photos/${photo.id}`} 
+                        download={photo.original_filename} 
+                        className="customer-grid-btn-download"
+                        title="Download Photo"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                        </svg>
+                      </a>
+                    ) : (
+                      /* Print Selection Checkbox overlay */
+                      isAlreadyPrinted ? (
+                        <div className="customer-grid-status-printed" title="Already printed">
+                          <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </div>
+                      ) : (
+                        <button 
+                          type="button" 
+                          className={`customer-grid-checkmark-btn ${isActivelySelected ? 'checked' : ''}`}
+                          onClick={(e) => { e.stopPropagation(); handleToggleSelectPhoto(photo.id); }}
+                          title={isActivelySelected ? "Deselect print" : "Select for print"}
+                        >
+                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                          </svg>
+                        </button>
+                      )
+                    )}
                   </div>
                 </div>
-
-                {/* Right Action Button */}
-                {!isPrintMode ? (
-                  /* Download Button */
-                  <a 
-                    href={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                    download={photo.original_filename} 
-                    className="customer-btn-single-download"
-                    title="Download Photo"
-                  >
-                    <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                    </svg>
-                  </a>
-                ) : (
-                  /* Selection Checkbox */
-                  isAlreadyPrinted ? (
-                    <span style={{ fontSize: '11px', color: '#10b981', fontWeight: '700', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      Printed
-                    </span>
-                  ) : (
-                    <button 
-                      type="button" 
-                      className={`customer-checkmark-button ${isActivelySelected ? 'checked' : ''}`}
-                      onClick={() => handleToggleSelectPhoto(photo.id)}
-                    >
-                      <div className="checkmark-circle">
-                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                        </svg>
-                      </div>
-                    </button>
-                  )
-                )}
               </div>
             );
           })}
