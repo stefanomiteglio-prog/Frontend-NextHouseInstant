@@ -297,8 +297,8 @@ function AdminDashboard({
                     
                     <div className="admin-selection-thumbs">
                       {sel.photos.slice(0, 8).map((photo) => (
-                        <div key={photo.id} className="admin-selection-thumb" title={photo.original_filename}>
-                          <img src={`${API_URL}/api/photos/${photo.id}/download`} alt={photo.original_filename} />
+                        <div key={photo.id} className="admin-selection-thumb" title="Photo thumbnail">
+                          <img src={`${API_URL}/api/photos/${photo.id}/download`} alt="Photo" />
                         </div>
                       ))}
                       {sel.photos.length > 8 && (
@@ -345,10 +345,9 @@ function AdminDashboard({
                           {sel.photos.map((photo) => (
                             <div key={photo.id} className="accordion-photo-card">
                               <div className="accordion-photo-thumb">
-                                <img src={`${API_URL}/api/photos/${photo.id}/download`} alt={photo.original_filename} />
+                                <img src={`${API_URL}/api/photos/${photo.id}/download`} alt="Photo" />
                               </div>
                               <div className="accordion-photo-info">
-                                <div className="filename" title={photo.original_filename}>{photo.original_filename}</div>
                                 <div className="filesize">{formatSize(photo.file_size)}</div>
                                 <a 
                                   href={`${API_URL}/api/photos/${photo.id}/download`} 
@@ -409,11 +408,10 @@ function AdminDashboard({
               {detailSelection.photos.map((photo) => (
                 <div key={photo.id} className="modal-photo-card">
                   <div className="modal-photo-thumb">
-                    <img src={`${API_URL}/api/photos/${photo.id}/download`} alt={photo.original_filename} />
+                    <img src={`${API_URL}/api/photos/${photo.id}/download`} alt="Photo" />
                   </div>
                   <div className="modal-photo-info">
                     <div>
-                      <div className="filename" title={photo.original_filename}>{photo.original_filename}</div>
                       <div className="filesize">{formatSize(photo.file_size)}</div>
                     </div>
                     <a 

@@ -354,7 +354,7 @@ function CustomerDownloadView({
                       <div key={photo.id} className="request-thumb-container" style={{ width: '36px', height: '36px', borderRadius: '4px', overflow: 'hidden' }}>
                         <img 
                           src={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                          alt={photo.original_filename} 
+                          alt="Printed Photo" 
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                       </div>
@@ -428,16 +428,13 @@ function CustomerDownloadView({
             <div className="lightbox-image-container">
               <img 
                 src={`${API_URL}/download/${token}/photos/${activePhoto.id}`} 
-                alt={activePhoto.original_filename} 
+                alt="Photo" 
               />
             </div>
 
             {/* Bottom details & action bar */}
             <div className="lightbox-bottom-bar">
               <div className="lightbox-photo-info">
-                <div className="lightbox-filename" title={activePhoto.original_filename}>
-                  {activePhoto.original_filename}
-                </div>
                 <div className="lightbox-filesize">
                   {formatSize(activePhoto.file_size)}
                 </div>
