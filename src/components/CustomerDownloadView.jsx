@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
 import nexthouseLogo from '../assets/nexthouse_logo.png';
+import { translations } from '../translations';
 
 function CustomerDownloadView({
+  lang,
   session,
   token,
   timeLeft,
@@ -15,6 +17,7 @@ function CustomerDownloadView({
   handleSubmitPrintRequest,
   formatSize
 }) {
+  const t = (key) => (translations[lang] && translations[lang][key]) || translations['en'][key] || key;
   const [guestName, setGuestName] = useState('');
   const [bookingNumber, setBookingNumber] = useState('');
   const [isPrintMode, setIsPrintMode] = useState(false);
@@ -107,7 +110,7 @@ function CustomerDownloadView({
   const onSubmit = () => {
     const guestNameVal = guestName.trim();
     if (!guestNameVal) {
-      alert("Please enter your name to identify your selection.");
+      alert(t("guestNameAlert"));
       return;
     }
 
@@ -141,7 +144,7 @@ function CustomerDownloadView({
             <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            <span>{selectionMessage}</span>
+            <span>{selectionMessage === 'Print request submitted successfully!' ? t("toastSuccess") : selectionMessage}</span>
           </div>
           <div className="toast-progress-bar"></div>
         </div>
@@ -155,15 +158,15 @@ function CustomerDownloadView({
       {/* Countdown timer badge */}
       <div className={`customer-session-countdown-badge ${timeLeft && timeLeft !== 'Expired' && (timeLeft.startsWith('00:') || timeLeft.startsWith('01:')) ? 'time-low' : ''}`}>
         <span className="pulse-dot"></span>
-        <span className="badge-text">Session: </span>
+        <span className="badge-text">{t("session")}: </span>
         <span className="countdown-time">{timeLeft || '--:--'}</span>
       </div>
 
       {/* View Title */}
       <h2 className="customer-title-text">
         {isPrintMode 
-          ? "Select the images You want to print! 🖨️"
-          : "Your images are ready to download! ✌️"
+          ? t("selectImagesPrint")
+          : t("imagesReadyDownload")
         }
       </h2>
 
@@ -180,7 +183,7 @@ function CustomerDownloadView({
               <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
-              Back to Downloads
+              {t("backToDownloads")}
             </button>
           </div>
         )}
@@ -218,7 +221,7 @@ function CustomerDownloadView({
                         href={`${API_URL}/download/${token}/photos/${photo.id}`} 
                         download={photo.original_filename} 
                         className="customer-grid-btn-download"
-                        title="Download Photo"
+                        title={t("download")}
                         onClick={(e) => e.stopPropagation()}
                       >
                         <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -228,7 +231,7 @@ function CustomerDownloadView({
                     ) : (
                       /* Print Selection Checkbox overlay */
                       isAlreadyPrinted ? (
-                        <div className="customer-grid-status-printed" title="Already printed">
+                        <div className="customer-grid-status-printed" title={t("alreadyPrinted")}>
                           <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
@@ -238,7 +241,7 @@ function CustomerDownloadView({
                           type="button" 
                           className={`customer-grid-checkmark-btn ${isActivelySelected ? 'checked' : ''}`}
                           onClick={(e) => { e.stopPropagation(); handleToggleSelectPhoto(photo.id); }}
-                          title={isActivelySelected ? "Deselect print" : "Select for print"}
+                          title={isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
                         >
                           <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -261,30 +264,30 @@ function CustomerDownloadView({
               href={`${API_URL}/download/${token}/zip`} 
               className="customer-btn-download-all"
             >
-              Download All!
+              {t("downloadAll")}
             </a>
           ) : (
             /* Print Request Details Form */
             <div className="customer-info-details">
-              <h3 className="customer-info-details-title">Information Details:</h3>
+              <h3 className="customer-info-details-title">{t("infoDetails")}</h3>
               
               <div className="customer-info-row">
-                <span className="customer-info-label">Full Name:</span>
+                <span className="customer-info-label">{t("fullName")}</span>
                 <input 
                   type="text" 
                   className="customer-input-field" 
-                  placeholder="Your name" 
+                  placeholder={t("yourNamePlaceholder")} 
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                 />
               </div>
 
               <div className="customer-info-row">
-                <span className="customer-info-label">Booking Number:</span>
+                <span className="customer-info-label">{t("bookingNumber")}</span>
                 <input 
                   type="text" 
                   className="customer-input-field" 
-                  placeholder="Booking number (optional)" 
+                  placeholder={t("bookingNumberPlaceholder")} 
                   value={bookingNumber}
                   onChange={(e) => setBookingNumber(e.target.value)}
                 />
@@ -297,7 +300,7 @@ function CustomerDownloadView({
                 onClick={onSubmit}
                 disabled={submittingSelection || activeSelectedPhotoIds.size === 0}
               >
-                {submittingSelection ? "Sending..." : "Send Request"}
+                {submittingSelection ? t("sending") : t("sendRequest")}
               </button>
             </div>
           )}
@@ -308,14 +311,14 @@ function CustomerDownloadView({
       {!isPrintMode ? (
         <>
           <div className="customer-footer-info">
-            Or click ‘Print Request’ button to start a print request
+            {t("orClickPrint")}
           </div>
           <button 
             type="button" 
             className="customer-btn-print-mode"
             onClick={() => setIsPrintMode(true)}
           >
-            Print Request
+            {t("printRequest")}
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
@@ -323,16 +326,16 @@ function CustomerDownloadView({
         </>
       ) : (
         <div className="customer-footer-info">
-          The images will be sent to the reception, where you can pay the fee and receive your requested prints.
-          <div className="sub-text">10 DKK per Print</div>
-          <div className="terms-text">By clicking on ‘Print!’ you agree to our Terms & Condition</div>
+          {t("receptionInstructions")}
+          <div className="sub-text">{t("priceInfo")}</div>
+          <div className="terms-text">{t("termsAgreement")}</div>
         </div>
       )}
 
       {/* Past Requests Card */}
       {clientSelections.length > 0 && (
         <div className="customer-past-requests-card">
-          <div className="customer-past-requests-title">My Print Requests</div>
+          <div className="customer-past-requests-title">{t("myPrintRequests")}</div>
           <div className="requests-list" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             {clientSelections.map((sel) => {
               const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
@@ -340,7 +343,7 @@ function CustomerDownloadView({
                 <div key={sel.id} className="request-history-card" style={{ background: '#f9fafb', padding: '12px', borderRadius: '12px', border: '1px solid #f3f4f6' }}>
                   <div className="request-meta" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '11px', color: '#6b7280' }}>
                     <span className="request-id" style={{ fontWeight: '600', color: '#111827' }}>
-                      Print Request 
+                      {t("printRequestTitle")} 
                       {parsedName && (
                         <span style={{ color: 'var(--primary)', marginLeft: '6px' }}>
                           ({parsedName}{parsedBooking ? ` - Booking: ${parsedBooking}` : ''})
@@ -447,12 +450,12 @@ function CustomerDownloadView({
                     href={`${API_URL}/download/${token}/photos/${activePhoto.id}`} 
                     download={activePhoto.original_filename} 
                     className="lightbox-btn-download"
-                    title="Download Photo"
+                    title={t("download")}
                   >
                     <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    Download
+                    {t("download")}
                   </a>
                 ) : (
                   /* Print Selection Action */
@@ -461,7 +464,7 @@ function CustomerDownloadView({
                       <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
-                      Already Printed
+                      {t("alreadyPrinted")}
                     </span>
                   ) : (
                     <button 
@@ -472,7 +475,7 @@ function CustomerDownloadView({
                       <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
-                      {isActivelySelected ? 'Deselect Print' : 'Select for Print'}
+                      {isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
                     </button>
                   )
                 )}

@@ -3,6 +3,23 @@ import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerDownloadView from './components/CustomerDownloadView';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import { translations } from './translations';
+
+const getLanguage = () => {
+  const params = new URLSearchParams(window.location.search);
+  const langParam = params.get('lang');
+  if (langParam) {
+    localStorage.setItem('nexthouse_lang', langParam.toLowerCase());
+    return langParam.toLowerCase();
+  }
+  const savedLang = localStorage.getItem('nexthouse_lang');
+  if (savedLang) return savedLang;
+  
+  const browserLang = navigator.language || navigator.userLanguage || 'en';
+  const prefix = browserLang.split('-')[0].toLowerCase();
+  const supported = ['en', 'it', 'de', 'da', 'es', 'fr'];
+  return supported.includes(prefix) ? prefix : 'en';
+};
 
 const getApiUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL || '';
@@ -20,6 +37,10 @@ function App() {
   const path = window.location.pathname;
   const isAdminRoute = path === '/admin';
   const isPrivacyRoute = path === '/privacy' || path === '/privacy-policy';
+
+  const [lang, setLang] = useState(getLanguage());
+  
+  const t = (key) => (translations[lang] && translations[lang][key]) || translations['en'][key] || key;
 
   // State for user photo download page (original logic)
   const [token, setToken] = useState('');
@@ -363,8 +384,8 @@ function App() {
     } else {
       setLoading(false);
       setError({
-        title: "Invalid link",
-        description: "The entered address does not contain a valid download token."
+        titleKey: "invalidLinkTitle",
+        descKey: "invalidLinkDesc"
       });
     }
   }, [isAdminRoute]);
@@ -377,21 +398,21 @@ function App() {
         const response = await fetch(`${API_URL}/api/download-sessions/${token}`);
         if (!response.ok) {
           if (response.status === 404) {
-            throw new Error("Session not found|The download link is invalid or the session has expired.");
+            throw new Error("sessionNotFoundTitle|sessionNotFoundDesc");
           } else if (response.status === 410) {
-            throw new Error("Session expired or limit reached|This download session is no longer available.");
+            throw new Error("sessionExpiredOrLimitTitle|sessionExpiredOrLimitDesc");
           } else {
-            throw new Error("Server error|Unable to load session data at this time.");
+            throw new Error("serverErrorTitle|serverErrorDesc");
           }
         }
         const data = await response.json();
         setSession(data);
         await fetchClientSelections(token);
       } catch (err) {
-        const [title, desc] = err.message.split('|');
+        const [titleKey, descKey] = err.message.includes('|') ? err.message.split('|') : ['serverErrorTitle', err.message];
         setError({
-          title: title || "Loading error",
-          description: desc || err.message,
+          titleKey: titleKey,
+          descKey: descKey,
           isExpired: err.message.toLowerCase().includes("expired") || err.message.toLowerCase().includes("limit")
         });
       } finally {
@@ -442,8 +463,8 @@ function App() {
       if (distance < 0) {
         setTimeLeft('Expired');
         setError({
-          title: "Session Expired",
-          description: "The download session has expired. Links are valid for 5 minutes.",
+          titleKey: "sessionExpiredTitle",
+          descKey: "sessionExpiredDesc",
           isExpired: true
         });
         return false;
@@ -481,7 +502,7 @@ function App() {
   // --- RENDERING ROUTER ---
 
   if (isPrivacyRoute) {
-    return <PrivacyPolicy />;
+    return <PrivacyPolicy lang={lang} />;
   }
 
   if (isAdminRoute) {
@@ -554,7 +575,7 @@ function App() {
     return (
       <div className="center-container">
         <div className="spinner"></div>
-        <p className="loading-text">Loading photos...</p>
+        <p className="loading-text">{t("loadingPhotos")}</p>
       </div>
     );
   }
@@ -569,8 +590,8 @@ function App() {
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h2 className="expired-title">{error.title}</h2>
-            <p className="expired-desc">{error.description}</p>
+            <h2 className="expired-title">{t(error.titleKey)}</h2>
+            <p className="expired-desc">{t(error.descKey)}</p>
           </div>
         </div>
       );
@@ -584,8 +605,8 @@ function App() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
           </div>
-          <h2 className="error-title">{error.title}</h2>
-          <p className="error-desc">{error.description}</p>
+          <h2 className="error-title">{t(error.titleKey)}</h2>
+          <p className="error-desc">{t(error.descKey)}</p>
         </div>
       </div>
     );
@@ -593,6 +614,7 @@ function App() {
 
   return (
     <CustomerDownloadView
+      lang={lang}
       session={session}
       token={token}
       timeLeft={timeLeft}
