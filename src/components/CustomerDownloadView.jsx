@@ -170,16 +170,14 @@ function CustomerDownloadView({
         <div style={{ height: '32px', background: '#ffffff', flexShrink: 0 }} />
 
         {/* Back button (Only in print mode) */}
-        {isPrintMode && (
-          <div style={{ padding: '0 35px', flexShrink: 0 }}>
-            <button type="button" className="customer-back-button" onClick={onCancel}>
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-              </svg>
-              {t("backToDownloads")}
-            </button>
-          </div>
-        )}
+        <div className={`customer-back-button-container ${isPrintMode ? 'visible' : 'hidden'}`} style={{ padding: '0 35px', flexShrink: 0 }}>
+          <button type="button" className="customer-back-button" onClick={onCancel}>
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            {t("backToDownloads")}
+          </button>
+        </div>
 
         {/* Responsive grid of photos */}
         <div className="customer-photo-grid">
@@ -208,8 +206,7 @@ function CustomerDownloadView({
                   
                   {/* Action Overlay */}
                   <div className="customer-grid-action-overlay">
-                    {!isPrintMode ? (
-                      /* Download button overlay */
+                    <div className={`overlay-download-action ${!isPrintMode ? 'visible' : 'hidden'}`}>
                       <a 
                         href={`${API_URL}/download/${token}/photos/${photo.id}`} 
                         download={photo.original_filename} 
@@ -221,9 +218,10 @@ function CustomerDownloadView({
                           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                       </a>
-                    ) : (
-                      /* Print Selection Checkbox overlay */
-                      isAlreadyPrinted ? (
+                    </div>
+                    
+                    <div className={`overlay-print-action ${isPrintMode ? 'visible' : 'hidden'}`}>
+                      {isAlreadyPrinted ? (
                         <div className="customer-grid-status-printed" title={t("alreadyPrinted")}>
                           <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -240,8 +238,8 @@ function CustomerDownloadView({
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
                         </button>
-                      )
-                    )}
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -251,16 +249,16 @@ function CustomerDownloadView({
 
         {/* Bottom Panel inside the Card */}
         <div className="customer-card-bottom">
-          {!isPrintMode ? (
-            /* Download All Button */
+          <div className={`customer-download-all-container ${!isPrintMode ? 'visible' : 'hidden'}`}>
             <a 
               href={`${API_URL}/download/${token}/zip`} 
               className="customer-btn-download-all"
             >
               {t("downloadAll")}
             </a>
-          ) : (
-            /* Print Request Details Form */
+          </div>
+          
+          <div className={`customer-info-details-container ${isPrintMode ? 'visible' : 'hidden'}`}>
             <div className="customer-info-details">
               <h3 className="customer-info-details-title">{t("infoDetails")}</h3>
               
@@ -285,13 +283,13 @@ function CustomerDownloadView({
                 {submittingSelection ? t("sending") : t("sendRequest")}
               </button>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
       {/* Section/Buttons below the Card */}
-      {!isPrintMode ? (
-        <>
+      <div className="customer-footer-actions-container">
+        <div className={`customer-footer-download-mode ${!isPrintMode ? 'visible' : 'hidden'}`}>
           <div className="customer-footer-info">
             {t("orClickPrint")}
           </div>
@@ -305,14 +303,15 @@ function CustomerDownloadView({
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
           </button>
-        </>
-      ) : (
-        <div className="customer-footer-info">
-          {t("receptionInstructions")}
-          <div className="sub-text">{t("priceInfo")}</div>
-          <div className="terms-text">{t("termsAgreement")}</div>
         </div>
-      )}
+        <div className={`customer-footer-print-mode ${isPrintMode ? 'visible' : 'hidden'}`}>
+          <div className="customer-footer-info">
+            {t("receptionInstructions")}
+            <div className="sub-text">{t("priceInfo")}</div>
+            <div className="terms-text">{t("termsAgreement")}</div>
+          </div>
+        </div>
+      </div>
 
       {/* Past Requests Card */}
       {clientSelections.length > 0 && (

@@ -45,6 +45,71 @@ function AdminDashboard({
       return next;
     });
   };
+
+  const handlePrintSelection = (sel) => {
+    const iframe = document.createElement('iframe');
+    iframe.style.position = 'fixed';
+    iframe.style.right = '0';
+    iframe.style.bottom = '0';
+    iframe.style.width = '0';
+    iframe.style.height = '0';
+    iframe.style.border = '0';
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    const photosHtml = sel.photos.map(photo => `
+      <div class="photo-page">
+        <img src="${API_URL}/api/photos/${photo.id}/download" alt="Print photo" />
+      </div>
+    `).join('');
+
+    doc.write(`
+      <html>
+        <head>
+          <title>Print - Request #${sel.id} - ${sel.name}</title>
+          <style>
+            @page {
+              size: auto;
+              margin: 0;
+            }
+            body {
+              margin: 0;
+              padding: 0;
+              background: #fff;
+            }
+            .photo-page {
+              width: 100vw;
+              height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              page-break-after: always;
+              break-after: page;
+              box-sizing: border-box;
+            }
+            img {
+              max-width: 100%;
+              max-height: 100%;
+              object-fit: contain;
+            }
+          </style>
+        </head>
+        <body>
+          ${photosHtml}
+          <script>
+            window.onload = function() {
+              window.focus();
+              window.print();
+              setTimeout(function() {
+                window.parent.document.body.removeChild(window.frameElement);
+              }, 1000);
+            };
+          </script>
+        </body>
+      </html>
+    `);
+    doc.close();
+  };
   const parseName = (fullName) => {
     if (!fullName) return { name: '', booking: '' };
     const parts = fullName.split(' | Booking: ');
@@ -221,19 +286,19 @@ function AdminDashboard({
                 className={`status-filter-btn ${statusFilter === 'all' ? 'active' : ''}`}
                 onClick={() => setStatusFilter('all')}
               >
-                Tutte ({selections.length})
+                All ({selections.length})
               </button>
               <button 
                 className={`status-filter-btn ${statusFilter === 'pending' ? 'active' : ''}`}
                 onClick={() => setStatusFilter('pending')}
               >
-                Da Stampare ({selections.filter(s => (s.status || 'pending') === 'pending').length})
+                To Print ({selections.filter(s => (s.status || 'pending') === 'pending').length})
               </button>
               <button 
                 className={`status-filter-btn ${statusFilter === 'printed' ? 'active' : ''}`}
                 onClick={() => setStatusFilter('printed')}
               >
-                Stampate ({selections.filter(s => s.status === 'printed').length})
+                Printed ({selections.filter(s => s.status === 'printed').length})
               </button>
             </div>
 
@@ -305,7 +370,7 @@ function AdminDashboard({
                         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                           <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request</span>
                           <span className={`status-badge ${(sel.status || 'pending')}`}>
-                            {(sel.status || 'pending') === 'printed' ? 'Stampata' : 'Da stampare'}
+                            {(sel.status || 'pending') === 'printed' ? 'Printed' : 'To Print'}
                           </span>
                         </div>
                         {sel.name && (() => {
@@ -353,7 +418,17 @@ function AdminDashboard({
                           className={`btn btn-status ${(sel.status || 'pending')}`}
                           style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
                         >
-                          {(sel.status || 'pending') === 'printed' ? 'Segna come Da Stampare' : 'Segna come Stampata'}
+                          {(sel.status || 'pending') === 'printed' ? 'Mark as Pending' : 'Mark as Printed'}
+                        </button>
+                        <button 
+                          onClick={() => handlePrintSelection(sel)}
+                          className="btn btn-accent"
+                          style={{ padding: '0.5rem 1rem', fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '4px' }}
+                        >
+                          <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                          </svg>
+                          Print
                         </button>
                         <button 
                           onClick={() => toggleExpandSelection(sel.id)} 
@@ -440,7 +515,7 @@ function AdminDashboard({
                 </p>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '0.5rem' }}>
                   <span className={`status-badge ${(detailSelection.status || 'pending')}`}>
-                    {(detailSelection.status || 'pending') === 'printed' ? 'Stampata' : 'Da stampare'}
+                    {(detailSelection.status || 'pending') === 'printed' ? 'Printed' : 'To Print'}
                   </span>
                 </div>
               </div>

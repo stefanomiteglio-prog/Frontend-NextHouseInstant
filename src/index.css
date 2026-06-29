@@ -3147,4 +3147,128 @@ button.clickable-thumbnail:focus-visible {
   box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
 }
 
+/* Animations and Transitions for Client Download Page */
+
+/* Grid item action buttons spring animation */
+.overlay-download-action,
+.overlay-print-action {
+  display: inline-flex;
+  transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.overlay-download-action.visible,
+.overlay-print-action.visible {
+  opacity: 1;
+  transform: scale(1);
+  pointer-events: auto;
+}
+
+.overlay-download-action.hidden,
+.overlay-print-action.hidden {
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* Back button container transition */
+.customer-back-button-container {
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translateX(-15px);
+  max-height: 0;
+  overflow: hidden;
+}
+
+.customer-back-button-container.visible {
+  opacity: 1;
+  transform: translateX(0);
+  max-height: 60px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.customer-back-button-container.hidden {
+  opacity: 0;
+  transform: translateX(-15px);
+  max-height: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  pointer-events: none;
+}
+
+/* Bottom card panel transition containers */
+.customer-download-all-container,
+.customer-info-details-container {
+  transition: all 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translateY(15px);
+  max-height: 0;
+  overflow: hidden;
+  width: 100%;
+}
+
+.customer-download-all-container.visible {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 100px;
+}
+
+.customer-info-details-container.visible {
+  opacity: 1;
+  transform: translateY(0);
+  max-height: 400px;
+}
+
+.customer-download-all-container.hidden,
+.customer-info-details-container.hidden {
+  opacity: 0;
+  transform: translateY(15px);
+  max-height: 0;
+  padding: 0 !important;
+  margin: 0 !important;
+  pointer-events: none;
+}
+
+/* Footer bottom instructions below card transitions */
+.customer-footer-actions-container {
+  width: 100%;
+  max-width: 550px;
+  margin: 0 auto;
+  position: relative;
+  min-height: 110px;
+  transition: min-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.customer-footer-download-mode,
+.customer-footer-print-mode {
+  width: 100%;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 0;
+  transform: translateY(15px);
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.customer-footer-download-mode.visible,
+.customer-footer-print-mode.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+  position: relative;
+}
+
+.customer-footer-download-mode.hidden,
+.customer-footer-print-mode.hidden {
+  opacity: 0;
+  transform: translateY(-15px);
+  pointer-events: none;
+  position: absolute;
+}
+
 
