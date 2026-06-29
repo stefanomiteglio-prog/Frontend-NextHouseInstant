@@ -33,7 +33,6 @@ function AdminDashboard({
   formatSize
 }) {
   const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
-  const [statusFilter, setStatusFilter] = useState('all');
 
   const toggleExpandSelection = (id) => {
     setExpandedSelectionIds(prev => {
@@ -282,26 +281,6 @@ function AdminDashboard({
         ) : (
           // Print Requests Tab Content
           <div className="admin-dashboard">
-            <div className="status-filter-tabs">
-              <button 
-                className={`status-filter-btn ${statusFilter === 'all' ? 'active' : ''}`}
-                onClick={() => setStatusFilter('all')}
-              >
-                All ({selections.length})
-              </button>
-              <button 
-                className={`status-filter-btn ${statusFilter === 'pending' ? 'active' : ''}`}
-                onClick={() => setStatusFilter('pending')}
-              >
-                To Print ({selections.filter(s => (s.status || 'pending') === 'pending').length})
-              </button>
-              <button 
-                className={`status-filter-btn ${statusFilter === 'printed' ? 'active' : ''}`}
-                onClick={() => setStatusFilter('printed')}
-              >
-                Printed ({selections.filter(s => s.status === 'printed').length})
-              </button>
-            </div>
 
             <div className="admin-toolbar">
               <div className="search-input-wrapper">
@@ -355,25 +334,15 @@ function AdminDashboard({
               <div className="admin-upload-section" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
                 No print requests found.
               </div>
-            ) : [...selections].filter((sel) => statusFilter === 'all' || (sel.status || 'pending') === statusFilter).length === 0 ? (
-              <div className="admin-upload-section" style={{ textAlign: 'center', padding: '3rem', color: 'var(--text-muted)' }}>
-                No print requests found matching this status filter.
-              </div>
             ) : (
               <div className="admin-selections-grid">
                 {[...selections]
-                  .filter((sel) => statusFilter === 'all' || (sel.status || 'pending') === statusFilter)
                   .sort((a, b) => b.id - a.id)
                   .map((sel) => (
                   <div key={sel.id} className="admin-selection-card">
                     <div className="admin-selection-header">
                       <div className="selection-info-group">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                          <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request</span>
-                          <span className={`status-badge ${(sel.status || 'pending')}`}>
-                            {(sel.status || 'pending') === 'printed' ? 'Printed' : 'To Print'}
-                          </span>
-                        </div>
+                        <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request</span>
                         {sel.name && (() => {
                           const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
                           return (
@@ -414,13 +383,6 @@ function AdminDashboard({
                         {sel.photos.length} {sel.photos.length === 1 ? 'photo' : 'photos'}
                       </span>
                       <div className="admin-card-buttons">
-                        <button 
-                          onClick={() => handleUpdateSelectionStatus(sel.id, (sel.status || 'pending') === 'printed' ? 'pending' : 'printed')}
-                          className={`btn btn-status ${(sel.status || 'pending')}`}
-                          style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
-                        >
-                          {(sel.status || 'pending') === 'printed' ? 'Mark as Pending' : 'Mark as Printed'}
-                        </button>
                         <button 
                           onClick={() => handlePrintSelection(sel)}
                           className="btn btn-accent"
@@ -514,11 +476,6 @@ function AdminDashboard({
                 <p className="subtitle" style={{ marginTop: '0.25rem' }}>
                   Session ID: {detailSelection.download_session_id} | Submitted on: {new Date(detailSelection.created_at).toLocaleString()}
                 </p>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginTop: '0.5rem' }}>
-                  <span className={`status-badge ${(detailSelection.status || 'pending')}`}>
-                    {(detailSelection.status || 'pending') === 'printed' ? 'Printed' : 'To Print'}
-                  </span>
-                </div>
               </div>
               <button className="modal-close-btn" onClick={() => setDetailSelection(null)}>
                 <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">

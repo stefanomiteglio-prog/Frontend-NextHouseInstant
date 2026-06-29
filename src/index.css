@@ -3274,9 +3274,10 @@ button.clickable-thumbnail:focus-visible {
 /* Admin Dashboard Header Styles */
 .admin-view-page .admin-header-logo-title {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 2.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1.25rem;
+  margin-bottom: 3rem;
   text-align: left;
   max-width: 1000px;
   width: 100%;
@@ -3284,7 +3285,7 @@ button.clickable-thumbnail:focus-visible {
 }
 
 .admin-view-page .admin-header-logo {
-  height: 48px;
+  height: 90px;
   width: auto;
   object-fit: contain;
 }
