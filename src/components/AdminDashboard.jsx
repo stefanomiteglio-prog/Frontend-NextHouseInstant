@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import nexthouseLogo from '../assets/nexthouse_logo.png';
 
 function AdminDashboard({
   user,
@@ -122,9 +123,9 @@ function AdminDashboard({
   return (
     <>
       <div className="glow-bg"></div>
-      <header>
-        <h1>NextHouseIstant Dashboard</h1>
-        <p className="subtitle">Decorative stickers and print requests management</p>
+      <header className="admin-header-logo-title">
+        <img src={nexthouseLogo} alt="NextHouse Logo" className="admin-header-logo" />
+        <h1 className="admin-header-title">NextHouse Instant Dashboard</h1>
       </header>
 
       <main className="container">

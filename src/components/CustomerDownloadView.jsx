@@ -63,7 +63,6 @@ function CustomerDownloadView({
 
   const activePhotoIndex = session.photos?.findIndex(p => p.id === activeLightboxPhotoId);
   const activePhoto = activePhotoIndex !== -1 ? session.photos[activePhotoIndex] : null;
-  const isAlreadyPrinted = activePhoto ? clientSelections.some(sel => sel.photos.some(p => p.id === activePhoto.id)) : false;
   const isActivelySelected = activePhoto ? activeSelectedPhotoIds.has(activePhoto.id) : false;
   const hasPrev = activePhotoIndex > 0;
   const hasNext = activePhotoIndex < session.photos?.length - 1;
@@ -182,7 +181,6 @@ function CustomerDownloadView({
         {/* Responsive grid of photos */}
         <div className="customer-photo-grid">
           {session.photos?.map((photo) => {
-            const isAlreadyPrinted = clientSelections.some(sel => sel.photos.some(p => p.id === photo.id));
             const isActivelySelected = activeSelectedPhotoIds.has(photo.id);
 
             return (
@@ -195,9 +193,7 @@ function CustomerDownloadView({
                     className="customer-grid-img"
                     onClick={() => {
                       if (isPrintMode) {
-                        if (!isAlreadyPrinted) {
-                          handleToggleSelectPhoto(photo.id);
-                        }
+                        handleToggleSelectPhoto(photo.id);
                       } else {
                         setActiveLightboxPhotoId(photo.id);
                       }
@@ -221,24 +217,16 @@ function CustomerDownloadView({
                     </div>
                     
                     <div className={`overlay-print-action ${isPrintMode ? 'visible' : 'hidden'}`}>
-                      {isAlreadyPrinted ? (
-                        <div className="customer-grid-status-printed" title={t("alreadyPrinted")}>
-                          <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </div>
-                      ) : (
-                        <button 
-                          type="button" 
-                          className={`customer-grid-checkmark-btn ${isActivelySelected ? 'checked' : ''}`}
-                          onClick={(e) => { e.stopPropagation(); handleToggleSelectPhoto(photo.id); }}
-                          title={isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
-                        >
-                          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                          </svg>
-                        </button>
-                      )}
+                      <button 
+                        type="button" 
+                        className={`customer-grid-checkmark-btn ${isActivelySelected ? 'checked' : ''}`}
+                        onClick={(e) => { e.stopPropagation(); handleToggleSelectPhoto(photo.id); }}
+                        title={isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
+                      >
+                        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="3.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -440,14 +428,6 @@ function CustomerDownloadView({
                   </a>
                 ) : (
                   /* Print Selection Action */
-                  isAlreadyPrinted ? (
-                    <span className="lightbox-status-printed">
-                      <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="3" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {t("alreadyPrinted")}
-                    </span>
-                  ) : (
                     <button 
                       type="button" 
                       className={`lightbox-btn-select-print ${isActivelySelected ? 'selected' : ''}`}
@@ -458,7 +438,6 @@ function CustomerDownloadView({
                       </svg>
                       {isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
                     </button>
-                  )
                 )}
               </div>
             </div>
