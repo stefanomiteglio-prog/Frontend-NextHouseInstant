@@ -207,6 +207,24 @@ function App() {
     }
   };
 
+  const handleUpdateSelectionStatus = async (selectionId, newStatus) => {
+    try {
+      const response = await authenticatedFetch(`${API_URL}/api/selections/${selectionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ status: newStatus })
+      });
+      if (response.ok) {
+        const updated = await response.json();
+        setSelections((prev) => prev.map((s) => s.id === selectionId ? updated : s));
+      } else {
+        alert("Unable to update request status.");
+      }
+    } catch (err) {
+      console.error("Error updating selection status:", err);
+    }
+  };
+
   // Authenticated fetch helper
   const authenticatedFetch = async (url, options = {}) => {
     const headers = { ...options.headers };
@@ -563,6 +581,7 @@ function App() {
           setDeletingSelectionId={setDeletingSelectionId}
           fetchSelections={fetchSelections}
           handleDeleteSelection={handleDeleteSelection}
+          handleUpdateSelectionStatus={handleUpdateSelectionStatus}
           formatSize={formatSize}
         />
       </div>

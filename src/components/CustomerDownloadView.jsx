@@ -19,7 +19,6 @@ function CustomerDownloadView({
 }) {
   const t = (key) => (translations[lang] && translations[lang][key]) || translations['en'][key] || key;
   const [guestName, setGuestName] = useState('');
-  const [bookingNumber, setBookingNumber] = useState('');
   const [isPrintMode, setIsPrintMode] = useState(false);
   const [activeLightboxPhotoId, setActiveLightboxPhotoId] = useState(null);
 
@@ -114,13 +113,8 @@ function CustomerDownloadView({
       return;
     }
 
-    const combinedName = bookingNumber.trim()
-      ? `${guestNameVal} | Booking: ${bookingNumber.trim()}`
-      : guestNameVal;
-
-    handleSubmitPrintRequest(combinedName, () => {
+    handleSubmitPrintRequest(guestNameVal, () => {
       setGuestName('');
-      setBookingNumber('');
       setIsPrintMode(false);
     });
   };
@@ -128,7 +122,6 @@ function CustomerDownloadView({
   const onCancel = () => {
     handleClearActiveSelection();
     setGuestName('');
-    setBookingNumber('');
     setIsPrintMode(false);
   };
 
@@ -279,17 +272,6 @@ function CustomerDownloadView({
                   placeholder={t("yourNamePlaceholder")} 
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
-                />
-              </div>
-
-              <div className="customer-info-row">
-                <span className="customer-info-label">{t("bookingNumber")}</span>
-                <input 
-                  type="text" 
-                  className="customer-input-field" 
-                  placeholder={t("bookingNumberPlaceholder")} 
-                  value={bookingNumber}
-                  onChange={(e) => setBookingNumber(e.target.value)}
                 />
               </div>
 
