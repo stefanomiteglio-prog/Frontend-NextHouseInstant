@@ -123,24 +123,19 @@ function AdminDashboard({
     <>
       <div className="glow-bg"></div>
       <header className="admin-header-logo-title">
-        <img src={nexthouseLogo} alt="NextHouse Logo" className="admin-header-logo" />
-        <h1 className="admin-header-title">NextHouse Instant Dashboard</h1>
+        <div className="admin-header-left">
+          <img src={nexthouseLogo} alt="NextHouse Logo" className="admin-header-logo" />
+          <h1 className="admin-header-title">NextHouse Instant Dashboard</h1>
+        </div>
+        <button onClick={handleLogout} className="btn btn-signout">
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          Sign Out
+        </button>
       </header>
 
       <main className="container">
-        <div className="dashboard-header">
-          <div>
-            <span className="photos-count">Welcome, {user.username}</span>
-          </div>
-          <div>
-            <button onClick={handleLogout} className="btn btn-secondary">
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-              </svg>
-              Sign Out
-            </button>
-          </div>
-        </div>
 
 
 

@@ -3276,12 +3276,19 @@ button.clickable-thumbnail:focus-visible {
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1.5rem;
+  justify-content: space-between;
   margin-bottom: 3rem;
   text-align: left;
   max-width: 1000px;
   width: 100%;
   margin-left: 0;
+}
+
+.admin-view-page .admin-header-left {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1.5rem;
 }
 
 .admin-view-page .admin-header-logo {
@@ -3300,6 +3307,40 @@ button.clickable-thumbnail:focus-visible {
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/* Premium Sign Out Button */
+.admin-view-page .btn-signout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(249, 115, 22, 0.05);
+  color: var(--primary);
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Outfit', sans-serif;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  height: auto;
+}
+
+.admin-view-page .btn-signout:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+  transform: translateY(-1px);
+}
+
+.admin-view-page .btn-signout svg {
+  transition: transform 0.2s ease;
+}
+
+.admin-view-page .btn-signout:hover svg {
+  transform: translateX(2px);
 }
 
 
