@@ -3,7 +3,9 @@ import { API_URL } from '../utils/api';
 import { AdminAuthContext } from './AdminAuthContext';
 
 export function AdminAuthProvider({ children }) {
-  const [sessionToken, setSessionToken] = useState(null);
+  const [sessionToken, setSessionToken] = useState(() => {
+    return localStorage.getItem('nexthouse_admin_token') || null;
+  });
   const [user, setUser] = useState(null);
   const [authLoading, setAuthLoading] = useState(true);
   const [loginUsername, setLoginUsername] = useState('');
@@ -67,6 +69,7 @@ export function AdminAuthProvider({ children }) {
       }
 
       const data = await response.json();
+      localStorage.setItem('nexthouse_admin_token', data.session_token);
       setSessionToken(data.session_token);
       setUser(data.user);
     } catch (err) {
@@ -82,6 +85,7 @@ export function AdminAuthProvider({ children }) {
     } catch (err) {
       console.error("Logout request failed", err);
     }
+    localStorage.removeItem('nexthouse_admin_token');
     setUser(null);
     setSessionToken(null);
   };

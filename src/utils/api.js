@@ -16,9 +16,20 @@ export const getLanguage = () => {
 
 export const getApiUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL || '';
+  const hostname = window.location.hostname;
   
-  if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+  // If it's localhost or a local IP address, we are in development
+  const isDevelopment = hostname === 'localhost' || 
+                        hostname === '127.0.0.1' || 
+                        /^(\d{1,3}\.){3}\d{1,3}$/.test(hostname);
+                        
+  if (!isDevelopment) {
     return '';
+  }
+  
+  // In development, if we are on a local IP address (e.g. phone testing), point to port 8080 on that IP
+  if (hostname !== 'localhost' && hostname !== '127.0.0.1') {
+    return `http://${hostname}:8080`;
   }
   
   return envUrl || 'http://localhost:8080';
