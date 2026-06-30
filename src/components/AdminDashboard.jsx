@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import nexthouseLogo from '../assets/nexthouse_logo.png';
 
 function AdminDashboard({
-  user,
   handleLogout,
   activeTab,
   setActiveTab,
@@ -29,7 +28,6 @@ function AdminDashboard({
   setDeletingSelectionId,
   fetchSelections,
   handleDeleteSelection,
-  handleUpdateSelectionStatus,
   formatSize
 }) {
   const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
