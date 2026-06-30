@@ -41,7 +41,7 @@ function CustomerDownloadView({
     const distance = touchStart - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
-    
+
     if (isLeftSwipe) {
       setActiveLightboxPhotoId(prevId => {
         const idx = session.photos?.findIndex(p => p.id === prevId);
@@ -156,7 +156,7 @@ function CustomerDownloadView({
 
       {/* View Title */}
       <h2 className="customer-title-text">
-        {isPrintMode 
+        {isPrintMode
           ? t("selectImagesPrint")
           : t("imagesReadyDownload")
         }
@@ -164,7 +164,7 @@ function CustomerDownloadView({
 
       {/* Main Files Card */}
       <div className={`customer-files-card ${isPrintMode ? 'print-mode' : ''}`}>
-        
+
         {/* Top decorative white spacer */}
         <div style={{ height: '32px', background: '#ffffff', flexShrink: 0 }} />
 
@@ -186,9 +186,9 @@ function CustomerDownloadView({
             return (
               <div key={photo.id} className={`customer-grid-item ${isActivelySelected ? 'selected' : ''}`}>
                 <div className="customer-grid-thumbnail-wrapper">
-                  <img 
-                    src={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                    alt="Photobooth capture" 
+                  <img
+                    src={`${API_URL}/download/${token}/photos/${photo.id}`}
+                    alt="Photobooth capture"
                     loading="lazy"
                     className="customer-grid-img"
                     onClick={() => {
@@ -199,13 +199,13 @@ function CustomerDownloadView({
                       }
                     }}
                   />
-                  
+
                   {/* Action Overlay */}
                   <div className="customer-grid-action-overlay">
                     <div className={`overlay-download-action ${!isPrintMode ? 'visible' : 'hidden'}`}>
-                      <a 
-                        href={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                        download={photo.original_filename} 
+                      <a
+                        href={`${API_URL}/download/${token}/photos/${photo.id}`}
+                        download={photo.original_filename}
                         className="customer-grid-btn-download"
                         title={t("download")}
                         onClick={(e) => e.stopPropagation()}
@@ -215,10 +215,10 @@ function CustomerDownloadView({
                         </svg>
                       </a>
                     </div>
-                    
+
                     <div className={`overlay-print-action ${isPrintMode ? 'visible' : 'hidden'}`}>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         className={`customer-grid-checkmark-btn ${isActivelySelected ? 'checked' : ''}`}
                         onClick={(e) => { e.stopPropagation(); handleToggleSelectPhoto(photo.id); }}
                         title={isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
@@ -238,32 +238,32 @@ function CustomerDownloadView({
         {/* Bottom Panel inside the Card */}
         <div className="customer-card-bottom">
           <div className={`customer-download-all-container ${!isPrintMode ? 'visible' : 'hidden'}`}>
-            <a 
-              href={`${API_URL}/download/${token}/zip`} 
+            <a
+              href={`${API_URL}/download/${token}/zip`}
               className="customer-btn-download-all"
             >
               {t("downloadAll")}
             </a>
           </div>
-          
+
           <div className={`customer-info-details-container ${isPrintMode ? 'visible' : 'hidden'}`}>
             <div className="customer-info-details">
               <h3 className="customer-info-details-title">{t("infoDetails")}</h3>
-              
+
               <div className="customer-info-row">
                 <span className="customer-info-label">{t("fullName")}</span>
-                <input 
-                  type="text" 
-                  className="customer-input-field" 
-                  placeholder={t("yourNamePlaceholder")} 
+                <input
+                  type="text"
+                  className="customer-input-field"
+                  placeholder={t("yourNamePlaceholder")}
                   value={guestName}
                   onChange={(e) => setGuestName(e.target.value)}
                 />
               </div>
 
               {/* Submit Button */}
-              <button 
-                type="button" 
+              <button
+                type="button"
                 className="customer-btn-send-request"
                 onClick={onSubmit}
                 disabled={submittingSelection || activeSelectedPhotoIds.size === 0}
@@ -281,8 +281,8 @@ function CustomerDownloadView({
           <div className="customer-footer-info">
             {t("orClickPrint")}
           </div>
-          <button 
-            type="button" 
+          <button
+            type="button"
             className="customer-btn-print-mode"
             onClick={() => setIsPrintMode(true)}
           >
@@ -312,21 +312,21 @@ function CustomerDownloadView({
                 <div key={sel.id} className="request-history-card" style={{ background: '#f9fafb', padding: '12px', borderRadius: '12px', border: '1px solid #f3f4f6' }}>
                   <div className="request-meta" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '11px', color: '#6b7280' }}>
                     <span className="request-id" style={{ fontWeight: '600', color: '#111827' }}>
-                      {t("printRequestTitle")} 
+                      {t("printRequestTitle")}
                       {parsedName && (
                         <span style={{ color: 'var(--primary)', marginLeft: '6px' }}>
                           ({parsedName}{parsedBooking ? ` - Booking: ${parsedBooking}` : ''})
                         </span>
                       )}
                     </span>
-                    <span className="request-date">{new Date(sel.created_at).toLocaleDateString('da-DK', { timeZone: 'Europe/Copenhagen' })}</span>
+                    <span className="request-date">{new Date(sel.created_at).toLocaleDateString()}</span>
                   </div>
                   <div className="request-thumbnails" style={{ display: 'flex', gap: '6px' }}>
                     {sel.photos.slice(0, 5).map((photo) => (
                       <div key={photo.id} className="request-thumb-container" style={{ width: '36px', height: '36px', borderRadius: '4px', overflow: 'hidden' }}>
-                        <img 
-                          src={`${API_URL}/download/${token}/photos/${photo.id}`} 
-                          alt="Printed Photo" 
+                        <img
+                          src={`${API_URL}/download/${token}/photos/${photo.id}`}
+                          alt="Printed Photo"
                           style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                         />
                       </div>
@@ -350,17 +350,17 @@ function CustomerDownloadView({
 
       {/* Lightbox Overlay */}
       {activePhoto && (
-        <div 
-          className="customer-lightbox-overlay" 
+        <div
+          className="customer-lightbox-overlay"
           onClick={closeLightbox}
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
         >
           {/* Close Button */}
-          <button 
-            type="button" 
-            className="lightbox-close-btn" 
+          <button
+            type="button"
+            className="lightbox-close-btn"
             onClick={closeLightbox}
             title="Close (Esc)"
           >
@@ -370,9 +370,9 @@ function CustomerDownloadView({
           </button>
 
           {/* Prev Button */}
-          <button 
-            type="button" 
-            className="lightbox-nav-btn prev" 
+          <button
+            type="button"
+            className="lightbox-nav-btn prev"
             onClick={(e) => { e.stopPropagation(); setActiveLightboxPhotoId(session.photos[activePhotoIndex - 1].id); }}
             disabled={!hasPrev}
             title="Previous (Arrow Left)"
@@ -383,9 +383,9 @@ function CustomerDownloadView({
           </button>
 
           {/* Next Button */}
-          <button 
-            type="button" 
-            className="lightbox-nav-btn next" 
+          <button
+            type="button"
+            className="lightbox-nav-btn next"
             onClick={(e) => { e.stopPropagation(); setActiveLightboxPhotoId(session.photos[activePhotoIndex + 1].id); }}
             disabled={!hasNext}
             title="Next (Arrow Right)"
@@ -398,9 +398,9 @@ function CustomerDownloadView({
           {/* Main Content Card */}
           <div className="lightbox-content-card" onClick={(e) => e.stopPropagation()}>
             <div className="lightbox-image-container">
-              <img 
-                src={`${API_URL}/download/${token}/photos/${activePhoto.id}`} 
-                alt="Photo" 
+              <img
+                src={`${API_URL}/download/${token}/photos/${activePhoto.id}`}
+                alt="Photo"
               />
             </div>
 
@@ -415,9 +415,9 @@ function CustomerDownloadView({
               <div className="lightbox-actions">
                 {!isPrintMode ? (
                   /* Download Button */
-                  <a 
-                    href={`${API_URL}/download/${token}/photos/${activePhoto.id}`} 
-                    download={activePhoto.original_filename} 
+                  <a
+                    href={`${API_URL}/download/${token}/photos/${activePhoto.id}`}
+                    download={activePhoto.original_filename}
                     className="lightbox-btn-download"
                     title={t("download")}
                   >
@@ -428,16 +428,16 @@ function CustomerDownloadView({
                   </a>
                 ) : (
                   /* Print Selection Action */
-                    <button 
-                      type="button" 
-                      className={`lightbox-btn-select-print ${isActivelySelected ? 'selected' : ''}`}
-                      onClick={() => handleToggleSelectPhoto(activePhoto.id)}
-                    >
-                      <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                      </svg>
-                      {isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
-                    </button>
+                  <button
+                    type="button"
+                    className={`lightbox-btn-select-print ${isActivelySelected ? 'selected' : ''}`}
+                    onClick={() => handleToggleSelectPhoto(activePhoto.id)}
+                  >
+                    <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                    </svg>
+                    {isActivelySelected ? t("deselectPrint") : t("selectForPrint")}
+                  </button>
                 )}
               </div>
             </div>
