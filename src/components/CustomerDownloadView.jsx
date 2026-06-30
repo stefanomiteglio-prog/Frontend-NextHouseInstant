@@ -250,6 +250,12 @@ function CustomerDownloadView({
             <div className="customer-info-details">
               <h3 className="customer-info-details-title">{t("infoDetails")}</h3>
 
+              {/* Price and Instruction Callout Box */}
+              <div className="customer-print-price-callout">
+                <div className="callout-price-badge">{t("priceInfo")}</div>
+                <div className="callout-instructions-text">{t("receptionInstructions")}</div>
+              </div>
+
               <div className="customer-info-row">
                 <span className="customer-info-label">{t("fullName")}</span>
                 <input
@@ -270,6 +276,9 @@ function CustomerDownloadView({
               >
                 {submittingSelection ? t("sending") : t("sendRequest")}
               </button>
+
+              {/* Terms Agreement */}
+              <div className="customer-print-terms-text" dangerouslySetInnerHTML={{ __html: t("termsAgreement") }} />
             </div>
           </div>
         </div>
@@ -291,13 +300,6 @@ function CustomerDownloadView({
               <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
             </svg>
           </button>
-        </div>
-        <div className={`customer-footer-print-mode ${isPrintMode ? 'visible' : 'hidden'}`}>
-          <div className="customer-footer-info">
-            {t("receptionInstructions")}
-            <div className="sub-text">{t("priceInfo")}</div>
-            <div className="terms-text">{t("termsAgreement")}</div>
-          </div>
         </div>
       </div>
 

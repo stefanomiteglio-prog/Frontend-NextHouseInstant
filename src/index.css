@@ -3343,4 +3343,52 @@ button.clickable-thumbnail:focus-visible {
   transform: translateX(2px);
 }
 
+/* Custom print callout box inside card */
+.customer-print-price-callout {
+  background: rgba(249, 115, 22, 0.05);
+  border: 1px solid rgba(249, 115, 22, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.callout-price-badge {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  color: var(--primary, #f97316); /* Warm accent color */
+}
+
+.callout-instructions-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  color: #4b5563; /* Grey text */
+  line-height: 1.4;
+}
+
+/* Custom print terms text directly below send request button */
+.customer-print-terms-text {
+  font-family: 'Inter', sans-serif;
+  font-style: italic;
+  font-size: 10px;
+  color: rgba(80, 80, 80, 0.55);
+  text-align: center;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.customer-print-terms-text .terms-link {
+  color: var(--primary, #f97316);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.customer-print-terms-text .terms-link:hover {
+  color: #ea580c;
+}
+
+
 
