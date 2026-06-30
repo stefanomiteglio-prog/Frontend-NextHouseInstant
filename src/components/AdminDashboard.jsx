@@ -354,7 +354,7 @@ function AdminDashboard({
                         <span className="selection-session-tag">Session #{sel.download_session_id}</span>
                       </div>
                       <span className="request-date">
-                        {new Date(sel.created_at).toLocaleString()}
+                        {new Date(sel.created_at).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' })}
                       </span>
                     </div>
                     
@@ -467,7 +467,7 @@ function AdminDashboard({
                   );
                 })()}
                 <p className="subtitle" style={{ marginTop: '0.25rem' }}>
-                  Session ID: {detailSelection.download_session_id} | Submitted on: {new Date(detailSelection.created_at).toLocaleString()}
+                  Session ID: {detailSelection.download_session_id} | Submitted on: {new Date(detailSelection.created_at).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' })}
                 </p>
               </div>
               <button className="modal-close-btn" onClick={() => setDetailSelection(null)}>

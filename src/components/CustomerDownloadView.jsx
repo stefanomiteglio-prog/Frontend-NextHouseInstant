@@ -319,7 +319,7 @@ function CustomerDownloadView({
                         </span>
                       )}
                     </span>
-                    <span className="request-date">{new Date(sel.created_at).toLocaleDateString()}</span>
+                    <span className="request-date">{new Date(sel.created_at).toLocaleDateString('da-DK', { timeZone: 'Europe/Copenhagen' })}</span>
                   </div>
                   <div className="request-thumbnails" style={{ display: 'flex', gap: '6px' }}>
                     {sel.photos.slice(0, 5).map((photo) => (
