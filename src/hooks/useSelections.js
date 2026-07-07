@@ -69,6 +69,33 @@ export function useSelections() {
     }
   };
 
+  const handleTriggerPrint = async (selectionId) => {
+    try {
+      const response = await authenticatedFetch(`${API_URL}/api/selections/${selectionId}/print`, {
+        method: 'POST'
+      });
+      if (response.ok) {
+        // Update selection status locally to "queued" so that the UI updates instantly.
+        setSelections((prev) => prev.map((s) => s.id === selectionId ? { ...s, status: 'queued' } : s));
+        return true;
+      } else {
+        let errorMsg = "Unable to queue print request.";
+        try {
+          const errData = await response.json();
+          if (errData.detail) errorMsg += ` (${errData.detail})`;
+        } catch (e) {
+          console.warn("Failed to parse error response JSON:", e);
+        }
+        alert(errorMsg);
+        return false;
+      }
+    } catch (err) {
+      console.error("Error queueing print request:", err);
+      alert("Network error while sending print request.");
+      return false;
+    }
+  };
+
   // Fetch selections when conditions change
   useEffect(() => {
     if (user && activeTab === 'prints') {
@@ -114,6 +141,7 @@ export function useSelections() {
     setRefreshSecondsLeft,
     fetchSelections,
     handleDeleteSelection,
-    handleUpdateSelectionStatus
+    handleUpdateSelectionStatus,
+    handleTriggerPrint
   };
 }

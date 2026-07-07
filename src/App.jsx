@@ -103,6 +103,7 @@ function AppContent() {
           setDeletingSelectionId={selectionsData.setDeletingSelectionId}
           fetchSelections={selectionsData.fetchSelections}
           handleDeleteSelection={selectionsData.handleDeleteSelection}
+          handleTriggerPrint={selectionsData.handleTriggerPrint}
           formatSize={formatSize}
         />
       </div>

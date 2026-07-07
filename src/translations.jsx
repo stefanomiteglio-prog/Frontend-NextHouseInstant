@@ -262,7 +262,7 @@ export const privacyTranslations = {
         <>
           <p>The Data Controller responsible for the processing of your personal data under this service is:</p>
           <div className="policy-highlight-box">
-            <strong>ARP-HANSEN HOTEL GROUP A/S</strong> (operating Next House Copenhagen)<br />
+            <strong>Arp-Hansen Hotel Group</strong> (operating Next House Copenhagen)<br />
             Registered Address: Nybrovej 75, 2820 Gentofte, Denmark<br />
             Physical Address: Bernstorffsgade 27, 1577 København, Denmark<br />
             CVR (Danish Business Reg. No): 54399219<br />
@@ -278,7 +278,7 @@ export const privacyTranslations = {
           <p>We process only the personal data strictly necessary to provide the photobooth sharing and printing service:</p>
           <ul>
             <li><strong>Digital Photographs:</strong> The images captured by you at the physical photobooth kiosk.</li>
-            <li><strong>Selection Metadata:</strong> If you choose to print your photos, we collect the guest name and/or booking code you manually input to identify your selection at the reception.</li>
+            <li><strong>Selection Metadata:</strong> If you choose to print your photos, we collect the guest name you manually input to identify your selection at the reception.</li>
           </ul>
           <p>This service does not request, collect, or store any other personal data (such as email addresses, phone numbers, or social media profiles). No browser cookies or tracking scripts are deployed on this website.</p>
         </>
@@ -291,7 +291,7 @@ export const privacyTranslations = {
           <p>Your personal data is processed solely for the following purposes:</p>
           <ol>
             <li><strong>Photo Download:</strong> To temporarily host your digital photos on a secure cloud server and generate a unique, tokenized download link so you can retrieve your images on your personal device.</li>
-            <li><strong>Print Request Fulfillment:</strong> To transmit your selected photos and your identification details (guest name / booking code) to the hotel reception, enabling staff to print and hand over your requested physical prints.</li>
+            <li><strong>Print Request Fulfillment:</strong> To transmit your selected photos and your identification details (guest name) to the hotel reception, enabling staff to print and hand over your requested physical prints.</li>
           </ol>
           <p>The legal basis for this processing is **Article 6(1)(b) of the GDPR** (processing is necessary for the performance of a contract to which the data subject is party, i.e., providing the photo sharing/printing service you requested).</p>
         </>
@@ -373,7 +373,7 @@ export const privacyTranslations = {
         <>
           <p>Il Titolare del trattamento responsabile per il trattamento dei tuoi dati personali nell\'ambito di questo servizio è:</p>
           <div className="policy-highlight-box">
-            <strong>ARP-HANSEN HOTEL GROUP A/S</strong> (gestore di Next House Copenhagen)<br />
+            <strong>Arp-Hansen Hotel Group</strong> (gestore di Next House Copenhagen)<br />
             Sede legale: Nybrovej 75, 2820 Gentofte, Danimarca<br />
             Indirizzo fisico: Bernstorffsgade 27, 1577 København, Danimarca<br />
             CVR (P. IVA danese): 54399219<br />
@@ -389,7 +389,7 @@ export const privacyTranslations = {
           <p>Trattiamo solo i dati personali strettamente necessari per fornire il servizio di condivisione e stampa del photobooth:</p>
           <ul>
             <li><strong>Fotografie digitali:</strong> Le immagini catturate dall\'utente presso il chiosco fisico del photobooth.</li>
-            <li><strong>Metadati di selezione:</strong> Se scegli di stampare le tue foto, raccogliamo il nome dell\'ospite e/o il codice di prenotazione inseriti manualmente per identificare la tua selezione alla reception.</li>
+            <li><strong>Metadati di selezione:</strong> Se scegli di stampare le tue foto, raccogliamo il nome dell\'ospite inserito manualmente per identificare la tua selezione alla reception.</li>
           </ul>
           <p>Questo servizio non richiede, raccoglie o memorizza altri dati personali (come indirizzi email, numeri di telefono o profili social). Nessun cookie del browser o script di tracciamento viene utilizzato su questo sito web.</p>
         </>
@@ -402,7 +402,7 @@ export const privacyTranslations = {
           <p>I tuoi dati personali sono trattati esclusivamente per le seguenti finalità:</p>
           <ol>
             <li><strong>Download delle foto:</strong> Per ospitare temporaneamente le tue foto digitali su un server cloud sicuro e generare un link di download tokenizzato e univoco per consentirti di scaricare le immagini sul tuo dispositivo personale.</li>
-            <li><strong>Adempimento della richiesta di stampa:</strong> Per trasmettere le foto selezionate e i dati identificativi (nome dell\'ospite / codice di prenotazione) alla reception dell\'hotel, consentendo allo staff di stampare e consegnare le stampe fisiche richieste.</li>
+            <li><strong>Adempimento della richiesta di stampa:</strong> Per trasmettere le foto selezionate e il dato identificativo (nome dell\'ospite) alla reception dell\'hotel, consentendo allo staff di stampare e consegnare le stampe fisiche richieste.</li>
           </ol>
           <p>La base giuridica di questo trattamento è l\'**Articolo 6(1)(b) del GDPR** (il trattamento è necessario all\'esecuzione di un contratto di cui l\'interessato è parte, ossia la fornitura del servizio di condivisione/stampa foto da te richiesto).</p>
         </>
@@ -484,7 +484,7 @@ export const privacyTranslations = {
         <>
           <p>Der Verantwortliche für die Verarbeitung Ihrer personenbezogenen Daten im Rahmen dieses Dienstes ist:</p>
           <div className="policy-highlight-box">
-            <strong>ARP-HANSEN HOTEL GROUP A/S</strong> (Betreiber von Next House Copenhagen)<br />
+            <strong>Arp-Hansen Hotel Group</strong> (Betreiber von Next House Copenhagen)<br />
             Eingetragene Adresse: Nybrovej 75, 2820 Gentofte, Dänemark<br />
             Physische Adresse: Bernstorffsgade 27, 1577 København, Dänemark<br />
             CVR (Dänische Registernummer): 54399219<br />
@@ -500,7 +500,7 @@ export const privacyTranslations = {
           <p>Wir verarbeiten nur die personenbezogenen Daten, die für die Bereitstellung des Photobooth-Teilungs- und Druckdienstes unbedingt erforderlich sind:</p>
           <ul>
             <li><strong>Digitale Fotos:</strong> Die von Ihnen am physischen Photobooth-Kiosk aufgenommenen Bilder.</li>
-            <li><strong>Auswahl-Metadaten:</strong> Wenn Sie Ihre Fotos drucken möchten, erfassen wir den Namen des Gastes und/oder den Buchungscode, den Sie manuell eingeben, um Ihre Auswahl an der Rezeption zuzuordnen.</li>
+            <li><strong>Auswahl-Metadaten:</strong> Wenn Sie Ihre Fotos drucken möchten, erfassen wir den Namen des Gastes, den Sie manuell eingeben, um Ihre Auswahl an der Rezeption zuzuordnen.</li>
           </ul>
           <p>Dieser Dienst fordert keine anderen personenbezogenen Daten (wie E-Mail-Adressen, Telefonnummern oder Social-Media-Profile) an, erfasst oder speichert diese nicht. Auf dieser Website werden keine Browser-Cookies oder Tracking-Skripte eingesetzt.</p>
         </>
@@ -513,7 +513,7 @@ export const privacyTranslations = {
           <p>Ihre personenbezogenen Daten werden ausschließlich zu folgenden Zwecken verarbeitet:</p>
           <ol>
             <li><strong>Foto-Download:</strong> Um Ihre digitalen Fotos vorübergehend auf einem sicheren Cloud-Server zu hosten und einen eindeutigen, tokenisierten Download-Link zu erstellen, damit Sie Ihre Bilder auf Ihr persönliches Gerät herunterladen können.</li>
-            <li><strong>Ausführung von Druckanfragen:</strong> Um Ihre ausgewählten Fotos und Ihre Identifikationsdaten (Name des Gastes / Buchungscode) an die Hotelrezeption zu übermitteln, damit das Personal Ihre gewünschten physischen Ausdrucke anfertigen und übergeben kann.</li>
+            <li><strong>Ausführung von Druckanfragen:</strong> Um Ihre ausgewählten Fotos und Ihre Identifikationsdaten (Name des Gastes) an die Hotelrezeption zu übermitteln, damit das Personal Ihre gewünschten physischen Ausdrucke anfertigen und übergeben kann.</li>
           </ol>
           <p>Die Rechtsgrundlage für diese Verarbeitung ist **Art. 6 Abs. 1 lit. b DSGVO** (die Verarbeitung ist für die Erfüllung eines Vertrags erforderlich, dessen Vertragspartei die betroffene Person ist, d. h. die Bereitstellung des von Ihnen angeforderten Foto-Teilungs-/Druckdienstes).</p>
         </>
@@ -595,7 +595,7 @@ export const privacyTranslations = {
         <>
           <p>Den dataansvarlige, der er ansvarlig for behandlingen af dine personoplysninger i forbindelse med denne tjeneste, er:</p>
           <div className="policy-highlight-box">
-            <strong>ARP-HANSEN HOTEL GROUP A/S</strong> (operatør af Next House Copenhagen)<br />
+            <strong>Arp-Hansen Hotel Group</strong> (operatør af Next House Copenhagen)<br />
             Registreret adresse: Nybrovej 75, 2820 Gentofte, Danmark<br />
             Fysisk adresse: Bernstorffsgade 27, 1577 København, Danmark<br />
             CVR (Dansk erhvervsreg. nr.): 54399219<br />
@@ -611,7 +611,7 @@ export const privacyTranslations = {
           <p>Vi behandler kun de personoplysninger, der er strengt nødvendige for at levere photobooth-delings- og printtjenesten:</p>
           <ul>
             <li><strong>Digitale fotografier:</strong> Billederne taget af dig ved den fysiske photobooth-kiosk.</li>
-            <li><strong>Udvalg-metadata:</strong> Hvis du vælger at printe dine billeder, indsamler vi det gæstenavn og/eller bookingnummer, du indtaster manuelt for at identificere dit valg i receptionen.</li>
+            <li><strong>Udvalg-metadata:</strong> Hvis du vælger at printe dine billeder, indsamler vi det gæstenavn, du indtaster manuelt for at identificere dit valg i receptionen.</li>
           </ul>
           <p>Denne tjeneste anmoder ikke om, indsamler eller gemmer ikke andre personoplysninger (såsom e-mailadresser, telefonnumre eller sociale medieprofiler). Der anvendes ingen browsercookies or trackingskripter på dette websted.</p>
         </>
@@ -624,7 +624,7 @@ export const privacyTranslations = {
           <p>Dine personoplysninger behandles udelukkende til følgende formål:</p>
           <ol>
             <li><strong>Download af billeder:</strong> For midlertidigt at hoste dine digitale billeder på en sikker cloudserver og generere et unikt, tokeniseret downloadlink, så du kan hente dine billeder på din personlige enhed.</li>
-            <li><strong>Opfyldelse af printanmodning:</strong> For at overføre dine valgte billeder og dine identifikationsoplysninger (gæstenavn / bookingnummer) til hotellets reception, så personalet kan printe og udlevere dine ønskede fysiske print.</li>
+            <li><strong>Opfyldelse af printanmodning:</strong> For at overføre dine valgte billeder og dine identifikationsoplysninger (gæstenavn) til hotellets reception, så personalet kan printe og udlevere dine ønskede fysiske print.</li>
           </ol>
           <p>Retsgrundlaget for denne behandling er **artikel 6, stk. 1, litra b i GDPR** (behandling er nødvendig af hensyn til opfyldelse af en kontrakt, som den registrerede er part i, dvs. levering af den billeddelings-/printtjeneste, du har anmodet om).</p>
         </>
@@ -706,7 +706,7 @@ export const privacyTranslations = {
         <>
           <p>El Responsable del tratamiento de sus datos personales bajo este servicio es:</p>
           <div className="policy-highlight-box">
-            <strong>ARP-HANSEN HOTEL GROUP A/S</strong> (operador de Next House Copenhagen)<br />
+            <strong>Arp-Hansen Hotel Group</strong> (operador de Next House Copenhagen)<br />
             Dirección registrada: Nybrovej 75, 2820 Gentofte, Dinamarca<br />
             Dirección física: Bernstorffsgade 27, 1577 København, Dinamarca<br />
             CVR (Número de registro danés): 54399219<br />
@@ -722,7 +722,7 @@ export const privacyTranslations = {
           <p>Procesamos únicamente los datos personales estrictamente necesarios para prestar el servicio de impresión y uso compartido del fotomatón:</p>
           <ul>
             <li><strong>Fotografías digitales:</strong> Las imágenes capturadas por usted en el quiosco físico del fotomatón.</li>
-            <li><strong>Metadatos de selección:</strong> Si elige imprimir sus fotos, recopilamos el nombre del huésped y/o el código de reserva que ingresa manualmente para identificar su selección en la recepción.</li>
+            <li><strong>Metadatos de selección:</strong> Si elige imprimir sus fotos, recopilamos el nombre del huésped que ingresa manualmente para identificar su selección en la recepción.</li>
           </ul>
           <p>Este servicio no solicita, recopila ni almacena ningún otro dato personal (como direcciones de correo electrónico, números de teléfono o perfiles de redes sociales). No se utilizan cookies ni scripts de seguimiento en este sitio web.</p>
         </>
@@ -735,7 +735,7 @@ export const privacyTranslations = {
           <p>Sus datos personales se procesan únicamente con los siguientes fines:</p>
           <ol>
             <li><strong>Descarga de fotos:</strong> Alojar temporalmente sus fotos digitales en un servidor seguro en la nube y generar un enlace de descarga tokenizado único para que pueda recuperar sus imágenes en su dispositivo personal.</li>
-            <li><strong>Cumplimiento de la solicitud de impresión:</strong> Transmitir las fotos seleccionadas y sus datos de identificación (nombre del huésped / código de reserva) a la recepción del hotel, lo que permite al personal imprimir y entregar las copias impresas solicitadas.</li>
+            <li><strong>Cumplimiento de la solicitud de impresión:</strong> Transmitir las fotos seleccionadas y sus datos de identificación (nombre del huésped) a la recepción del hotel, lo que permite al personal imprimir y entregar las copias impresas solicitadas.</li>
           </ol>
           <p>La base jurídica de este tratamiento es el **Artículo 6(1)(b) del GDPR** (el tratamiento es necesario para la ejecución de un contrato en el que el interesado es parte, es decir, la prestación del servicio de impresión/compartir fotos solicitado por usted).</p>
         </>
@@ -817,7 +817,7 @@ export const privacyTranslations = {
         <>
           <p>Le Responsable du traitement de vos données personnelles dans le cadre de ce service est :</p>
           <div className="policy-highlight-box">
-            <strong>ARP-HANSEN HOTEL GROUP A/S</strong> (opérateur de Next House Copenhagen)<br />
+            <strong>Arp-Hansen Hotel Group</strong> (opérateur de Next House Copenhagen)<br />
             Adresse enregistrée : Nybrovej 75, 2820 Gentofte, Danemark<br />
             Adresse physique : Bernstorffsgade 27, 1577 København, Danemark<br />
             CVR (Numéro d\'enregistrement danois) : 54399219<br />
@@ -833,7 +833,7 @@ export const privacyTranslations = {
           <p>Nous traitons uniquement les données personnelles strictement nécessaires pour fournir le service de partage et d\'impression du photobooth :</p>
           <ul>
             <li><strong>Photographies numériques :</strong> Les images capturées par vous sur la borne physique du photobooth.</li>
-            <li><strong>Métadonnées de sélection :</strong> Si vous choisissez d\'imprimer vos photos, nous recueillons le nom du client et/ou le code de réservation saisi manuellement afin d\'identifier votre sélection à la réception.</li>
+            <li><strong>Métadonnées de sélection :</strong> Si vous choisissez d\'imprimer vos photos, nous recueillons le nom du client saisi manuellement afin d\'identifier votre sélection à la réception.</li>
           </ul>
           <p>Ce service ne demande, ne collecte et ne stocke aucune autre donnée personnelle (telle que des adresses e-mail, des numéros de téléphone ou des profils de réseaux sociaux). Aucun cookie de navigation ou script de suivi n\'est déployé sur ce site.</p>
         </>
@@ -846,7 +846,7 @@ export const privacyTranslations = {
           <p>Vos données personnelles sont traitées exclusivement aux fins suivantes :</p>
           <ol>
             <li><strong>Téléchargement des photos :</strong> Héberger temporairement vos photos numériques sur un serveur cloud sécurisé et générer un lien de téléchargement unique tokenisé pour vous permettre de récupérer vos images sur votre appareil personnel.</li>
-            <li><strong>Traitement des demandes d\'impression :</strong> Transmettre vos photos sélectionnées et vos données d\'identification (nom du client / code de réservation) à la réception de l\'hôtel, permettant au personnel d\'effectuer et de vous remettre vos tirages physiques.</li>
+            <li><strong>Traitement des demandes d\'impression :</strong> Transmettre vos photos sélectionnées et vos données d\'identification (nom du client) à la réception de l\'hôtel, permettant au personnel d\'effectuer et de vous remettre vos tirages physiques.</li>
           </ol>
           <p>La base juridique de ce traitement est l\'**Article 6(1)(b) du RGPD** (le traitement est nécessaire à l\'exécution d\'un contrat auquel la personne concernée est partie, c\'est-à-dire la fourniture du service de partage/impression de photos que vous avez demandé).</p>
         </>
