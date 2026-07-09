@@ -167,6 +167,7 @@ function AppContent() {
       handleToggleSelectPhoto={downloadSession.handleToggleSelectPhoto}
       handleClearActiveSelection={downloadSession.handleClearActiveSelection}
       handleSubmitPrintRequest={downloadSession.handleSubmitPrintRequest}
+      handleDeleteClientSelection={downloadSession.handleDeleteClientSelection}
       formatSize={formatSize}
     />
   );

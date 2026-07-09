@@ -40,7 +40,11 @@ export const translations = {
     privacyPolicy: "Privacy Policy",
     gdprSubtitle: "GDPR Information Notice for Photobooth & Download Services",
     lastUpdated: "Last updated: June 2026",
-    policyIntro: "This Privacy Policy describes how Next House Copenhagen processes and protects the personal data collected through our photobooth and photo download service. We are committed to safeguarding your privacy in compliance with the General Data Protection Regulation (GDPR) (EU 2016/679)."
+    policyIntro: "This Privacy Policy describes how Next House Copenhagen processes and protects the personal data collected through our photobooth and photo download service. We are committed to safeguarding your privacy in compliance with the General Data Protection Regulation (GDPR) (EU 2016/679).",
+    cancelRequest: "Cancel Request",
+    confirmCancelRequest: "Are you sure you want to cancel this print request?",
+    toastCancelSuccess: "Print request cancelled successfully!",
+    cancelError: "Unable to cancel print request."
   },
   it: {
     session: "Sessione",
@@ -82,7 +86,11 @@ export const translations = {
     privacyPolicy: "Informativa sulla Privacy",
     gdprSubtitle: "Informativa GDPR per i Servizi Photobooth & Download",
     lastUpdated: "Ultimo aggiornamento: Giugno 2026",
-    policyIntro: "Questa Informativa sulla Privacy descrive come Next House Copenhagen tratta e protegge i dati personali raccolti tramite il nostro servizio di photobooth e download di foto. Ci impegniamo a salvaguardare la tua privacy in conformità con il Regolamento Generale sulla Protezione dei Dati (GDPR) (UE 2016/679)."
+    policyIntro: "Questa Informativa sulla Privacy descrive come Next House Copenhagen tratta e protegge i dati personali raccolti tramite il nostro servizio di photobooth e download di foto. Ci impegniamo a salvaguardare la tua privacy in conformità con il Regolamento Generale sulla Protezione dei Dati (GDPR) (UE 2016/679).",
+    cancelRequest: "Annulla Richiesta",
+    confirmCancelRequest: "Sei sicuro di voler annullare questa richiesta di stampa?",
+    toastCancelSuccess: "Richiesta di stampa annullata con successo!",
+    cancelError: "Impossibile annullare la richiesta di stampa."
   },
   de: {
     session: "Sitzung",
@@ -124,7 +132,11 @@ export const translations = {
     privacyPolicy: "Datenschutzerklärung",
     gdprSubtitle: "DSGVO-Informationshinweis für Photobooth- & Download-Dienste",
     lastUpdated: "Zuletzt aktualisiert: Juni 2026",
-    policyIntro: "Diese Datenschutzerklärung beschreibt, wie Next House Copenhagen die über unseren Photobooth- und Foto-Download-Dienst erfassten personenbezogenen Daten verarbeitet und schützt. Wir verpflichten uns, Ihre Privatsphäre in Übereinstimmung mit der Datenschutz-Grundverordnung (DSGVO) (EU 2016/679) zu schützen."
+    policyIntro: "Diese Datenschutzerklärung beschreibt, wie Next House Copenhagen die über unseren Photobooth- und Foto-Download-Dienst erfassten personenbezogenen Daten verarbeitet und schützt. Wir verpflichten uns, Ihre Privatsphäre in Übereinstimmung mit der Datenschutz-Grundverordnung (DSGVO) (EU 2016/679) zu schützen.",
+    cancelRequest: "Anfrage stornieren",
+    confirmCancelRequest: "Sind Sie sicher, dass Sie diese Druckanfrage stornieren möchten?",
+    toastCancelSuccess: "Druckanfrage erfolgreich storniert!",
+    cancelError: "Druckanfrage konnte nicht storniert werden."
   },
   da: {
     session: "Session",
@@ -166,7 +178,11 @@ export const translations = {
     privacyPolicy: "Privatlivspolitik",
     gdprSubtitle: "GDPR-oplysningsmeddelelse for Photobooth- & downloadtjenester",
     lastUpdated: "Sidst opdateret: Juni 2026",
-    policyIntro: "Denne privatlivspolitik beskriver, hvordan Next House Copenhagen behandler og beskytter de personoplysninger, der indsamles via vores photobooth- og fotodownloadtjeneste. Vi er forpligtet til at beskytte dit privatliv i overensstemmelse med den generelle forordning om databeskyttelse (GDPR) (EU 2016/679)."
+    policyIntro: "Denne privatlivspolitik beskriver, hvordan Next House Copenhagen behandler og beskytter de personoplysninger, der indsamles via vores photobooth- og fotodownloadtjeneste. Vi er forpligtet til at beskytte dit privatliv i overensstemmelse med den generelle forordning om databeskyttelse (GDPR) (EU 2016/679).",
+    cancelRequest: "Annuller anmodning",
+    confirmCancelRequest: "Er du sikker på, at du vil annullere denne printanmodning?",
+    toastCancelSuccess: "Printanmodning blev annulleret med succes!",
+    cancelError: "Kunne ikke annullere printanmodningen."
   },
   es: {
     session: "Sesión",
@@ -208,7 +224,11 @@ export const translations = {
     privacyPolicy: "Política de Privacidad",
     gdprSubtitle: "Aviso de información de GDPR para servicios de photobooth y descarga",
     lastUpdated: "Última actualización: Junio de 2026",
-    policyIntro: "Esta Política de Privacidad describe cómo Next House Copenhagen procesa y protege los datos personales recopilados a través de nuestro servicio de photobooth y descarga de fotos. Nos comprometemos a salvaguardar su privacidad de conformidad con el Reglamento General de Protección de Datos (GDPR) (UE 2016/679)."
+    policyIntro: "Esta Política de Privacidad describe cómo Next House Copenhagen procesa y protege los datos personales recopilados a través de nuestro servicio de photobooth y descarga de fotos. Nos comprometemos a salvaguardar su privacidad de conformidad con el Reglamento General de Protección de Datos (GDPR) (UE 2016/679).",
+    cancelRequest: "Cancelar Solicitud",
+    confirmCancelRequest: "¿Estás seguro de que deseas cancelar esta solicitud de impresión?",
+    toastCancelSuccess: "¡Solicitud de impresión cancelada con éxito!",
+    cancelError: "No se pudo cancelar la solicitud de impresión."
   },
   fr: {
     session: "Session",
@@ -250,8 +270,12 @@ export const translations = {
     privacyPolicy: "Politique de Confidentialité",
     gdprSubtitle: "Notice d'information RGPD pour les services de photobooth et de téléchargement",
     lastUpdated: "Dernière mise à jour : Juin 2026",
-    policyIntro: "Cette politique de confidentialité décrit comment Next House Copenhagen traite et protège les données personnelles collectées via notre service de photobooth et de téléchargement de photos. Nous nous engageons à protéger votre vie privée conformément au Règlement Général sur la Protection des Données (RGPD) (UE 2016/679)."
-  }
+    policyIntro: "Cette politique de confidentialité décrit comment Next House Copenhagen traite et protège les données personnelles collectées via notre service de photobooth et de téléchargement de photos. Nous nous engageons à protéger votre vie privée conformément au Règlement Général sur la Protection des Données (RGPD) (UE 2016/679).",
+    cancelRequest: "Annuler la demande",
+    confirmCancelRequest: "Êtes-vous sûr de vouloir annuler cette demande d'impression ?",
+    toastCancelSuccess: "Demande d'impression annulée avec succès !",
+    cancelError: "Impossible d'annuler la demande d'impression."
+  },
 };
 
 export const privacyTranslations = {

@@ -124,6 +124,22 @@ export function useDownloadSession() {
     }
   };
 
+  const handleDeleteClientSelection = async (selectionId) => {
+    try {
+      const response = await fetch(`${API_URL}/download/${token}/selections/${selectionId}`, {
+        method: 'DELETE'
+      });
+      if (response.ok) {
+        setClientSelections((prev) => prev.filter((s) => s.id !== selectionId));
+        return true;
+      }
+      return false;
+    } catch (err) {
+      console.error("Error cancelling print request:", err);
+      return false;
+    }
+  };
+
   // Fetch session once token is set
   useEffect(() => {
     if (!token || isAdminRoute) return;
@@ -217,6 +233,7 @@ export function useDownloadSession() {
     handleToggleSelectPhoto,
     handleClearActiveSelection,
     handleSubmitPrintRequest,
-    fetchClientSelections
+    fetchClientSelections,
+    handleDeleteClientSelection
   };
 }

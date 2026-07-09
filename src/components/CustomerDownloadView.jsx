@@ -15,6 +15,7 @@ function CustomerDownloadView({
   handleToggleSelectPhoto,
   handleClearActiveSelection,
   handleSubmitPrintRequest,
+  handleDeleteClientSelection,
   formatSize
 }) {
   const t = (key) => (translations[lang] && translations[lang][key]) || translations['en'][key] || key;
@@ -122,6 +123,15 @@ function CustomerDownloadView({
     handleClearActiveSelection();
     setGuestName('');
     setIsPrintMode(false);
+  };
+
+  const handleCancelClick = async (selectionId) => {
+    if (window.confirm(t("confirmCancelRequest"))) {
+      const success = await handleDeleteClientSelection(selectionId);
+      if (!success) {
+        alert(t("cancelError"));
+      }
+    }
   };
 
   return (
@@ -312,7 +322,7 @@ function CustomerDownloadView({
               const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
               return (
                 <div key={sel.id} className="request-history-card" style={{ background: '#f9fafb', padding: '12px', borderRadius: '12px', border: '1px solid #f3f4f6' }}>
-                  <div className="request-meta" style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', fontSize: '11px', color: '#6b7280' }}>
+                  <div className="request-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', color: '#6b7280' }}>
                     <span className="request-id" style={{ fontWeight: '600', color: '#111827' }}>
                       {t("printRequestTitle")}
                       {parsedName && (
@@ -321,7 +331,38 @@ function CustomerDownloadView({
                         </span>
                       )}
                     </span>
-                    <span className="request-date">{new Date(sel.created_at).toLocaleDateString()}</span>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      <span className="request-date">{new Date(sel.created_at).toLocaleDateString()}</span>
+                      <button
+                        type="button"
+                        onClick={() => handleCancelClick(sel.id)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#ef4444',
+                          cursor: 'pointer',
+                          fontWeight: '600',
+                          fontSize: '11px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          padding: '2px 6px',
+                          borderRadius: '4px',
+                          transition: 'background 0.2s, color 0.2s'
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.background = 'none';
+                        }}
+                      >
+                        <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        {t("cancelRequest")}
+                      </button>
+                    </div>
                   </div>
                   <div className="request-thumbnails" style={{ display: 'flex', gap: '6px' }}>
                     {sel.photos.slice(0, 5).map((photo) => (
