@@ -272,8 +272,8 @@ function AdminDashboard({
                   <div key={sel.id} className="admin-selection-card">
                     <div className="admin-selection-header">
                       <div className="selection-info-group">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontWeight: '600', fontSize: '1.1rem' }}>Print Request</span>
+                        <div className="admin-selection-header-row">
+                          <span className="admin-selection-title">Print Request</span>
                           <span className={`status-badge ${sel.status || 'pending'}`}>
                             {sel.status || 'pending'}
                           </span>
@@ -282,12 +282,12 @@ function AdminDashboard({
                           const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
                           return (
                             <>
-                              <h3 className="selection-guest-title" style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
+                              <h3 className="selection-guest-title">
                                 Selection for: <strong>{parsedName}</strong>
                               </h3>
                               {parsedBooking && (
-                                <h4 style={{ fontSize: '0.9rem', margin: '0.15rem 0', fontWeight: '500', color: '#4b5563' }}>
-                                  Booking: <strong style={{ color: '#000' }}>{parsedBooking}</strong>
+                                <h4 className="selection-booking-title">
+                                  Booking: <strong>{parsedBooking}</strong>
                                 </h4>
                               )}
                             </>
@@ -307,7 +307,7 @@ function AdminDashboard({
                         </div>
                       ))}
                       {sel.photos.length > 8 && (
-                        <div className="admin-selection-thumb" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', background: 'rgba(255,255,255,0.05)', fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                        <div className="admin-selection-thumb admin-selection-thumb-more">
                           +{sel.photos.length - 8}
                         </div>
                       )}
@@ -320,17 +320,8 @@ function AdminDashboard({
                       <div className="admin-card-buttons">
                         <button 
                           onClick={() => handleTriggerPrint(sel.id)}
-                          className={`btn ${sel.status === 'failed' ? 'btn-danger' : 'btn-accent'}`}
+                          className={`btn admin-btn-action-print ${sel.status === 'failed' ? 'btn-danger' : 'btn-accent'} ${['queued', 'assigned', 'printing'].includes(sel.status) ? 'disabled' : ''}`}
                           disabled={['queued', 'assigned', 'printing'].includes(sel.status)}
-                          style={{ 
-                            padding: '0.5rem 1rem', 
-                            fontSize: '0.85rem', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            gap: '4px',
-                            opacity: ['queued', 'assigned', 'printing'].includes(sel.status) ? 0.6 : 1,
-                            cursor: ['queued', 'assigned', 'printing'].includes(sel.status) ? 'not-allowed' : 'pointer'
-                          }}
                         >
                           <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
@@ -344,23 +335,22 @@ function AdminDashboard({
                         </button>
                         <button 
                           onClick={() => toggleExpandSelection(sel.id)} 
-                          className={`btn btn-secondary ${expandedSelectionIds.has(sel.id) ? 'active' : ''}`}
-                          style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}
+                          className={`btn btn-secondary admin-btn-action-details ${expandedSelectionIds.has(sel.id) ? 'active' : ''}`}
                         >
                           {expandedSelectionIds.has(sel.id) ? 'Collapse' : 'Details'}
                         </button>
                         
                         {deletingSelectionId === sel.id ? (
-                          <div className="confirm-delete-box" style={{ margin: 0 }}>
-                            <button onClick={() => handleDeleteSelection(sel.id)} className="btn btn-danger" style={{ padding: '0.5rem' }}>
+                          <div className="confirm-delete-box admin-confirm-delete-box">
+                            <button onClick={() => handleDeleteSelection(sel.id)} className="btn btn-danger admin-btn-confirm">
                               Confirm
                             </button>
-                            <button onClick={() => setDeletingSelectionId(null)} className="btn btn-secondary" style={{ padding: '0.5rem' }}>
+                            <button onClick={() => setDeletingSelectionId(null)} className="btn btn-secondary admin-btn-cancel">
                               Cancel
                             </button>
                           </div>
                         ) : (
-                          <button onClick={() => setDeletingSelectionId(sel.id)} className="btn btn-danger" style={{ padding: '0.5rem 1rem', fontSize: '0.85rem' }}>
+                          <button onClick={() => setDeletingSelectionId(sel.id)} className="btn btn-danger admin-btn-action-delete">
                             Delete
                           </button>
                         )}
@@ -406,23 +396,23 @@ function AdminDashboard({
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
               <div>
-                <h2 style={{ fontSize: '1.5rem', fontWeight: '700' }}>Request Details</h2>
+                <h2 className="admin-modal-title">Request Details</h2>
                 {detailSelection.name && (() => {
                   const { name: parsedName, booking: parsedBooking } = parseName(detailSelection.name);
                   return (
                     <>
-                      <h3 className="selection-guest-title" style={{ fontSize: '1.2rem', margin: '0.25rem 0', fontWeight: '600', color: 'var(--accent)' }}>
+                      <h3 className="selection-guest-title modal-title">
                         Selection for: <strong>{parsedName}</strong>
                       </h3>
                       {parsedBooking && (
-                        <h4 style={{ fontSize: '1.05rem', margin: '0.25rem 0', fontWeight: '500', color: '#4b5563' }}>
-                          Booking: <strong style={{ color: '#000' }}>{parsedBooking}</strong>
+                        <h4 className="selection-booking-title modal-title">
+                          Booking: <strong>{parsedBooking}</strong>
                         </h4>
                       )}
                     </>
                   );
                 })()}
-                <p className="subtitle" style={{ marginTop: '0.25rem' }}>
+                <p className="subtitle admin-modal-subtitle">
                   Session ID: {detailSelection.download_session_id} | Submitted on: {new Date(detailSelection.created_at).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' })}
                 </p>
               </div>
@@ -456,7 +446,7 @@ function AdminDashboard({
               ))}
             </div>
             
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: '1rem' }}>
+            <div className="admin-modal-footer">
               <button onClick={() => setDetailSelection(null)} className="btn btn-secondary">
                 Close
               </button>

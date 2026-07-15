@@ -22,6 +22,7 @@ function CustomerDownloadView({
   const [guestName, setGuestName] = useState('');
   const [isPrintMode, setIsPrintMode] = useState(false);
   const [activeLightboxPhotoId, setActiveLightboxPhotoId] = useState(null);
+  const [nameError, setNameError] = useState(false);
 
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -109,9 +110,10 @@ function CustomerDownloadView({
   const onSubmit = () => {
     const guestNameVal = guestName.trim();
     if (!guestNameVal) {
-      alert(t("guestNameAlert"));
+      setNameError(true);
       return;
     }
+    setNameError(false);
 
     handleSubmitPrintRequest(guestNameVal, () => {
       setGuestName('');
@@ -122,6 +124,7 @@ function CustomerDownloadView({
   const onCancel = () => {
     handleClearActiveSelection();
     setGuestName('');
+    setNameError(false);
     setIsPrintMode(false);
   };
 
@@ -175,8 +178,7 @@ function CustomerDownloadView({
       {/* Main Files Card */}
       <div className={`customer-files-card ${isPrintMode ? 'print-mode' : ''}`}>
 
-        {/* Top decorative white spacer */}
-        <div style={{ height: '32px', background: '#ffffff', flexShrink: 0 }} />
+        {/* Spacing and padding managed in index.css */}
 
         {/* Back button (Only in print mode) */}
         <div className={`customer-back-button-container ${isPrintMode ? 'visible' : 'hidden'}`} style={{ padding: '0 35px', flexShrink: 0 }}>
@@ -270,12 +272,22 @@ function CustomerDownloadView({
                 <span className="customer-info-label">{t("fullName")}</span>
                 <input
                   type="text"
-                  className="customer-input-field"
+                  className={`customer-input-field ${nameError ? 'input-error' : ''}`}
                   placeholder={t("yourNamePlaceholder")}
                   value={guestName}
-                  onChange={(e) => setGuestName(e.target.value)}
+                  onChange={(e) => {
+                    setGuestName(e.target.value);
+                    if (nameError && e.target.value.trim()) {
+                      setNameError(false);
+                    }
+                  }}
                 />
               </div>
+              {nameError && (
+                <div className="customer-input-error-msg">
+                  {t("guestNameAlert")}
+                </div>
+              )}
 
               {/* Submit Button */}
               <button
@@ -317,45 +329,26 @@ function CustomerDownloadView({
       {clientSelections.length > 0 && (
         <div className="customer-past-requests-card">
           <div className="customer-past-requests-title">{t("myPrintRequests")}</div>
-          <div className="requests-list" style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+          <div className="requests-list">
             {clientSelections.map((sel) => {
               const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
               return (
-                <div key={sel.id} className="request-history-card" style={{ background: '#f9fafb', padding: '12px', borderRadius: '12px', border: '1px solid #f3f4f6' }}>
-                  <div className="request-meta" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', color: '#6b7280' }}>
-                    <span className="request-id" style={{ fontWeight: '600', color: '#111827' }}>
+                <div key={sel.id} className="request-history-card">
+                  <div className="request-meta">
+                    <span className="request-id">
                       {t("printRequestTitle")}
                       {parsedName && (
-                        <span style={{ color: 'var(--primary)', marginLeft: '6px' }}>
+                        <span className="request-id-name">
                           ({parsedName}{parsedBooking ? ` - Booking: ${parsedBooking}` : ''})
                         </span>
                       )}
                     </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div className="request-meta-right">
                       <span className="request-date">{new Date(sel.created_at).toLocaleDateString()}</span>
                       <button
                         type="button"
                         onClick={() => handleCancelClick(sel.id)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#ef4444',
-                          cursor: 'pointer',
-                          fontWeight: '600',
-                          fontSize: '11px',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '4px',
-                          padding: '2px 6px',
-                          borderRadius: '4px',
-                          transition: 'background 0.2s, color 0.2s'
-                        }}
-                        onMouseEnter={(e) => {
-                          e.currentTarget.style.background = 'rgba(239, 68, 68, 0.1)';
-                        }}
-                        onMouseLeave={(e) => {
-                          e.currentTarget.style.background = 'none';
-                        }}
+                        className="customer-request-cancel-btn"
                       >
                         <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -364,18 +357,18 @@ function CustomerDownloadView({
                       </button>
                     </div>
                   </div>
-                  <div className="request-thumbnails" style={{ display: 'flex', gap: '6px' }}>
+                  <div className="request-thumbnails">
                     {sel.photos.slice(0, 5).map((photo) => (
-                      <div key={photo.id} className="request-thumb-container" style={{ width: '36px', height: '36px', borderRadius: '4px', overflow: 'hidden' }}>
+                      <div key={photo.id} className="request-thumb-container">
                         <img
                           src={`${API_URL}/download/${token}/photos/${photo.id}`}
                           alt="Printed Photo"
-                          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                          className="request-thumb-img"
                         />
                       </div>
                     ))}
                     {sel.photos.length > 5 && (
-                      <span className="request-thumb-more" style={{ fontSize: '11px', display: 'flex', alignItems: 'center', color: '#9ca3af' }}>
+                      <span className="request-thumb-more">
                         +{sel.photos.length - 5}
                       </span>
                     )}
