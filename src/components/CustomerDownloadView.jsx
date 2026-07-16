@@ -315,7 +315,7 @@ function CustomerDownloadView({
           <button
             type="button"
             className="customer-btn-print-mode"
-            onClick={() => setIsPrintMode(true)}
+            onClick={() => alert(t("printNotActiveYet"))}
           >
             {t("printRequest")}
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">

@@ -44,7 +44,8 @@ export const translations = {
     cancelRequest: "Cancel Request",
     confirmCancelRequest: "Are you sure you want to cancel this print request?",
     toastCancelSuccess: "Print request cancelled successfully!",
-    cancelError: "Unable to cancel print request."
+    cancelError: "Unable to cancel print request.",
+    printNotActiveYet: "The print request function is not active yet."
   },
   it: {
     session: "Sessione",
@@ -90,7 +91,8 @@ export const translations = {
     cancelRequest: "Annulla Richiesta",
     confirmCancelRequest: "Sei sicuro di voler annullare questa richiesta di stampa?",
     toastCancelSuccess: "Richiesta di stampa annullata con successo!",
-    cancelError: "Impossibile annullare la richiesta di stampa."
+    cancelError: "Impossibile annullare la richiesta di stampa.",
+    printNotActiveYet: "La funzione di richiesta di stampa non è ancora attiva."
   },
   de: {
     session: "Sitzung",
@@ -136,7 +138,8 @@ export const translations = {
     cancelRequest: "Anfrage stornieren",
     confirmCancelRequest: "Sind Sie sicher, dass Sie diese Druckanfrage stornieren möchten?",
     toastCancelSuccess: "Druckanfrage erfolgreich storniert!",
-    cancelError: "Druckanfrage konnte nicht storniert werden."
+    cancelError: "Druckanfrage konnte nicht storniert werden.",
+    printNotActiveYet: "Die Druckanfragefunktion ist noch nicht aktiv."
   },
   da: {
     session: "Session",
@@ -182,7 +185,8 @@ export const translations = {
     cancelRequest: "Annuller anmodning",
     confirmCancelRequest: "Er du sikker på, at du vil annullere denne printanmodning?",
     toastCancelSuccess: "Printanmodning blev annulleret med succes!",
-    cancelError: "Kunne ikke annullere printanmodningen."
+    cancelError: "Kunne ikke annullere printanmodningen.",
+    printNotActiveYet: "Printanmodningsfunktionen er ikke aktiv endnu."
   },
   es: {
     session: "Sesión",
@@ -228,7 +232,8 @@ export const translations = {
     cancelRequest: "Cancelar Solicitud",
     confirmCancelRequest: "¿Estás seguro de que deseas cancelar esta solicitud de impresión?",
     toastCancelSuccess: "¡Solicitud de impresión cancelada con éxito!",
-    cancelError: "No se pudo cancelar la solicitud de impresión."
+    cancelError: "No se pudo cancelar la solicitud de impresión.",
+    printNotActiveYet: "La función de solicitud de impresión aún no está activa."
   },
   fr: {
     session: "Session",
@@ -274,7 +279,8 @@ export const translations = {
     cancelRequest: "Annuler la demande",
     confirmCancelRequest: "Êtes-vous sûr de vouloir annuler cette demande d'impression ?",
     toastCancelSuccess: "Demande d'impression annulée avec succès !",
-    cancelError: "Impossible d'annuler la demande d'impression."
+    cancelError: "Impossible d'annuler la demande d'impression.",
+    printNotActiveYet: "La fonction de demande d'impression n'est pas encore active."
   },
 };
 
