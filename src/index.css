@@ -3711,5 +3711,9 @@ button.clickable-thumbnail:focus-visible {
   margin-top: 1rem;
 }
 
+.spinner-rotate {
+  animation: spin 1s linear infinite;
+}
+
 
 

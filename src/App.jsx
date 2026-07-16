@@ -10,6 +10,7 @@ import { useAdminAuth } from './hooks/useAdminAuth';
 import { useStickers } from './hooks/useStickers';
 import { useSelections } from './hooks/useSelections';
 import { useDownloadSession } from './hooks/useDownloadSession';
+import { useMonitor } from './hooks/useMonitor';
 
 function AppContent() {
   const path = window.location.pathname;
@@ -31,6 +32,9 @@ function AppContent() {
 
   // 4. Customer Download Session hook
   const downloadSession = useDownloadSession();
+
+  // 5. System Monitor hook
+  const monitorData = useMonitor(selectionsData.activeTab);
 
   const formatSize = (bytes) => {
     if (!bytes) return 'Unknown size';
@@ -105,6 +109,13 @@ function AppContent() {
           handleDeleteSelection={selectionsData.handleDeleteSelection}
           handleTriggerPrint={selectionsData.handleTriggerPrint}
           formatSize={formatSize}
+          monitorStats={monitorData.stats}
+          monitorLoading={monitorData.loading}
+          monitorError={monitorData.error}
+          monitorAutoRefresh={monitorData.autoRefresh}
+          setMonitorAutoRefresh={monitorData.setAutoRefresh}
+          monitorRefreshSeconds={monitorData.refreshSecondsLeft}
+          fetchMonitorStats={monitorData.fetchStats}
         />
       </div>
     );
