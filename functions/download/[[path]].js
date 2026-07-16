@@ -15,7 +15,7 @@ export async function onRequest(context) {
     const incomingUrl = new URL(request.url);
 
     // Normalize backend origin (remove trailing slash and trailing /api)
-    const backendOriginClean = (env.BACKEND_ORIGIN || "http://static.44.52.233.167.clients.your-server.de:8080")
+    const backendOriginClean = (env.BACKEND_ORIGIN || "https://167.233.52.44.sslip.io")
         .replace(/\/api\/?$/, "")
         .replace(/\/$/, "");
 

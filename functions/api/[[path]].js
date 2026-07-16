@@ -8,7 +8,7 @@ export async function onRequest(context) {
             ? params.path.join("/")
             : (params.path || "");
 
-        const backendOrigin = env.BACKEND_ORIGIN || "http://static.44.52.233.167.clients.your-server.de:8080";
+        const backendOrigin = env.BACKEND_ORIGIN || "https://167.233.52.44.sslip.io";
         const incomingUrl = new URL(request.url);
         const base = backendOrigin.replace(/\/+$/, "");
         const prefix = BACKEND_PREFIX.replace(/\/+$/, "");
