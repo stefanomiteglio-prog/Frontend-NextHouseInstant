@@ -545,6 +545,11 @@ function AdminDashboard({
                       <div style={{ textAlign: 'left' }}>
                         <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.photos_count}</div>
                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Uploaded Photos</div>
+                        {monitorStats.database.photos_last_48h !== undefined && (
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                            Last 48h: <span style={{ color: '#3b82f6', fontWeight: '600' }}>{monitorStats.database.photos_last_48h}</span>
+                          </div>
+                        )}
                         <div style={{ fontSize: '0.75rem', color: '#3b82f6', fontWeight: '500', marginTop: '2px' }}>{monitorStats.database.photos_size_formatted}</div>
                       </div>
                     </div>
