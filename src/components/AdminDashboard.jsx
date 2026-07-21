@@ -39,6 +39,7 @@ function AdminDashboard({
   fetchMonitorStats
 }) {
   const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
+  const [hoveredPoint, setHoveredPoint] = useState(null);
 
   const renderHistoryChart = () => {
     const historyData = monitorStats?.history || [];
@@ -93,33 +94,74 @@ function AdminDashboard({
       }
     };
 
+    const formatTooltipDate = (dateStr) => {
+      try {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('da-DK', { day: '2-digit', month: 'short', year: 'numeric' });
+      } catch {
+        return dateStr;
+      }
+    };
+
+    // Calculate tooltip coordinates if active
+    let tooltipX = 0;
+    let tooltipY = 0;
+    let showBelow = false;
+    const tooltipWidth = 150;
+    const tooltipHeight = 75;
+
+    if (hoveredPoint) {
+      tooltipX = hoveredPoint.x - tooltipWidth / 2;
+      const minTooltipX = 10;
+      const maxTooltipX = width - tooltipWidth - 10;
+      if (tooltipX < minTooltipX) {
+        tooltipX = minTooltipX;
+      } else if (tooltipX > maxTooltipX) {
+        tooltipX = maxTooltipX;
+      }
+
+      // Collect Y coordinates of only the dots actually rendered (count > 0)
+      const activeYs = [];
+      if (hoveredPoint.raw.sessions_count > 0) activeYs.push(hoveredPoint.ySessions);
+      if (hoveredPoint.raw.selections_count > 0) activeYs.push(hoveredPoint.ySelections);
+      
+      const minY = activeYs.length > 0 ? Math.min(...activeYs) : height - paddingBottom;
+      const maxY = activeYs.length > 0 ? Math.max(...activeYs) : height - paddingBottom;
+
+      tooltipY = minY - tooltipHeight - 15;
+      if (tooltipY < paddingTop) {
+        tooltipY = maxY + 15;
+        showBelow = true;
+      }
+    }
+
     return (
-      <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--card-border)', borderRadius: '12px', marginTop: '1.5rem' }}>
+      <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left', marginTop: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', margin: 0 }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#1e293b', margin: 0, fontFamily: "'Inter', sans-serif" }}>
             30-Day Activity History
           </h3>
           <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span>
-              <span style={{ color: 'var(--text-muted)' }}>Sessions Created</span>
+              <span style={{ color: '#4b5563', fontWeight: '500' }}>Sessions Created</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#a855f7' }}></span>
-              <span style={{ color: 'var(--text-muted)' }}>Print Requests</span>
+              <span style={{ color: '#4b5563', fontWeight: '500' }}>Print Requests</span>
             </div>
           </div>
         </div>
 
-        <div style={{ width: '100%', overflowX: 'auto' }}>
+        <div style={{ width: '100%', overflowX: 'auto', position: 'relative' }}>
           <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', minWidth: '600px', height: 'auto', display: 'block' }}>
             <defs>
               <linearGradient id="sessionsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15" />
                 <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
               </linearGradient>
               <linearGradient id="selectionsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.2" />
+                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.15" />
                 <stop offset="100%" stopColor="#a855f7" stopOpacity="0.0" />
               </linearGradient>
             </defs>
@@ -134,15 +176,17 @@ function AdminDashboard({
                     y1={y} 
                     x2={width - paddingRight} 
                     y2={y} 
-                    stroke="rgba(255, 255, 255, 0.05)" 
+                    stroke="rgba(0, 0, 0, 0.06)" 
                     strokeWidth="1" 
                     strokeDasharray={ratio === 0 ? "0" : "4 4"}
                   />
                   <text 
                     x={paddingLeft - 8} 
                     y={y + 4} 
-                    fill="rgba(255, 255, 255, 0.4)" 
+                    fill="#64748b" 
                     fontSize="10" 
+                    fontWeight="500"
+                    fontFamily="'Inter', sans-serif"
                     textAnchor="end"
                   >
                     {value}
@@ -151,35 +195,219 @@ function AdminDashboard({
               );
             })}
 
+            {/* Vertical hover guide line */}
+            {hoveredPoint && (
+              <line 
+                x1={hoveredPoint.x} 
+                y1={paddingTop} 
+                x2={hoveredPoint.x} 
+                y2={height - paddingBottom} 
+                stroke="#cbd5e1" 
+                strokeWidth="1.5" 
+                strokeDasharray="4 4"
+                pointerEvents="none"
+              />
+            )}
+
             <path d={sessionsAreaPath} fill="url(#sessionsGrad)" />
             <path d={selectionsAreaPath} fill="url(#selectionsGrad)" />
 
             <path d={sessionsPath} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             <path d={selectionsPath} fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
 
-            {points.map((p, idx) => (
-              <g key={idx}>
-                {p.raw.sessions_count > 0 && (
-                  <circle cx={p.x} cy={p.ySessions} r="4" fill="var(--card-bg)" stroke="#3b82f6" strokeWidth="2" />
-                )}
-                {p.raw.selections_count > 0 && (
-                  <circle cx={p.x} cy={p.ySelections} r="4" fill="var(--card-bg)" stroke="#a855f7" strokeWidth="2" />
-                )}
-              </g>
-            ))}
+            {/* Interactive Circles / Dots */}
+            {points.map((p, idx) => {
+              const isHovered = hoveredPoint && hoveredPoint.date === p.date;
+              return (
+                <g key={idx}>
+                  {p.raw.sessions_count > 0 && (
+                    <circle 
+                      cx={p.x} 
+                      cy={p.ySessions} 
+                      r={isHovered ? "6" : "4"} 
+                      fill="#ffffff" 
+                      stroke="#3b82f6" 
+                      strokeWidth={isHovered ? "3" : "2"} 
+                      style={{ transition: 'all 0.1s ease' }}
+                    />
+                  )}
+                  {p.raw.selections_count > 0 && (
+                    <circle 
+                      cx={p.x} 
+                      cy={p.ySelections} 
+                      r={isHovered ? "6" : "4"} 
+                      fill="#ffffff" 
+                      stroke="#a855f7" 
+                      strokeWidth={isHovered ? "3" : "2"} 
+                      style={{ transition: 'all 0.1s ease' }}
+                    />
+                  )}
+                </g>
+              );
+            })}
 
+            {/* X Axis Labels */}
             {xLabels.map((p, idx) => (
               <text 
                 key={idx}
                 x={p.x} 
                 y={height - 12} 
-                fill="rgba(255, 255, 255, 0.4)" 
+                fill="#64748b" 
                 fontSize="10" 
+                fontWeight="500"
+                fontFamily="'Inter', sans-serif"
                 textAnchor="middle"
               >
                 {formatDate(p.date)}
               </text>
             ))}
+
+            {/* Invisible hover zones/bars */}
+            {points.map((p, idx) => {
+              const colWidth = chartWidth / (points.length - 1 || 1);
+              return (
+                <rect
+                  key={`hover-zone-${idx}`}
+                  x={p.x - colWidth / 2}
+                  y={paddingTop}
+                  width={colWidth}
+                  height={chartHeight}
+                  fill="transparent"
+                  style={{ cursor: 'pointer' }}
+                  onMouseEnter={() => setHoveredPoint(p)}
+                  onMouseMove={() => setHoveredPoint(p)}
+                  onMouseLeave={() => setHoveredPoint(null)}
+                />
+              );
+            })}
+
+            {/* Tooltip Group */}
+            {hoveredPoint && (
+              <g style={{ pointerEvents: 'none' }}>
+                {/* Tooltip Background Card with subtle shadow */}
+                <rect
+                  x={tooltipX}
+                  y={tooltipY}
+                  width={tooltipWidth}
+                  height={tooltipHeight}
+                  rx="8"
+                  ry="8"
+                  fill="#ffffff"
+                  stroke="#e2e8f0"
+                  strokeWidth="1.5"
+                  style={{ filter: 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1))' }}
+                />
+                
+                {/* Tooltip Caret */}
+                {showBelow ? (
+                  <polygon
+                    points={`${hoveredPoint.x},${tooltipY} ${hoveredPoint.x - 6},${tooltipY - 6} ${hoveredPoint.x + 6},${tooltipY - 6}`}
+                    fill="#ffffff"
+                    stroke="#e2e8f0"
+                    strokeWidth="1.5"
+                  />
+                ) : (
+                  <polygon
+                    points={`${hoveredPoint.x},${tooltipY + tooltipHeight} ${hoveredPoint.x - 6},${tooltipY + tooltipHeight + 6} ${hoveredPoint.x + 6},${tooltipY + tooltipHeight + 6}`}
+                    fill="#ffffff"
+                    stroke="#e2e8f0"
+                    strokeWidth="1.5"
+                  />
+                )}
+                {/* Clean Caret Base Cover */}
+                {showBelow ? (
+                  <polygon
+                    points={`${hoveredPoint.x - 5},${tooltipY} ${hoveredPoint.x + 5},${tooltipY} ${hoveredPoint.x},${tooltipY + 1}`}
+                    fill="#ffffff"
+                  />
+                ) : (
+                  <polygon
+                    points={`${hoveredPoint.x - 5},${tooltipY + tooltipHeight} ${hoveredPoint.x + 5},${tooltipY + tooltipHeight} ${hoveredPoint.x},${tooltipY + tooltipHeight - 1}`}
+                    fill="#ffffff"
+                  />
+                )}
+
+                {/* Tooltip Header Date */}
+                <text
+                  x={tooltipX + 12}
+                  y={tooltipY + 20}
+                  fontSize="11.5"
+                  fontWeight="700"
+                  fill="#1e293b"
+                  fontFamily="'Inter', sans-serif"
+                >
+                  {formatTooltipDate(hoveredPoint.date)}
+                </text>
+
+                {/* Divider Line */}
+                <line
+                  x1={tooltipX + 12}
+                  y1={tooltipY + 28}
+                  x2={tooltipX + tooltipWidth - 12}
+                  y2={tooltipY + 28}
+                  stroke="#f1f5f9"
+                  strokeWidth="1.2"
+                />
+
+                {/* Sessions Detail Row */}
+                <circle
+                  cx={tooltipX + 18}
+                  cy={tooltipY + 42}
+                  r="3.5"
+                  fill="#3b82f6"
+                />
+                <text
+                  x={tooltipX + 28}
+                  y={tooltipY + 45}
+                  fontSize="10"
+                  fontWeight="500"
+                  fill="#64748b"
+                  fontFamily="'Inter', sans-serif"
+                >
+                  Sessions:
+                </text>
+                <text
+                  x={tooltipX + tooltipWidth - 14}
+                  y={tooltipY + 45}
+                  fontSize="10.5"
+                  fontWeight="700"
+                  fill="#1e293b"
+                  fontFamily="'Inter', sans-serif"
+                  textAnchor="end"
+                >
+                  {hoveredPoint.raw.sessions_count || 0}
+                </text>
+
+                {/* Selections/Prints Detail Row */}
+                <circle
+                  cx={tooltipX + 18}
+                  cy={tooltipY + 58}
+                  r="3.5"
+                  fill="#a855f7"
+                />
+                <text
+                  x={tooltipX + 28}
+                  y={tooltipY + 61}
+                  fontSize="10"
+                  fontWeight="500"
+                  fill="#64748b"
+                  fontFamily="'Inter', sans-serif"
+                >
+                  Prints:
+                </text>
+                <text
+                  x={tooltipX + tooltipWidth - 14}
+                  y={tooltipY + 61}
+                  fontSize="10.5"
+                  fontWeight="700"
+                  fill="#1e293b"
+                  fontFamily="'Inter', sans-serif"
+                  textAnchor="end"
+                >
+                  {hoveredPoint.raw.selections_count || 0}
+                </text>
+              </g>
+            )}
           </svg>
         </div>
       </div>
@@ -207,20 +435,7 @@ function AdminDashboard({
     return { name: fullName, booking: '' };
   };
 
-  const formatUptime = (seconds) => {
-    if (!seconds) return '0s';
-    const d = Math.floor(seconds / (3600 * 24));
-    const h = Math.floor((seconds % (3600 * 24)) / 3600);
-    const m = Math.floor((seconds % 3600) / 60);
-    const s = Math.floor(seconds % 60);
-    
-    const parts = [];
-    if (d > 0) parts.push(`${d}d`);
-    if (h > 0) parts.push(`${h}h`);
-    if (m > 0) parts.push(`${m}m`);
-    if (parts.length === 0 || s > 0) parts.push(`${s}s`);
-    return parts.join(' ');
-  };
+
 
   return (
     <>
