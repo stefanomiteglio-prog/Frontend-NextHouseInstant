@@ -43,7 +43,7 @@ function AdminDashboard({
 
   const renderHistoryChart = () => {
     const historyData = monitorStats?.history || [];
-    
+
     if (historyData.length === 0) {
       return (
         <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '3rem' }}>
@@ -124,7 +124,7 @@ function AdminDashboard({
       const activeYs = [];
       if (hoveredPoint.raw.sessions_count > 0) activeYs.push(hoveredPoint.ySessions);
       if (hoveredPoint.raw.selections_count > 0) activeYs.push(hoveredPoint.ySelections);
-      
+
       const minY = activeYs.length > 0 ? Math.min(...activeYs) : height - paddingBottom;
       const maxY = activeYs.length > 0 ? Math.max(...activeYs) : height - paddingBottom;
 
@@ -171,20 +171,20 @@ function AdminDashboard({
               const value = Math.round(ratio * maxVal);
               return (
                 <g key={i}>
-                  <line 
-                    x1={paddingLeft} 
-                    y1={y} 
-                    x2={width - paddingRight} 
-                    y2={y} 
-                    stroke="rgba(0, 0, 0, 0.06)" 
-                    strokeWidth="1" 
+                  <line
+                    x1={paddingLeft}
+                    y1={y}
+                    x2={width - paddingRight}
+                    y2={y}
+                    stroke="rgba(0, 0, 0, 0.06)"
+                    strokeWidth="1"
                     strokeDasharray={ratio === 0 ? "0" : "4 4"}
                   />
-                  <text 
-                    x={paddingLeft - 8} 
-                    y={y + 4} 
-                    fill="#64748b" 
-                    fontSize="10" 
+                  <text
+                    x={paddingLeft - 8}
+                    y={y + 4}
+                    fill="#64748b"
+                    fontSize="10"
                     fontWeight="500"
                     fontFamily="'Inter', sans-serif"
                     textAnchor="end"
@@ -197,13 +197,13 @@ function AdminDashboard({
 
             {/* Vertical hover guide line */}
             {hoveredPoint && (
-              <line 
-                x1={hoveredPoint.x} 
-                y1={paddingTop} 
-                x2={hoveredPoint.x} 
-                y2={height - paddingBottom} 
-                stroke="#cbd5e1" 
-                strokeWidth="1.5" 
+              <line
+                x1={hoveredPoint.x}
+                y1={paddingTop}
+                x2={hoveredPoint.x}
+                y2={height - paddingBottom}
+                stroke="#cbd5e1"
+                strokeWidth="1.5"
                 strokeDasharray="4 4"
                 pointerEvents="none"
               />
@@ -221,24 +221,24 @@ function AdminDashboard({
               return (
                 <g key={idx}>
                   {p.raw.sessions_count > 0 && (
-                    <circle 
-                      cx={p.x} 
-                      cy={p.ySessions} 
-                      r={isHovered ? "6" : "4"} 
-                      fill="#ffffff" 
-                      stroke="#3b82f6" 
-                      strokeWidth={isHovered ? "3" : "2"} 
+                    <circle
+                      cx={p.x}
+                      cy={p.ySessions}
+                      r={isHovered ? "6" : "4"}
+                      fill="#ffffff"
+                      stroke="#3b82f6"
+                      strokeWidth={isHovered ? "3" : "2"}
                       style={{ transition: 'all 0.1s ease' }}
                     />
                   )}
                   {p.raw.selections_count > 0 && (
-                    <circle 
-                      cx={p.x} 
-                      cy={p.ySelections} 
-                      r={isHovered ? "6" : "4"} 
-                      fill="#ffffff" 
-                      stroke="#a855f7" 
-                      strokeWidth={isHovered ? "3" : "2"} 
+                    <circle
+                      cx={p.x}
+                      cy={p.ySelections}
+                      r={isHovered ? "6" : "4"}
+                      fill="#ffffff"
+                      stroke="#a855f7"
+                      strokeWidth={isHovered ? "3" : "2"}
                       style={{ transition: 'all 0.1s ease' }}
                     />
                   )}
@@ -248,12 +248,12 @@ function AdminDashboard({
 
             {/* X Axis Labels */}
             {xLabels.map((p, idx) => (
-              <text 
+              <text
                 key={idx}
-                x={p.x} 
-                y={height - 12} 
-                fill="#64748b" 
-                fontSize="10" 
+                x={p.x}
+                y={height - 12}
+                fill="#64748b"
+                fontSize="10"
                 fontWeight="500"
                 fontFamily="'Inter', sans-serif"
                 textAnchor="middle"
@@ -297,7 +297,7 @@ function AdminDashboard({
                   strokeWidth="1.5"
                   style={{ filter: 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1))' }}
                 />
-                
+
                 {/* Tooltip Caret */}
                 {showBelow ? (
                   <polygon
@@ -459,7 +459,7 @@ function AdminDashboard({
 
         {/* Admin Navigation Tabs */}
         <div className="admin-tabs">
-          <button 
+          <button
             className={`admin-tab-btn ${activeTab === 'prints' ? 'active' : ''}`}
             onClick={() => setActiveTab('prints')}
           >
@@ -468,7 +468,7 @@ function AdminDashboard({
             </svg>
             Print Requests
           </button>
-          <button 
+          <button
             className={`admin-tab-btn ${activeTab === 'stickers' ? 'active' : ''}`}
             onClick={() => setActiveTab('stickers')}
           >
@@ -477,7 +477,7 @@ function AdminDashboard({
             </svg>
             Decorative Stickers
           </button>
-          <button 
+          <button
             className={`admin-tab-btn ${activeTab === 'monitor' ? 'active' : ''}`}
             onClick={() => setActiveTab('monitor')}
           >
@@ -551,10 +551,10 @@ function AdminDashboard({
                 {stickers.map((sticker) => (
                   <div key={sticker.id} className="card">
                     <div className="img-container">
-                      <img 
-                        src={`${API_URL}/api/stickers/${sticker.id}/image`} 
-                        alt={sticker.name} 
-                        loading="lazy" 
+                      <img
+                        src={`${API_URL}/api/stickers/${sticker.id}/image`}
+                        alt={sticker.name}
+                        loading="lazy"
                       />
                     </div>
                     <div className="card-body">
@@ -567,15 +567,15 @@ function AdminDashboard({
 
                       {deletingStickerId === sticker.id ? (
                         <div className="confirm-delete-box">
-                          <button 
-                            onClick={() => handleDeleteSticker(sticker.id)} 
+                          <button
+                            onClick={() => handleDeleteSticker(sticker.id)}
                             className="btn btn-danger"
                             style={{ padding: '0.5rem' }}
                           >
                             Confirm
                           </button>
-                          <button 
-                            onClick={() => setDeletingStickerId(null)} 
+                          <button
+                            onClick={() => setDeletingStickerId(null)}
                             className="btn btn-secondary"
                             style={{ padding: '0.5rem' }}
                           >
@@ -583,8 +583,8 @@ function AdminDashboard({
                           </button>
                         </div>
                       ) : (
-                        <button 
-                          onClick={() => setDeletingStickerId(sticker.id)} 
+                        <button
+                          onClick={() => setDeletingStickerId(sticker.id)}
                           className="btn btn-danger"
                           style={{ width: '100%' }}
                         >
@@ -630,10 +630,10 @@ function AdminDashboard({
                   Filter
                 </button>
                 {filterName && (
-                  <button 
+                  <button
                     onClick={() => {
                       setFilterName('');
-                    }} 
+                    }}
                     className="btn btn-secondary"
                   >
                     Reset
@@ -662,121 +662,121 @@ function AdminDashboard({
                 {[...selections]
                   .sort((a, b) => b.id - a.id)
                   .map((sel) => (
-                  <div key={sel.id} className="admin-selection-card">
-                    <div className="admin-selection-header">
-                      <div className="selection-info-group">
-                        <div className="admin-selection-header-row">
-                          <span className="admin-selection-title">Print Request</span>
-                          <span className={`status-badge ${sel.status || 'pending'}`}>
-                            {sel.status || 'pending'}
-                          </span>
-                        </div>
-                        {sel.name && (() => {
-                          const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
-                          return (
-                            <>
-                              <h3 className="selection-guest-title">
-                                Selection for: <strong>{parsedName}</strong>
-                              </h3>
-                              {parsedBooking && (
-                                <h4 className="selection-booking-title">
-                                  Booking: <strong>{parsedBooking}</strong>
-                                </h4>
-                              )}
-                            </>
-                          );
-                        })()}
-                        <span className="selection-session-tag">Session #{sel.download_session_id}</span>
-                      </div>
-                      <span className="request-date">
-                        {new Date(sel.created_at).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' })}
-                      </span>
-                    </div>
-                    
-                    <div className="admin-selection-thumbs">
-                      {sel.photos.slice(0, 8).map((photo) => (
-                        <div key={photo.id} className="admin-selection-thumb" title="Photo thumbnail">
-                          <img src={`${API_URL}/api/photos/${photo.id}/download`} alt="Photo" />
-                        </div>
-                      ))}
-                      {sel.photos.length > 8 && (
-                        <div className="admin-selection-thumb admin-selection-thumb-more">
-                          +{sel.photos.length - 8}
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="admin-selection-actions">
-                      <span className="photo-count-badge">
-                        {sel.photos.length} {sel.photos.length === 1 ? 'photo' : 'photos'}
-                      </span>
-                      <div className="admin-card-buttons">
-                        <button 
-                          onClick={() => handleTriggerPrint(sel.id)}
-                          className={`btn admin-btn-action-print ${sel.status === 'failed' ? 'btn-danger' : 'btn-accent'} ${['queued', 'assigned', 'printing'].includes(sel.status) ? 'disabled' : ''}`}
-                          disabled={['queued', 'assigned', 'printing'].includes(sel.status)}
-                        >
-                          <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                          </svg>
-                          {sel.status === 'queued' && 'Queued'}
-                          {sel.status === 'assigned' && 'Assigned'}
-                          {sel.status === 'printing' && 'Printing...'}
-                          {sel.status === 'completed' && 'Reprint'}
-                          {sel.status === 'failed' && 'Retry Print'}
-                          {(!sel.status || sel.status === 'pending') && 'Print'}
-                        </button>
-                        <button 
-                          onClick={() => toggleExpandSelection(sel.id)} 
-                          className={`btn btn-secondary admin-btn-action-details ${expandedSelectionIds.has(sel.id) ? 'active' : ''}`}
-                        >
-                          {expandedSelectionIds.has(sel.id) ? 'Collapse' : 'Details'}
-                        </button>
-                        
-                        {deletingSelectionId === sel.id ? (
-                          <div className="confirm-delete-box admin-confirm-delete-box">
-                            <button onClick={() => handleDeleteSelection(sel.id)} className="btn btn-danger admin-btn-confirm">
-                              Confirm
-                            </button>
-                            <button onClick={() => setDeletingSelectionId(null)} className="btn btn-secondary admin-btn-cancel">
-                              Cancel
-                            </button>
+                    <div key={sel.id} className="admin-selection-card">
+                      <div className="admin-selection-header">
+                        <div className="selection-info-group">
+                          <div className="admin-selection-header-row">
+                            <span className="admin-selection-title">Print Request</span>
+                            <span className={`status-badge ${sel.status || 'pending'}`}>
+                              {sel.status || 'pending'}
+                            </span>
                           </div>
-                        ) : (
-                          <button onClick={() => setDeletingSelectionId(sel.id)} className="btn btn-danger admin-btn-action-delete">
-                            Delete
-                          </button>
+                          {sel.name && (() => {
+                            const { name: parsedName, booking: parsedBooking } = parseName(sel.name);
+                            return (
+                              <>
+                                <h3 className="selection-guest-title">
+                                  Selection for: <strong>{parsedName}</strong>
+                                </h3>
+                                {parsedBooking && (
+                                  <h4 className="selection-booking-title">
+                                    Booking: <strong>{parsedBooking}</strong>
+                                  </h4>
+                                )}
+                              </>
+                            );
+                          })()}
+                          <span className="selection-session-tag">Session #{sel.download_session_id}</span>
+                        </div>
+                        <span className="request-date">
+                          {new Date(sel.created_at).toLocaleString('da-DK', { timeZone: 'Europe/Copenhagen' })}
+                        </span>
+                      </div>
+
+                      <div className="admin-selection-thumbs">
+                        {sel.photos.slice(0, 8).map((photo) => (
+                          <div key={photo.id} className="admin-selection-thumb" title="Photo thumbnail">
+                            <img src={`${API_URL}/api/photos/${photo.id}/download`} alt="Photo" />
+                          </div>
+                        ))}
+                        {sel.photos.length > 8 && (
+                          <div className="admin-selection-thumb admin-selection-thumb-more">
+                            +{sel.photos.length - 8}
+                          </div>
                         )}
                       </div>
-                    </div>
 
-                    {/* Accordion Details Panel */}
-                    <div className={`admin-selection-details-accordion ${expandedSelectionIds.has(sel.id) ? 'expanded' : ''}`}>
-                      <div className="accordion-content">
-                        <div className="accordion-photos-grid">
-                          {sel.photos.map((photo) => (
-                            <div key={photo.id} className="accordion-photo-card">
-                              <div className="accordion-photo-thumb">
-                                <img src={`${API_URL}/api/photos/${photo.id}/download`} alt="Photo" />
-                              </div>
-                              <div className="accordion-photo-info">
-                                <div className="filesize">{formatSize(photo.file_size)}</div>
-                                <a 
-                                  href={`${API_URL}/api/photos/${photo.id}/download`} 
-                                  download={photo.original_filename}
-                                  className="btn btn-download"
-                                  style={{ padding: '0.5rem', fontSize: '0.8rem', marginTop: '0.5rem', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                                >
-                                  Download
-                                </a>
-                              </div>
+                      <div className="admin-selection-actions">
+                        <span className="photo-count-badge">
+                          {sel.photos.length} {sel.photos.length === 1 ? 'photo' : 'photos'}
+                        </span>
+                        <div className="admin-card-buttons">
+                          <button
+                            onClick={() => handleTriggerPrint(sel.id)}
+                            className={`btn admin-btn-action-print ${sel.status === 'failed' ? 'btn-danger' : 'btn-accent'} ${['queued', 'assigned', 'printing'].includes(sel.status) ? 'disabled' : ''}`}
+                            disabled={['queued', 'assigned', 'printing'].includes(sel.status)}
+                          >
+                            <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                            </svg>
+                            {sel.status === 'queued' && 'Queued'}
+                            {sel.status === 'assigned' && 'Assigned'}
+                            {sel.status === 'printing' && 'Printing...'}
+                            {sel.status === 'completed' && 'Reprint'}
+                            {sel.status === 'failed' && 'Retry Print'}
+                            {(!sel.status || sel.status === 'pending') && 'Print'}
+                          </button>
+                          <button
+                            onClick={() => toggleExpandSelection(sel.id)}
+                            className={`btn btn-secondary admin-btn-action-details ${expandedSelectionIds.has(sel.id) ? 'active' : ''}`}
+                          >
+                            {expandedSelectionIds.has(sel.id) ? 'Collapse' : 'Details'}
+                          </button>
+
+                          {deletingSelectionId === sel.id ? (
+                            <div className="confirm-delete-box admin-confirm-delete-box">
+                              <button onClick={() => handleDeleteSelection(sel.id)} className="btn btn-danger admin-btn-confirm">
+                                Confirm
+                              </button>
+                              <button onClick={() => setDeletingSelectionId(null)} className="btn btn-secondary admin-btn-cancel">
+                                Cancel
+                              </button>
                             </div>
-                          ))}
+                          ) : (
+                            <button onClick={() => setDeletingSelectionId(sel.id)} className="btn btn-danger admin-btn-action-delete">
+                              Delete
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      {/* Accordion Details Panel */}
+                      <div className={`admin-selection-details-accordion ${expandedSelectionIds.has(sel.id) ? 'expanded' : ''}`}>
+                        <div className="accordion-content">
+                          <div className="accordion-photos-grid">
+                            {sel.photos.map((photo) => (
+                              <div key={photo.id} className="accordion-photo-card">
+                                <div className="accordion-photo-thumb">
+                                  <img src={`${API_URL}/api/photos/${photo.id}/download`} alt="Photo" />
+                                </div>
+                                <div className="accordion-photo-info">
+                                  <div className="filesize">{formatSize(photo.file_size)}</div>
+                                  <a
+                                    href={`${API_URL}/api/photos/${photo.id}/download`}
+                                    download={photo.original_filename}
+                                    className="btn btn-download"
+                                    style={{ padding: '0.5rem', fontSize: '0.8rem', marginTop: '0.5rem', height: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                                  >
+                                    Download
+                                  </a>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
               </div>
             )}
           </div>
@@ -786,7 +786,7 @@ function AdminDashboard({
           <div className="admin-dashboard monitor-tab">
             <div className="admin-toolbar" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
               <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--text-main)' }}>System Metrics</h2>
-              
+
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <span className="session-info" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>
                   {monitorAutoRefresh ? (
@@ -797,18 +797,18 @@ function AdminDashboard({
                     'Auto-refresh paused'
                   )}
                 </span>
-                
-                <button 
-                  onClick={() => setMonitorAutoRefresh(!monitorAutoRefresh)} 
+
+                <button
+                  onClick={() => setMonitorAutoRefresh(!monitorAutoRefresh)}
                   className={`btn ${monitorAutoRefresh ? 'btn-accent' : 'btn-secondary'}`}
                   style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto' }}
                 >
                   {monitorAutoRefresh ? 'Pause Auto' : 'Resume Auto'}
                 </button>
-                
-                <button 
-                  onClick={fetchMonitorStats} 
-                  className="btn btn-secondary" 
+
+                <button
+                  onClick={fetchMonitorStats}
+                  className="btn btn-secondary"
                   disabled={monitorLoading}
                   style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
@@ -837,24 +837,13 @@ function AdminDashboard({
 
             {monitorStats && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1rem' }}>
-                
+
                 {/* Application Stats Grid */}
                 <div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '500', marginBottom: '1rem', textAlign: 'left', color: 'var(--text-main)' }}>Application Metrics</h3>
                   <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-                    
-                    {/* Photos Stat */}
-                    <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
-                      <div style={{ padding: '0.75rem', borderRadius: '12px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                      </div>
-                      <div style={{ textAlign: 'left' }}>
-                        <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.photos_count}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Uploaded Photos</div>
-                      </div>
-                    </div>
+
+
 
                     {/* Active Sessions Stat */}
                     <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
@@ -866,7 +855,6 @@ function AdminDashboard({
                       <div style={{ textAlign: 'left' }}>
                         <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.sessions_active}</div>
                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Active Sessions</div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>Total sessions: {monitorStats.database.sessions_count}</div>
                       </div>
                     </div>
 
@@ -906,7 +894,7 @@ function AdminDashboard({
                 {/* Print Jobs Queue Breakdown */}
                 <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left' }}>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '500', marginBottom: '1.25rem', color: 'var(--text-main)' }}>Print Jobs Queue Distribution</h3>
-                  
+
                   {monitorStats.database.print_jobs.total === 0 ? (
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '1rem' }}>
                       No print jobs have been queued yet.
@@ -974,7 +962,7 @@ function AdminDashboard({
         )}
 
       </main>
-      
+
       {/* Selection Details Modal */}
       {detailSelection && (
         <div className="modal-overlay" onClick={() => setDetailSelection(null)}>
@@ -1007,7 +995,7 @@ function AdminDashboard({
                 </svg>
               </button>
             </div>
-            
+
             <div className="modal-photos-grid">
               {detailSelection.photos.map((photo) => (
                 <div key={photo.id} className="modal-photo-card">
@@ -1018,8 +1006,8 @@ function AdminDashboard({
                     <div>
                       <div className="filesize">{formatSize(photo.file_size)}</div>
                     </div>
-                    <a 
-                      href={`${API_URL}/api/photos/${photo.id}/download`} 
+                    <a
+                      href={`${API_URL}/api/photos/${photo.id}/download`}
                       download={photo.original_filename}
                       className="btn btn-download"
                       style={{ padding: '0.5rem', fontSize: '0.85rem', marginTop: '0.5rem' }}
@@ -1030,7 +1018,7 @@ function AdminDashboard({
                 </div>
               ))}
             </div>
-            
+
             <div className="admin-modal-footer">
               <button onClick={() => setDetailSelection(null)} className="btn btn-secondary">
                 Close
