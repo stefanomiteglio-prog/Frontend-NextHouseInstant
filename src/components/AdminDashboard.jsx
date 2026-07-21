@@ -63,20 +63,20 @@ function AdminDashboard({
 
     const maxVal = Math.max(
       10,
-      ...historyData.map(d => Math.max(d.photos_count || 0, d.selections_count || 0))
+      ...historyData.map(d => Math.max(d.sessions_count || 0, d.selections_count || 0))
     );
 
     const points = historyData.map((d, i) => {
       const x = paddingLeft + (i / (historyData.length - 1 || 1)) * chartWidth;
-      const yPhotos = height - paddingBottom - ((d.photos_count || 0) / maxVal) * chartHeight;
+      const ySessions = height - paddingBottom - ((d.sessions_count || 0) / maxVal) * chartHeight;
       const ySelections = height - paddingBottom - ((d.selections_count || 0) / maxVal) * chartHeight;
-      return { x, yPhotos, ySelections, date: d.date, raw: d };
+      return { x, ySessions, ySelections, date: d.date, raw: d };
     });
 
-    const photosPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.yPhotos}`).join(' ');
+    const sessionsPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.ySessions}`).join(' ');
     const selectionsPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.ySelections}`).join(' ');
 
-    const photosAreaPath = `${photosPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
+    const sessionsAreaPath = `${sessionsPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
     const selectionsAreaPath = `${selectionsPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
 
     const labelStep = Math.max(1, Math.floor(historyData.length / 5));
@@ -102,7 +102,7 @@ function AdminDashboard({
           <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span>
-              <span style={{ color: 'var(--text-muted)' }}>Photos Uploaded</span>
+              <span style={{ color: 'var(--text-muted)' }}>Sessions Created</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#a855f7' }}></span>
@@ -114,7 +114,7 @@ function AdminDashboard({
         <div style={{ width: '100%', overflowX: 'auto' }}>
           <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', minWidth: '600px', height: 'auto', display: 'block' }}>
             <defs>
-              <linearGradient id="photosGrad" x1="0" y1="0" x2="0" y2="1">
+              <linearGradient id="sessionsGrad" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
                 <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
               </linearGradient>
@@ -151,16 +151,16 @@ function AdminDashboard({
               );
             })}
 
-            <path d={photosAreaPath} fill="url(#photosGrad)" />
+            <path d={sessionsAreaPath} fill="url(#sessionsGrad)" />
             <path d={selectionsAreaPath} fill="url(#selectionsGrad)" />
 
-            <path d={photosPath} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={sessionsPath} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
             <path d={selectionsPath} fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
 
             {points.map((p, idx) => (
               <g key={idx}>
-                {p.raw.photos_count > 0 && (
-                  <circle cx={p.x} cy={p.yPhotos} r="4" fill="var(--card-bg)" stroke="#3b82f6" strokeWidth="2" />
+                {p.raw.sessions_count > 0 && (
+                  <circle cx={p.x} cy={p.ySessions} r="4" fill="var(--card-bg)" stroke="#3b82f6" strokeWidth="2" />
                 )}
                 {p.raw.selections_count > 0 && (
                   <circle cx={p.x} cy={p.ySelections} r="4" fill="var(--card-bg)" stroke="#a855f7" strokeWidth="2" />
