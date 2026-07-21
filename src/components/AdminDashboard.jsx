@@ -40,6 +40,152 @@ function AdminDashboard({
 }) {
   const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
 
+  const renderHistoryChart = () => {
+    const historyData = monitorStats?.history || [];
+    
+    if (historyData.length === 0) {
+      return (
+        <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '3rem' }}>
+          No historical data recorded yet. Statistics will start appearing daily.
+        </div>
+      );
+    }
+
+    const width = 800;
+    const height = 280;
+    const paddingLeft = 40;
+    const paddingRight = 20;
+    const paddingTop = 20;
+    const paddingBottom = 40;
+
+    const chartWidth = width - paddingLeft - paddingRight;
+    const chartHeight = height - paddingTop - paddingBottom;
+
+    const maxVal = Math.max(
+      10,
+      ...historyData.map(d => Math.max(d.photos_count || 0, d.selections_count || 0))
+    );
+
+    const points = historyData.map((d, i) => {
+      const x = paddingLeft + (i / (historyData.length - 1 || 1)) * chartWidth;
+      const yPhotos = height - paddingBottom - ((d.photos_count || 0) / maxVal) * chartHeight;
+      const ySelections = height - paddingBottom - ((d.selections_count || 0) / maxVal) * chartHeight;
+      return { x, yPhotos, ySelections, date: d.date, raw: d };
+    });
+
+    const photosPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.yPhotos}`).join(' ');
+    const selectionsPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.ySelections}`).join(' ');
+
+    const photosAreaPath = `${photosPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
+    const selectionsAreaPath = `${selectionsPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
+
+    const labelStep = Math.max(1, Math.floor(historyData.length / 5));
+    const xLabels = points.filter((_, idx) => idx % labelStep === 0 || idx === points.length - 1);
+
+    const gridLines = [0, 0.25, 0.5, 0.75, 1];
+
+    const formatDate = (dateStr) => {
+      try {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('da-DK', { day: '2-digit', month: 'short' });
+      } catch {
+        return dateStr;
+      }
+    };
+
+    return (
+      <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left', background: 'rgba(255, 255, 255, 0.01)', border: '1px solid var(--card-border)', borderRadius: '12px', marginTop: '1.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+          <h3 style={{ fontSize: '1.1rem', fontWeight: '500', color: 'var(--text-main)', margin: 0 }}>
+            30-Day Activity History
+          </h3>
+          <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span>
+              <span style={{ color: 'var(--text-muted)' }}>Photos Uploaded</span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#a855f7' }}></span>
+              <span style={{ color: 'var(--text-muted)' }}>Print Requests</span>
+            </div>
+          </div>
+        </div>
+
+        <div style={{ width: '100%', overflowX: 'auto' }}>
+          <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', minWidth: '600px', height: 'auto', display: 'block' }}>
+            <defs>
+              <linearGradient id="photosGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+              </linearGradient>
+              <linearGradient id="selectionsGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#a855f7" stopOpacity="0.0" />
+              </linearGradient>
+            </defs>
+
+            {gridLines.map((ratio, i) => {
+              const y = height - paddingBottom - ratio * chartHeight;
+              const value = Math.round(ratio * maxVal);
+              return (
+                <g key={i}>
+                  <line 
+                    x1={paddingLeft} 
+                    y1={y} 
+                    x2={width - paddingRight} 
+                    y2={y} 
+                    stroke="rgba(255, 255, 255, 0.05)" 
+                    strokeWidth="1" 
+                    strokeDasharray={ratio === 0 ? "0" : "4 4"}
+                  />
+                  <text 
+                    x={paddingLeft - 8} 
+                    y={y + 4} 
+                    fill="rgba(255, 255, 255, 0.4)" 
+                    fontSize="10" 
+                    textAnchor="end"
+                  >
+                    {value}
+                  </text>
+                </g>
+              );
+            })}
+
+            <path d={photosAreaPath} fill="url(#photosGrad)" />
+            <path d={selectionsAreaPath} fill="url(#selectionsGrad)" />
+
+            <path d={photosPath} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d={selectionsPath} fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+            {points.map((p, idx) => (
+              <g key={idx}>
+                {p.raw.photos_count > 0 && (
+                  <circle cx={p.x} cy={p.yPhotos} r="4" fill="var(--card-bg)" stroke="#3b82f6" strokeWidth="2" />
+                )}
+                {p.raw.selections_count > 0 && (
+                  <circle cx={p.x} cy={p.ySelections} r="4" fill="var(--card-bg)" stroke="#a855f7" strokeWidth="2" />
+                )}
+              </g>
+            ))}
+
+            {xLabels.map((p, idx) => (
+              <text 
+                key={idx}
+                x={p.x} 
+                y={height - 12} 
+                fill="rgba(255, 255, 255, 0.4)" 
+                fontSize="10" 
+                textAnchor="middle"
+              >
+                {formatDate(p.date)}
+              </text>
+            ))}
+          </svg>
+        </div>
+      </div>
+    );
+  };
+
   const toggleExpandSelection = (id) => {
     setExpandedSelectionIds(prev => {
       const next = new Set(prev);
@@ -477,59 +623,6 @@ function AdminDashboard({
             {monitorStats && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1rem' }}>
                 
-                {/* System Resource Gauges */}
-                <div className="admin-upload-section" style={{ padding: '1.5rem' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: '500', marginBottom: '1.5rem', textAlign: 'left', color: 'var(--text-main)' }}>Hardware Resources</h3>
-                  <div style={{ display: 'flex', justifyContent: 'space-around', flexWrap: 'wrap', gap: '1.5rem' }}>
-                    
-                    {/* CPU Gauge */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', background: 'rgba(255,255,255,0.015)', borderRadius: '12px', border: '1px solid var(--card-border)', minWidth: '160px', flex: '1 1 20%' }}>
-                      <div style={{ position: 'relative', width: '100px', height: '100px' }}>
-                        <svg width="100" height="100" style={{ transform: 'rotate(-90deg)' }}>
-                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.03)" strokeWidth="7" />
-                          <circle cx="50" cy="50" r="40" fill="transparent" stroke={monitorStats.system.cpu_percent > 80 ? '#ef4444' : monitorStats.system.cpu_percent > 50 ? '#f59e0b' : '#3b82f6'} strokeWidth="7" strokeDasharray={251.2} strokeDashoffset={251.2 - (Math.min(monitorStats.system.cpu_percent, 100) / 100) * 251.2} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.8s ease-in-out' }} />
-                        </svg>
-                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                          <span style={{ fontSize: '1.3rem', fontWeight: '600' }}>{monitorStats.system.cpu_percent}%</span>
-                        </div>
-                      </div>
-                      <span style={{ fontSize: '0.9rem', fontWeight: '600', marginTop: '0.8rem' }}>CPU Load</span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>1m Load: {monitorStats.system.cpu_load_1m} ({monitorStats.system.cpu_cores} Cores)</span>
-                    </div>
-
-                    {/* Memory Gauge */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', background: 'rgba(255,255,255,0.015)', borderRadius: '12px', border: '1px solid var(--card-border)', minWidth: '160px', flex: '1 1 20%' }}>
-                      <div style={{ position: 'relative', width: '100px', height: '100px' }}>
-                        <svg width="100" height="100" style={{ transform: 'rotate(-90deg)' }}>
-                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.03)" strokeWidth="7" />
-                          <circle cx="50" cy="50" r="40" fill="transparent" stroke={monitorStats.system.memory.percent > 85 ? '#ef4444' : monitorStats.system.memory.percent > 65 ? '#f59e0b' : '#10b981'} strokeWidth="7" strokeDasharray={251.2} strokeDashoffset={251.2 - (monitorStats.system.memory.percent / 100) * 251.2} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.8s ease-in-out' }} />
-                        </svg>
-                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                          <span style={{ fontSize: '1.3rem', fontWeight: '600' }}>{monitorStats.system.memory.percent}%</span>
-                        </div>
-                      </div>
-                      <span style={{ fontSize: '0.9rem', fontWeight: '600', marginTop: '0.8rem' }}>Memory</span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Used: {monitorStats.system.memory.used_gb} / {monitorStats.system.memory.total_gb} GB</span>
-                    </div>
-
-                    {/* Storage Uploads Gauge */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '1rem', background: 'rgba(255,255,255,0.015)', borderRadius: '12px', border: '1px solid var(--card-border)', minWidth: '160px', flex: '1 1 20%' }}>
-                      <div style={{ position: 'relative', width: '100px', height: '100px' }}>
-                        <svg width="100" height="100" style={{ transform: 'rotate(-90deg)' }}>
-                          <circle cx="50" cy="50" r="40" fill="transparent" stroke="rgba(255,255,255,0.03)" strokeWidth="7" />
-                          <circle cx="50" cy="50" r="40" fill="transparent" stroke={monitorStats.system.disk_uploads.percent > 90 ? '#ef4444' : monitorStats.system.disk_uploads.percent > 70 ? '#f59e0b' : '#10b981'} strokeWidth="7" strokeDasharray={251.2} strokeDashoffset={251.2 - (monitorStats.system.disk_uploads.percent / 100) * 251.2} strokeLinecap="round" style={{ transition: 'stroke-dashoffset 0.8s ease-in-out' }} />
-                        </svg>
-                        <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', textAlign: 'center' }}>
-                          <span style={{ fontSize: '1.3rem', fontWeight: '600' }}>{monitorStats.system.disk_uploads.percent}%</span>
-                        </div>
-                      </div>
-                      <span style={{ fontSize: '0.9rem', fontWeight: '600', marginTop: '0.8rem' }}>Storage Space</span>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>Free: {monitorStats.system.disk_uploads.free_gb} / {monitorStats.system.disk_uploads.total_gb} GB</span>
-                    </div>
-
-                  </div>
-                </div>
-
                 {/* Application Stats Grid */}
                 <div>
                   <h3 style={{ fontSize: '1.1rem', fontWeight: '500', marginBottom: '1rem', textAlign: 'left', color: 'var(--text-main)' }}>Application Metrics</h3>
@@ -539,18 +632,12 @@ function AdminDashboard({
                     <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
                       <div style={{ padding: '0.75rem', borderRadius: '12px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                           <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
                       <div style={{ textAlign: 'left' }}>
                         <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.photos_count}</div>
                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Uploaded Photos</div>
-                        {monitorStats.database.photos_last_48h !== undefined && (
-                          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
-                            Last 48h: <span style={{ color: '#3b82f6', fontWeight: '600' }}>{monitorStats.database.photos_last_48h}</span>
-                          </div>
-                        )}
-                        <div style={{ fontSize: '0.75rem', color: '#3b82f6', fontWeight: '500', marginTop: '2px' }}>{monitorStats.database.photos_size_formatted}</div>
                       </div>
                     </div>
 
@@ -578,7 +665,6 @@ function AdminDashboard({
                       <div style={{ textAlign: 'left' }}>
                         <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.stickers_count}</div>
                         <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Decorative Stickers</div>
-                        <div style={{ fontSize: '0.75rem', color: '#f59e0b', fontWeight: '500', marginTop: '2px' }}>{monitorStats.database.stickers_size_formatted}</div>
                       </div>
                     </div>
 
@@ -598,6 +684,9 @@ function AdminDashboard({
 
                   </div>
                 </div>
+
+                {/* Monthly History SVG Chart */}
+                {renderHistoryChart()}
 
                 {/* Print Jobs Queue Breakdown */}
                 <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left' }}>
@@ -662,27 +751,6 @@ function AdminDashboard({
                       </div>
                     </div>
                   )}
-                </div>
-
-                {/* Uptime and Server Info */}
-                <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-                  
-                  {/* System Uptime */}
-                  <div className="card" style={{ flex: '1 1 45%', padding: '1rem 1.5rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>System Uptime</span>
-                    <span style={{ fontSize: '1.4rem', fontWeight: '700', marginTop: '4px', color: '#10b981' }}>
-                      {formatUptime(monitorStats.system.system_uptime)}
-                    </span>
-                  </div>
-
-                  {/* App Uptime */}
-                  <div className="card" style={{ flex: '1 1 45%', padding: '1rem 1.5rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)', display: 'flex', flexDirection: 'column', alignItems: 'flex-start', textAlign: 'left' }}>
-                    <span style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Application Uptime</span>
-                    <span style={{ fontSize: '1.4rem', fontWeight: '700', marginTop: '4px', color: '#3b82f6' }}>
-                      {formatUptime(monitorStats.system.app_uptime)}
-                    </span>
-                  </div>
-
                 </div>
 
               </div>
