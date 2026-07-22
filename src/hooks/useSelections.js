@@ -4,7 +4,7 @@ import { useAdminAuth } from './useAdminAuth';
 export function useSelections() {
   const { user, authenticatedFetch, API_URL } = useAdminAuth();
   
-  const [activeTab, setActiveTab] = useState('prints'); // 'stickers' or 'prints'
+  const [activeTab, setActiveTab] = useState('monitor'); // Default to System Monitor ('monitor', 'prints', or 'stickers')
   const [selections, setSelections] = useState([]);
   const [selectionsLoading, setSelectionsLoading] = useState(false);
   const [filterName, setFilterName] = useState('');
