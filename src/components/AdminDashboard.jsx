@@ -838,22 +838,8 @@ function AdminDashboard({
 
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <span className="session-info" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>
-                  {monitorAutoRefresh ? (
-                    <>
-                      Auto-refresh in <strong className="countdown" style={{ marginLeft: '4px' }}>{monitorRefreshSeconds}s</strong>
-                    </>
-                  ) : (
-                    'Auto-refresh paused'
-                  )}
+                  Auto-refresh in <strong className="countdown" style={{ marginLeft: '4px' }}>{monitorRefreshSeconds}s</strong>
                 </span>
-
-                <button
-                  onClick={() => setMonitorAutoRefresh(!monitorAutoRefresh)}
-                  className={`btn ${monitorAutoRefresh ? 'btn-accent' : 'btn-secondary'}`}
-                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto' }}
-                >
-                  {monitorAutoRefresh ? 'Pause Auto' : 'Resume Auto'}
-                </button>
 
                 <button
                   onClick={fetchMonitorStats}

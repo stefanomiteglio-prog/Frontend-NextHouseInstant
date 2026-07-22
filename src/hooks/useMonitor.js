@@ -8,7 +8,7 @@ export function useMonitor(activeTab) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [refreshSecondsLeft, setRefreshSecondsLeft] = useState(10);
+  const [refreshSecondsLeft, setRefreshSecondsLeft] = useState(60);
 
   const fetchStats = useCallback(async () => {
     if (!user) return;
@@ -19,7 +19,7 @@ export function useMonitor(activeTab) {
       if (response.ok) {
         const data = await response.json();
         setStats(data);
-        setRefreshSecondsLeft(10);
+        setRefreshSecondsLeft(60);
       } else {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
@@ -38,7 +38,7 @@ export function useMonitor(activeTab) {
     }
   }, [user, activeTab, fetchStats]);
 
-  // Auto refresh timer effect
+  // Auto refresh timer effect (every 60 seconds / 1 minute)
   useEffect(() => {
     if (!user || activeTab !== 'monitor' || !autoRefresh) return;
     
@@ -46,7 +46,7 @@ export function useMonitor(activeTab) {
       setRefreshSecondsLeft(prev => {
         if (prev <= 1) {
           fetchStats();
-          return 10;
+          return 60;
         }
         return prev - 1;
       });

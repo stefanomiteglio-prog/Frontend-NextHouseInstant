@@ -11,13 +11,13 @@ export function useSelections() {
   const [detailSelection, setDetailSelection] = useState(null);
   const [deletingSelectionId, setDeletingSelectionId] = useState(null);
 
-  // Admin auto-refresh states
+  // Admin auto-refresh states (60 seconds / 1 minute)
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [refreshSecondsLeft, setRefreshSecondsLeft] = useState(30);
+  const [refreshSecondsLeft, setRefreshSecondsLeft] = useState(60);
 
   const fetchSelections = useCallback(async (name = filterName) => {
     setSelectionsLoading(true);
-    setRefreshSecondsLeft(30);
+    setRefreshSecondsLeft(60);
     try {
       const url = name 
         ? `${API_URL}/api/selections?name=${encodeURIComponent(name)}` 
@@ -105,7 +105,7 @@ export function useSelections() {
     }
   }, [user, activeTab, filterName, fetchSelections]);
 
-  // Auto refresh timer effect
+  // Auto refresh timer effect (every 60 seconds / 1 minute)
   useEffect(() => {
     if (!user || activeTab !== 'prints' || !autoRefresh) return;
     
@@ -115,7 +115,7 @@ export function useSelections() {
           Promise.resolve().then(() => {
             fetchSelections(filterName);
           });
-          return 30;
+          return 60;
         }
         return prev - 1;
       });
