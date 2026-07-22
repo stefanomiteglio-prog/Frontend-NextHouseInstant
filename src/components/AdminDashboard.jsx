@@ -138,17 +138,24 @@ function AdminDashboard({
     return (
       <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left', marginTop: '1.5rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <h3 style={{ fontSize: '1.1rem', fontWeight: '700', color: '#1e293b', margin: 0, fontFamily: "'Inter', sans-serif" }}>
-            30-Day Activity History
-          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(168, 85, 247, 0.15)', color: '#a855f7', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+              </svg>
+            </div>
+            <h3 className="admin-subsection-title">
+              30-Day Activity History
+            </h3>
+          </div>
           <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span>
-              <span style={{ color: '#4b5563', fontWeight: '500' }}>Sessions Created</span>
+              <span style={{ color: 'var(--text-muted)', fontWeight: '500' }}>Sessions Created</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#a855f7' }}></span>
-              <span style={{ color: '#4b5563', fontWeight: '500' }}>Print Requests</span>
+              <span style={{ color: 'var(--text-muted)', fontWeight: '500' }}>Print Requests</span>
             </div>
           </div>
         </div>
@@ -535,7 +542,7 @@ function AdminDashboard({
               )}
             </div>
 
-            <h2 style={{ fontSize: '1.5rem', fontWeight: '600', marginTop: '1rem', textAlign: 'left' }}>Uploaded Stickers</h2>
+            <h2 className="admin-section-title" style={{ marginTop: '1.5rem', marginBottom: '1rem', textAlign: 'left' }}>Uploaded Stickers</h2>
 
             {stickersLoading ? (
               <div className="center-container" style={{ minHeight: '20vh' }}>
@@ -785,7 +792,14 @@ function AdminDashboard({
         {activeTab === 'monitor' && (
           <div className="admin-dashboard monitor-tab">
             <div className="admin-toolbar" style={{ justifyContent: 'space-between', alignItems: 'center' }}>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: '600', color: 'var(--text-main)' }}>System Metrics</h2>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                <div style={{ padding: '0.5rem', borderRadius: '12px', background: 'rgba(249, 115, 22, 0.15)', color: 'var(--primary)', display: 'flex', justifyContent: 'center', alignItems: 'center', boxShadow: '0 0 12px rgba(249, 115, 22, 0.2)' }}>
+                  <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+                <h2 className="admin-section-title">System Metrics</h2>
+              </div>
 
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <span className="session-info" style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem' }}>
@@ -840,7 +854,14 @@ function AdminDashboard({
 
                 {/* Application Stats Grid */}
                 <div>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: '500', marginBottom: '1rem', textAlign: 'left', color: 'var(--text-main)' }}>Application Metrics</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
+                    <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+                      </svg>
+                    </div>
+                    <h3 className="admin-subsection-title">Application Metrics</h3>
+                  </div>
                   <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
 
 
@@ -893,7 +914,14 @@ function AdminDashboard({
 
                 {/* Print Jobs Queue Breakdown */}
                 <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left' }}>
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: '500', marginBottom: '1.25rem', color: 'var(--text-main)' }}>Print Jobs Queue Distribution</h3>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
+                    <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                      </svg>
+                    </div>
+                    <h3 className="admin-subsection-title">Print Jobs Queue Distribution</h3>
+                  </div>
 
                   {monitorStats.database.print_jobs.total === 0 ? (
                     <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '1rem' }}>
