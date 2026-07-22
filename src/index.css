@@ -3941,8 +3941,16 @@ button.clickable-thumbnail:focus-visible {
   }
 
   :root:not([data-theme="light"]) .customer-view-page .form-label,
+  :root:not([data-theme="light"]) .admin-view-page .form-label,
+  :root:not([data-theme="light"]) .form-label,
   :root:not([data-theme="light"]) .customer-view-page .customer-info-details-title {
+    color: #ffffff !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .file-input-btn {
+    background: rgba(255, 255, 255, 0.08) !important;
     color: #f3f4f6 !important;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
   }
 
   :root:not([data-theme="light"]) .customer-view-page .customer-past-requests-title {
@@ -4054,8 +4062,16 @@ button.clickable-thumbnail:focus-visible {
 }
 
 [data-theme="dark"] .customer-view-page .form-label,
+[data-theme="dark"] .admin-view-page .form-label,
+[data-theme="dark"] .form-label,
 [data-theme="dark"] .customer-view-page .customer-info-details-title {
+  color: #ffffff !important;
+}
+
+[data-theme="dark"] .admin-view-page .file-input-btn {
+  background: rgba(255, 255, 255, 0.08) !important;
   color: #f3f4f6 !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
 }
 
 [data-theme="dark"] .customer-view-page .customer-past-requests-title {
