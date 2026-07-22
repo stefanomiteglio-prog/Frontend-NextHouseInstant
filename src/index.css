@@ -3715,7 +3715,7 @@ button.clickable-thumbnail:focus-visible {
   animation: spin 1s linear infinite;
 }
 
-/* Admin Dashboard Section Titles */
+/* Admin Dashboard Section Titles & Metrics Styling */
 .admin-section-title {
   font-family: 'Outfit', sans-serif;
   font-size: 1.75rem;
@@ -3736,6 +3736,79 @@ button.clickable-thumbnail:focus-visible {
   margin: 0;
   letter-spacing: 0.01em;
 }
+
+.status-legend-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.75rem;
+  border-radius: 10px;
+}
+
+.status-legend-label {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.status-legend-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 4px;
+  color: var(--text-main);
+}
+
+.chart-legend-text {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Light Theme Overrides for .admin-view-page */
+.admin-view-page .admin-section-title {
+  background: linear-gradient(135deg, #0f172a 40%, var(--primary) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  font-weight: 800 !important;
+}
+
+.admin-view-page .admin-subsection-title {
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+.admin-view-page .admin-upload-section {
+  background: #ffffff !important;
+  color: #0f172a !important;
+}
+
+.admin-view-page .status-legend-card {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.admin-view-page .status-legend-label {
+  color: #64748b !important;
+}
+
+.admin-view-page .status-legend-value {
+  color: #0f172a !important;
+}
+
+.admin-view-page .chart-legend-text {
+  color: #4b5563 !important;
+  font-weight: 600 !important;
+}
+
+.admin-view-page .session-info {
+  background: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+}
+
+.admin-view-page .session-info .countdown {
+  color: var(--primary) !important;
+}
+
 
 
 

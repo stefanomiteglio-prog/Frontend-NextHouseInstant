@@ -151,11 +151,11 @@ function AdminDashboard({
           <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span>
-              <span style={{ color: 'var(--text-muted)', fontWeight: '500' }}>Sessions Created</span>
+              <span className="chart-legend-text">Sessions Created</span>
             </div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#a855f7' }}></span>
-              <span style={{ color: 'var(--text-muted)', fontWeight: '500' }}>Print Requests</span>
+              <span className="chart-legend-text">Print Requests</span>
             </div>
           </div>
         </div>
@@ -950,34 +950,34 @@ function AdminDashboard({
 
                       {/* Status Legends Grid */}
                       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem' }}>
-                        <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: '8px' }}>
+                        <div className="status-legend-card">
                           <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', marginRight: '6px' }}></span>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Completed</span>
-                          <div style={{ fontSize: '1.2rem', fontWeight: '700', marginTop: '4px' }}>{monitorStats.database.print_jobs.completed}</div>
+                          <span className="status-legend-label">Completed</span>
+                          <div className="status-legend-value">{monitorStats.database.print_jobs.completed}</div>
                         </div>
 
-                        <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: '8px' }}>
+                        <div className="status-legend-card">
                           <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', marginRight: '6px' }}></span>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Printing</span>
-                          <div style={{ fontSize: '1.2rem', fontWeight: '700', marginTop: '4px' }}>{monitorStats.database.print_jobs.printing}</div>
+                          <span className="status-legend-label">Printing</span>
+                          <div className="status-legend-value">{monitorStats.database.print_jobs.printing}</div>
                         </div>
 
-                        <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: '8px' }}>
+                        <div className="status-legend-card">
                           <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', marginRight: '6px' }}></span>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Queued</span>
-                          <div style={{ fontSize: '1.2rem', fontWeight: '700', marginTop: '4px' }}>{monitorStats.database.print_jobs.queued}</div>
+                          <span className="status-legend-label">Queued</span>
+                          <div className="status-legend-value">{monitorStats.database.print_jobs.queued}</div>
                         </div>
 
-                        <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: '8px' }}>
+                        <div className="status-legend-card">
                           <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', marginRight: '6px' }}></span>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Assigned</span>
-                          <div style={{ fontSize: '1.2rem', fontWeight: '700', marginTop: '4px' }}>{monitorStats.database.print_jobs.assigned}</div>
+                          <span className="status-legend-label">Assigned</span>
+                          <div className="status-legend-value">{monitorStats.database.print_jobs.assigned}</div>
                         </div>
 
-                        <div style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.03)', padding: '0.75rem', borderRadius: '8px' }}>
+                        <div className="status-legend-card">
                           <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', marginRight: '6px' }}></span>
-                          <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>Failed</span>
-                          <div style={{ fontSize: '1.2rem', fontWeight: '700', marginTop: '4px' }}>{monitorStats.database.print_jobs.failed}</div>
+                          <span className="status-legend-label">Failed</span>
+                          <div className="status-legend-value">{monitorStats.database.print_jobs.failed}</div>
                         </div>
                       </div>
                     </div>
