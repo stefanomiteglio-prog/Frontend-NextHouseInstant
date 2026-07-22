@@ -12,7 +12,10 @@ import { useSelections } from './hooks/useSelections';
 import { useDownloadSession } from './hooks/useDownloadSession';
 import { useMonitor } from './hooks/useMonitor';
 
+import { useTheme } from './hooks/useTheme';
+
 function AppContent() {
+  const themeHook = useTheme();
   const path = window.location.pathname;
   const isAdminRoute = path === '/admin';
   const isPrivacyRoute = path === '/privacy' || path === '/privacy-policy';
@@ -116,6 +119,9 @@ function AppContent() {
           setMonitorAutoRefresh={monitorData.setAutoRefresh}
           monitorRefreshSeconds={monitorData.refreshSecondsLeft}
           fetchMonitorStats={monitorData.fetchStats}
+          theme={themeHook.theme}
+          toggleTheme={themeHook.toggleTheme}
+          changeTheme={themeHook.changeTheme}
         />
       </div>
     );
@@ -180,6 +186,9 @@ function AppContent() {
       handleSubmitPrintRequest={downloadSession.handleSubmitPrintRequest}
       handleDeleteClientSelection={downloadSession.handleDeleteClientSelection}
       formatSize={formatSize}
+      theme={themeHook.theme}
+      toggleTheme={themeHook.toggleTheme}
+      changeTheme={themeHook.changeTheme}
     />
   );
 }

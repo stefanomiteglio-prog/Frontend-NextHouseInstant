@@ -3809,6 +3809,277 @@ button.clickable-thumbnail:focus-visible {
   color: var(--primary) !important;
 }
 
+/* ==========================================================================
+   THEME ENGINE (SYSTEM PREFERENCE & MANUAL TOGGLE FOR CUSTOMER AND ADMIN VIEWS)
+   ========================================================================== */
+
+/* Theme Switcher Button Styling */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--card-border);
+  color: var(--text-main);
+  padding: 0.45rem 0.85rem;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  font-family: 'Outfit', sans-serif;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.theme-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* Light Mode Overrides for Theme Toggle in Customer/Admin Light View */
+.admin-view-page .theme-toggle-btn,
+.customer-view-page .theme-toggle-btn {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.admin-view-page .theme-toggle-btn:hover,
+.customer-view-page .theme-toggle-btn:hover {
+  background: #f8fafc;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+/* Dark Mode Rule Set (Triggered via system prefers-color-scheme OR data-theme="dark") */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .customer-view-page,
+  :root:not([data-theme="light"]) .admin-view-page {
+    background: #0b0f19 !important;
+    background-color: #0b0f19 !important;
+    color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .customer-view-page .customer-files-card,
+  :root:not([data-theme="light"]) .admin-view-page .admin-upload-section,
+  :root:not([data-theme="light"]) .admin-view-page .admin-card,
+  :root:not([data-theme="light"]) .admin-view-page .dashboard-header,
+  :root:not([data-theme="light"]) .customer-view-page .customer-info-card,
+  :root:not([data-theme="light"]) .customer-view-page .customer-past-request-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    color: #f3f4f6 !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+  }
+
+  :root:not([data-theme="light"]) .customer-title-text,
+  :root:not([data-theme="light"]) .admin-view-page h1,
+  :root:not([data-theme="light"]) .admin-view-page .admin-title {
+    color: #ffffff !important;
+    background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .admin-section-title {
+    background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .admin-subsection-title {
+    color: #f3f4f6 !important;
+    -webkit-text-fill-color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .status-legend-card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .status-legend-label,
+  :root:not([data-theme="light"]) .admin-view-page .chart-legend-text {
+    color: #9ca3af !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .status-legend-value {
+    color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .card {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .card-body,
+  :root:not([data-theme="light"]) .admin-view-page .filename {
+    color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .theme-toggle-btn,
+  :root:not([data-theme="light"]) .customer-view-page .theme-toggle-btn {
+    background: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .customer-view-page .customer-grid-item {
+    background: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  }
+
+  :root:not([data-theme="light"]) .customer-view-page .customer-grid-item.selected {
+    border-color: var(--primary) !important;
+    box-shadow: 0 0 15px var(--primary-glow) !important;
+  }
+
+  :root:not([data-theme="light"]) .customer-view-page .form-label,
+  :root:not([data-theme="light"]) .customer-view-page .customer-info-details-title {
+    color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .customer-view-page .customer-past-requests-title {
+    color: #f3f4f6 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+  }
+
+  :root:not([data-theme="light"]) .customer-view-page .form-input,
+  :root:not([data-theme="light"]) .admin-view-page .form-input {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    color: #f3f4f6 !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .admin-tab-btn {
+    color: #9ca3af !important;
+  }
+
+  :root:not([data-theme="light"]) .admin-view-page .admin-tab-btn:hover,
+  :root:not([data-theme="light"]) .admin-view-page .admin-tab-btn.active {
+    color: var(--primary) !important;
+  }
+}
+
+/* Explicit data-theme="dark" Override (For when user selects Dark mode on a Light OS) */
+[data-theme="dark"] .customer-view-page,
+[data-theme="dark"] .admin-view-page {
+  background: #0b0f19 !important;
+  background-color: #0b0f19 !important;
+  color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .customer-view-page .customer-files-card,
+[data-theme="dark"] .admin-view-page .admin-upload-section,
+[data-theme="dark"] .admin-view-page .admin-card,
+[data-theme="dark"] .admin-view-page .dashboard-header,
+[data-theme="dark"] .customer-view-page .customer-info-card,
+[data-theme="dark"] .customer-view-page .customer-past-request-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37) !important;
+}
+
+[data-theme="dark"] .customer-title-text,
+[data-theme="dark"] .admin-view-page h1,
+[data-theme="dark"] .admin-view-page .admin-title {
+  color: #ffffff !important;
+  background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+[data-theme="dark"] .admin-view-page .admin-section-title {
+  background: linear-gradient(135deg, #ffffff 30%, var(--primary) 100%) !important;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+}
+
+[data-theme="dark"] .admin-view-page .admin-subsection-title {
+  color: #f3f4f6 !important;
+  -webkit-text-fill-color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .admin-view-page .status-legend-card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .admin-view-page .status-legend-label,
+[data-theme="dark"] .admin-view-page .chart-legend-text {
+  color: #9ca3af !important;
+}
+
+[data-theme="dark"] .admin-view-page .status-legend-value {
+  color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .admin-view-page .card {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .admin-view-page .card-body,
+[data-theme="dark"] .admin-view-page .filename {
+  color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .admin-view-page .theme-toggle-btn,
+[data-theme="dark"] .customer-view-page .theme-toggle-btn {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .customer-view-page .customer-grid-item {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="dark"] .customer-view-page .customer-grid-item.selected {
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 15px var(--primary-glow) !important;
+}
+
+[data-theme="dark"] .customer-view-page .form-label,
+[data-theme="dark"] .customer-view-page .customer-info-details-title {
+  color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .customer-view-page .customer-past-requests-title {
+  color: #f3f4f6 !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .customer-view-page .form-input,
+[data-theme="dark"] .admin-view-page .form-input {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border: 1px solid rgba(255, 255, 255, 0.12) !important;
+  color: #f3f4f6 !important;
+}
+
+[data-theme="dark"] .admin-view-page .admin-tab-btn {
+  color: #9ca3af !important;
+}
+
+[data-theme="dark"] .admin-view-page .admin-tab-btn:hover,
+[data-theme="dark"] .admin-view-page .admin-tab-btn.active {
+  color: var(--primary) !important;
+}
+
+
 
 
 

@@ -16,7 +16,9 @@ function CustomerDownloadView({
   handleClearActiveSelection,
   handleSubmitPrintRequest,
   handleDeleteClientSelection,
-  formatSize
+  formatSize,
+  theme = 'system',
+  toggleTheme
 }) {
   const t = (key) => (translations[lang] && translations[lang][key]) || translations['en'][key] || key;
   const [guestName, setGuestName] = useState('');
@@ -160,11 +162,45 @@ function CustomerDownloadView({
         <img src={nexthouseLogo} alt="NextHouse Logo" />
       </div>
 
-      {/* Countdown timer badge */}
-      <div className={`customer-session-countdown-badge ${timeLeft && timeLeft !== 'Expired' && (timeLeft.startsWith('00:') || timeLeft.startsWith('01:')) ? 'time-low' : ''}`}>
-        <span className="pulse-dot"></span>
-        <span className="badge-text">{t("session")}: </span>
-        <span className="countdown-time">{timeLeft || '--:--'}</span>
+      {/* Top Header controls: Countdown badge & Theme toggle */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem', flexWrap: 'wrap', justifyContent: 'center' }}>
+        <div className={`customer-session-countdown-badge ${timeLeft && timeLeft !== 'Expired' && (timeLeft.startsWith('00:') || timeLeft.startsWith('01:')) ? 'time-low' : ''}`} style={{ marginBottom: 0 }}>
+          <span className="pulse-dot"></span>
+          <span className="badge-text">{t("session")}: </span>
+          <span className="countdown-time">{timeLeft || '--:--'}</span>
+        </div>
+
+        {toggleTheme && (
+          <button
+            type="button"
+            onClick={toggleTheme}
+            className="theme-toggle-btn"
+            title={`Theme: ${theme}. Click to switch theme.`}
+          >
+            {theme === 'system' ? (
+              <>
+                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span>Auto</span>
+              </>
+            ) : theme === 'dark' ? (
+              <>
+                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
+                </svg>
+                <span>Dark</span>
+              </>
+            ) : (
+              <>
+                <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                </svg>
+                <span>Light</span>
+              </>
+            )}
+          </button>
+        )}
       </div>
 
       {/* View Title */}
