@@ -666,23 +666,25 @@ function AdminDashboard({
                 />
               </div>
               <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-
-
-                <button onClick={() => fetchSelections(filterName)} className="btn btn-secondary">
-                  Filter
-                </button>
                 {filterName && (
                   <button
                     onClick={() => {
                       setFilterName('');
                     }}
                     className="btn btn-secondary"
+                    style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto' }}
                   >
                     Reset
                   </button>
                 )}
-                <button onClick={() => fetchSelections(filterName)} className="btn btn-secondary" title="Refresh List" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <button
+                  onClick={() => fetchSelections(filterName)}
+                  className="btn btn-secondary"
+                  disabled={selectionsLoading}
+                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  title="Refresh List"
+                >
+                  <svg className={selectionsLoading ? "spinner-rotate" : ""} width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>
                   Refresh
