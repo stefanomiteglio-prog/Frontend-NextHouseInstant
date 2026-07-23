@@ -873,85 +873,72 @@ function AdminDashboard({
             {monitorStats && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1rem' }}>
 
-                {/* Application Stats Grid */}
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1rem' }}>
-                    <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                      </svg>
-                    </div>
-                    <h3 className="admin-subsection-title">Application Metrics</h3>
-                  </div>
-                  <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
-
-
-
-                    {/* Active Sessions Stat */}
-                    <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
-                      <div style={{ padding: '0.75rem', borderRadius: '12px', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                        </svg>
-                      </div>
-                      <div style={{ textAlign: 'left' }}>
-                        <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.sessions_active}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Active Sessions</div>
-                      </div>
-                    </div>
-
-                    {/* Stickers Stat */}
-                    <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
-                      <div style={{ padding: '0.75rem', borderRadius: '12px', background: 'rgba(245, 158, 11, 0.1)', color: '#f59e0b', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
-                      </div>
-                      <div style={{ textAlign: 'left' }}>
-                        <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.stickers_count}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Decorative Stickers</div>
-                      </div>
-                    </div>
-
-                    {/* Printers Stat */}
-                    <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1rem', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
-                      <div style={{ padding: '0.75rem', borderRadius: '12px', background: 'rgba(139, 92, 246, 0.1)', color: '#8b5cf6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                        <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                        </svg>
-                      </div>
-                      <div style={{ textAlign: 'left' }}>
-                        <div style={{ fontSize: '1.6rem', fontWeight: '700' }}>{monitorStats.database.printers_active} / {monitorStats.database.printers_count}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>Active Printers</div>
-                        <div style={{ fontSize: '0.75rem', color: '#8b5cf6', fontWeight: '500', marginTop: '2px' }}>Seeded selections: {monitorStats.database.selections_count}</div>
-                      </div>
-                    </div>
-
-                  </div>
-                </div>
-
                 {/* Monthly History SVG Chart */}
                 {renderHistoryChart()}
 
                 {/* Print Jobs Queue Breakdown */}
                 <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', marginBottom: '1.25rem' }}>
-                    <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                      </svg>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                      <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                        <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                        </svg>
+                      </div>
+                      <h3 className="admin-subsection-title">Print Jobs Queue Distribution</h3>
                     </div>
-                    <h3 className="admin-subsection-title">Print Jobs Queue Distribution</h3>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.85rem', background: 'rgba(139, 92, 246, 0.12)', border: '1px solid rgba(139, 92, 246, 0.25)', borderRadius: '20px', color: '#8b5cf6', fontSize: '0.85rem', fontWeight: '600' }}>
+                      <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                      </svg>
+                      <span>Active Printers: {monitorStats.database.printers_active} / {monitorStats.database.printers_count}</span>
+                    </div>
                   </div>
 
-                  {monitorStats.database.print_jobs.total === 0 ? (
-                    <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '1rem' }}>
-                      No print jobs have been queued yet.
+                  {/* Status Legends Grid including Active Printers */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '1rem', marginBottom: monitorStats.database.print_jobs.total > 0 ? '1.5rem' : '0' }}>
+                    <div className="status-legend-card" style={{ borderColor: 'rgba(139, 92, 246, 0.3)', background: 'rgba(139, 92, 246, 0.05)' }}>
+                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', marginRight: '6px' }}></span>
+                      <span className="status-legend-label">Active Printers</span>
+                      <div className="status-legend-value" style={{ color: '#8b5cf6' }}>{monitorStats.database.printers_active} / {monitorStats.database.printers_count}</div>
                     </div>
-                  ) : (
+
+                    <div className="status-legend-card">
+                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', marginRight: '6px' }}></span>
+                      <span className="status-legend-label">Completed</span>
+                      <div className="status-legend-value">{monitorStats.database.print_jobs.completed}</div>
+                    </div>
+
+                    <div className="status-legend-card">
+                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', marginRight: '6px' }}></span>
+                      <span className="status-legend-label">Printing</span>
+                      <div className="status-legend-value">{monitorStats.database.print_jobs.printing}</div>
+                    </div>
+
+                    <div className="status-legend-card">
+                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', marginRight: '6px' }}></span>
+                      <span className="status-legend-label">Queued</span>
+                      <div className="status-legend-value">{monitorStats.database.print_jobs.queued}</div>
+                    </div>
+
+                    <div className="status-legend-card">
+                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', marginRight: '6px' }}></span>
+                      <span className="status-legend-label">Assigned</span>
+                      <div className="status-legend-value">{monitorStats.database.print_jobs.assigned}</div>
+                    </div>
+
+                    <div className="status-legend-card">
+                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', marginRight: '6px' }}></span>
+                      <span className="status-legend-label">Failed</span>
+                      <div className="status-legend-value">{monitorStats.database.print_jobs.failed}</div>
+                    </div>
+                  </div>
+
+                  {monitorStats.database.print_jobs.total > 0 && (
                     <div>
                       {/* Proportion Stack Bar */}
-                      <div style={{ display: 'flex', height: '18px', width: '100%', borderRadius: '9px', overflow: 'hidden', background: 'rgba(255,255,255,0.02)', marginBottom: '1.5rem' }}>
+                      <div style={{ display: 'flex', height: '18px', width: '100%', borderRadius: '9px', overflow: 'hidden', background: 'rgba(255,255,255,0.02)' }}>
                         {monitorStats.database.print_jobs.completed > 0 && (
                           <div style={{ width: `${(monitorStats.database.print_jobs.completed / monitorStats.database.print_jobs.total) * 100}%`, background: '#10b981', transition: 'width 0.5s ease' }} title={`Completed: ${monitorStats.database.print_jobs.completed}`} />
                         )}
@@ -967,39 +954,6 @@ function AdminDashboard({
                         {monitorStats.database.print_jobs.failed > 0 && (
                           <div style={{ width: `${(monitorStats.database.print_jobs.failed / monitorStats.database.print_jobs.total) * 100}%`, background: '#ef4444', transition: 'width 0.5s ease' }} title={`Failed: ${monitorStats.database.print_jobs.failed}`} />
                         )}
-                      </div>
-
-                      {/* Status Legends Grid */}
-                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(120px, 1fr))', gap: '1rem' }}>
-                        <div className="status-legend-card">
-                          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', marginRight: '6px' }}></span>
-                          <span className="status-legend-label">Completed</span>
-                          <div className="status-legend-value">{monitorStats.database.print_jobs.completed}</div>
-                        </div>
-
-                        <div className="status-legend-card">
-                          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', marginRight: '6px' }}></span>
-                          <span className="status-legend-label">Printing</span>
-                          <div className="status-legend-value">{monitorStats.database.print_jobs.printing}</div>
-                        </div>
-
-                        <div className="status-legend-card">
-                          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', marginRight: '6px' }}></span>
-                          <span className="status-legend-label">Queued</span>
-                          <div className="status-legend-value">{monitorStats.database.print_jobs.queued}</div>
-                        </div>
-
-                        <div className="status-legend-card">
-                          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', marginRight: '6px' }}></span>
-                          <span className="status-legend-label">Assigned</span>
-                          <div className="status-legend-value">{monitorStats.database.print_jobs.assigned}</div>
-                        </div>
-
-                        <div className="status-legend-card">
-                          <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', marginRight: '6px' }}></span>
-                          <span className="status-legend-label">Failed</span>
-                          <div className="status-legend-value">{monitorStats.database.print_jobs.failed}</div>
-                        </div>
                       </div>
                     </div>
                   )}
