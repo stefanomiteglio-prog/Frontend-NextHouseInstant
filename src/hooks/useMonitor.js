@@ -4,22 +4,26 @@ import { useAdminAuth } from './useAdminAuth';
 export function useMonitor(activeTab) {
   const { user, authenticatedFetch, API_URL } = useAdminAuth();
   
+  const REFRESH_INTERVAL_SECONDS = 5;
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [refreshSecondsLeft, setRefreshSecondsLeft] = useState(60);
+  const [refreshSecondsLeft, setRefreshSecondsLeft] = useState(REFRESH_INTERVAL_SECONDS);
 
   const fetchStats = useCallback(async () => {
     if (!user) return;
-    setLoading(true);
+    setStats(prevStats => {
+      if (!prevStats) setLoading(true);
+      return prevStats;
+    });
     setError(null);
     try {
       const response = await authenticatedFetch(`${API_URL}/api/dashboard/stats`);
       if (response.ok) {
         const data = await response.json();
         setStats(data);
-        setRefreshSecondsLeft(60);
+        setRefreshSecondsLeft(REFRESH_INTERVAL_SECONDS);
       } else {
         throw new Error(`Error: ${response.status} - ${response.statusText}`);
       }
@@ -38,7 +42,7 @@ export function useMonitor(activeTab) {
     }
   }, [user, activeTab, fetchStats]);
 
-  // Auto refresh timer effect (every 60 seconds / 1 minute)
+  // Auto refresh timer effect (every 5 seconds)
   useEffect(() => {
     if (!user || activeTab !== 'monitor' || !autoRefresh) return;
     
@@ -46,7 +50,7 @@ export function useMonitor(activeTab) {
       setRefreshSecondsLeft(prev => {
         if (prev <= 1) {
           fetchStats();
-          return 60;
+          return REFRESH_INTERVAL_SECONDS;
         }
         return prev - 1;
       });
