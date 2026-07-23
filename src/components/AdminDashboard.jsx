@@ -568,6 +568,46 @@ function AdminDashboard({
 
         {activeTab === 'stickers' && (
           <>
+            {/* Informational Header Banner */}
+            <div
+              className="admin-upload-section"
+              style={{
+                padding: '1.25rem 1.5rem',
+                marginBottom: '1.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '1rem',
+                background: 'rgba(59, 130, 246, 0.06)',
+                border: '1px solid rgba(59, 130, 246, 0.2)',
+                borderRadius: '12px'
+              }}
+            >
+              <div
+                style={{
+                  padding: '0.6rem',
+                  borderRadius: '10px',
+                  background: 'rgba(59, 130, 246, 0.15)',
+                  color: '#3b82f6',
+                  display: 'flex',
+                  justify: 'center',
+                  alignItems: 'center',
+                  flexShrink: 0
+                }}
+              >
+                <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div style={{ textAlign: 'left' }}>
+                <h4 style={{ margin: '0 0 0.25rem 0', fontSize: '1rem', fontWeight: '600', color: 'var(--text-main)' }}>
+                  Photobooth Decorative Stickers
+                </h4>
+                <p style={{ margin: 0, fontSize: '0.875rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+                  Upload custom stickers and decorative graphic overlays here. Guests taking photos at the photobooth can choose and apply these stickers to customize their photos during their session.
+                </p>
+              </div>
+            </div>
+
             <div className="admin-upload-section">
               <form onSubmit={handleUploadSticker} className="upload-grid">
                 <div className="form-group">
