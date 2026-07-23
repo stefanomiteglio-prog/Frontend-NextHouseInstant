@@ -42,6 +42,42 @@ function AdminDashboard({
 }) {
   const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
   const [hoveredPoint, setHoveredPoint] = useState(null);
+  const [manualRefreshingMonitor, setManualRefreshingMonitor] = useState(false);
+  const [manualRefreshingPrints, setManualRefreshingPrints] = useState(false);
+
+  const handleManualRefreshMonitor = async () => {
+    if (manualRefreshingMonitor || monitorLoading) return;
+    setManualRefreshingMonitor(true);
+    const startTime = Date.now();
+    try {
+      await fetchMonitorStats();
+    } catch (e) {
+      console.error(e);
+    } finally {
+      const elapsed = Date.now() - startTime;
+      const minDelay = Math.max(0, 800 - elapsed);
+      setTimeout(() => {
+        setManualRefreshingMonitor(false);
+      }, minDelay);
+    }
+  };
+
+  const handleManualRefreshPrints = async () => {
+    if (manualRefreshingPrints || selectionsLoading) return;
+    setManualRefreshingPrints(true);
+    const startTime = Date.now();
+    try {
+      await fetchSelections(filterName);
+    } catch (e) {
+      console.error(e);
+    } finally {
+      const elapsed = Date.now() - startTime;
+      const minDelay = Math.max(0, 800 - elapsed);
+      setTimeout(() => {
+        setManualRefreshingPrints(false);
+      }, minDelay);
+    }
+  };
 
   const renderHistoryChart = () => {
     const historyData = monitorStats?.history || [];
@@ -678,9 +714,9 @@ function AdminDashboard({
                   </button>
                 )}
                 <button
-                  onClick={() => fetchSelections(filterName)}
-                  className={`btn btn-secondary btn-refresh ${selectionsLoading ? 'is-refreshing' : ''}`}
-                  disabled={selectionsLoading}
+                  onClick={handleManualRefreshPrints}
+                  className={`btn btn-secondary btn-refresh ${selectionsLoading || manualRefreshingPrints ? 'is-refreshing' : ''}`}
+                  disabled={selectionsLoading || manualRefreshingPrints}
                   style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}
                   title="Refresh List"
                 >
@@ -840,9 +876,9 @@ function AdminDashboard({
 
               <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center', flexWrap: 'wrap' }}>
                 <button
-                  onClick={fetchMonitorStats}
-                  className={`btn btn-secondary btn-refresh ${monitorLoading ? 'is-refreshing' : ''}`}
-                  disabled={monitorLoading}
+                  onClick={handleManualRefreshMonitor}
+                  className={`btn btn-secondary btn-refresh ${monitorLoading || manualRefreshingMonitor ? 'is-refreshing' : ''}`}
+                  disabled={monitorLoading || manualRefreshingMonitor}
                   style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
                   <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
