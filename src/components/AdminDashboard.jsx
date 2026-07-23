@@ -876,16 +876,16 @@ function AdminDashboard({
                 {/* Monthly History SVG Chart */}
                 {renderHistoryChart()}
 
-                {/* Printer & Print Queue Monitor Section */}
+                {/* Printer Status Section */}
                 <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(59, 130, 246, 0.15)', color: '#3b82f6', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
                         </svg>
                       </div>
-                      <h3 className="admin-subsection-title">Printer & Print Queue Monitor</h3>
+                      <h3 className="admin-subsection-title">Printer Status</h3>
                     </div>
 
                     <div>
@@ -898,92 +898,56 @@ function AdminDashboard({
                     </div>
                   </div>
 
-                  {/* Status Cards Grid */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '1rem', marginBottom: monitorStats.database.print_jobs.total > 0 ? '1.5rem' : '0' }}>
-                    {/* Active Printer Card */}
-                    <div className="status-legend-card" style={{ borderColor: monitorStats.database.printers_active > 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)', background: monitorStats.database.printers_active > 0 ? 'rgba(16, 185, 129, 0.05)' : 'rgba(239, 68, 68, 0.05)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: monitorStats.database.printers_active > 0 ? '#10b981' : '#ef4444', display: 'inline-block' }}></span>
-                        <span className="status-legend-label">Printer Status</span>
-                      </div>
-                      <div className="status-legend-value" style={{ color: monitorStats.database.printers_active > 0 ? '#10b981' : '#ef4444' }}>
-                        {monitorStats.database.printers_active > 0 ? 'Active' : 'Offline'} ({monitorStats.database.printers_active}/{monitorStats.database.printers_count})
-                      </div>
-                    </div>
+                  {(() => {
+                    const isActive = monitorStats.database.printers_active > 0;
+                    const isPrinting = monitorStats.database.print_jobs.printing > 0;
+                    const isQueued = (monitorStats.database.print_jobs.queued > 0 || monitorStats.database.print_jobs.assigned > 0);
 
-                    {/* Currently Printing Card */}
-                    <div className="status-legend-card" style={{ borderColor: monitorStats.database.print_jobs.printing > 0 ? 'rgba(245, 158, 11, 0.3)' : 'rgba(255, 255, 255, 0.08)', background: monitorStats.database.print_jobs.printing > 0 ? 'rgba(245, 158, 11, 0.05)' : 'rgba(255, 255, 255, 0.03)' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', display: 'inline-block' }}></span>
-                        <span className="status-legend-label">Printing Now</span>
-                      </div>
-                      <div className="status-legend-value" style={{ color: monitorStats.database.print_jobs.printing > 0 ? '#f59e0b' : 'var(--text-main)' }}>
-                        {monitorStats.database.print_jobs.printing}
-                      </div>
-                    </div>
+                    let statusState = 'Active';
+                    let statusColor = '#10b981';
+                    let statusBg = 'rgba(16, 185, 129, 0.08)';
+                    let statusBorder = 'rgba(16, 185, 129, 0.25)';
+                    let description = 'Printer is online and ready.';
 
-                    {/* Queued Jobs Card */}
-                    <div className="status-legend-card">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', display: 'inline-block' }}></span>
-                        <span className="status-legend-label">Queued</span>
-                      </div>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.queued}</div>
-                    </div>
+                    if (!isActive) {
+                      statusState = 'Offline';
+                      statusColor = '#ef4444';
+                      statusBg = 'rgba(239, 68, 68, 0.08)';
+                      statusBorder = 'rgba(239, 68, 68, 0.25)';
+                      description = 'Printer is offline or disconnected.';
+                    } else if (isPrinting) {
+                      statusState = 'Printing';
+                      statusColor = '#f59e0b';
+                      statusBg = 'rgba(245, 158, 11, 0.08)';
+                      statusBorder = 'rgba(245, 158, 11, 0.25)';
+                      description = 'Printer is currently printing a document.';
+                    } else if (isQueued) {
+                      statusState = 'Queued';
+                      statusColor = '#3b82f6';
+                      statusBg = 'rgba(59, 130, 246, 0.08)';
+                      statusBorder = 'rgba(59, 130, 246, 0.25)';
+                      description = 'Print job is queued and waiting to process.';
+                    }
 
-                    {/* Assigned Jobs Card */}
-                    <div className="status-legend-card">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', display: 'inline-block' }}></span>
-                        <span className="status-legend-label">Assigned</span>
+                    return (
+                      <div className="card" style={{ padding: '1.25rem', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '1.25rem', background: 'var(--card-bg)', border: `1px solid ${statusBorder}`, borderRadius: '12px' }}>
+                        <div style={{ padding: '0.85rem', borderRadius: '12px', background: statusBg, color: statusColor, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                          <svg width="28" height="28" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+                          </svg>
+                        </div>
+                        <div style={{ textAlign: 'left' }}>
+                          <div style={{ fontSize: '1.35rem', fontWeight: '700', color: statusColor, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <span style={{ width: '10px', height: '10px', borderRadius: '50%', background: statusColor, display: 'inline-block' }}></span>
+                            {statusState}
+                          </div>
+                          <div style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: '4px' }}>
+                            {description}
+                          </div>
+                        </div>
                       </div>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.assigned}</div>
-                    </div>
-
-                    {/* Completed Jobs Card */}
-                    <div className="status-legend-card">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', display: 'inline-block' }}></span>
-                        <span className="status-legend-label">Completed</span>
-                      </div>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.completed}</div>
-                    </div>
-
-                    {/* Failed Jobs Card */}
-                    <div className="status-legend-card">
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', display: 'inline-block' }}></span>
-                        <span className="status-legend-label">Failed</span>
-                      </div>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.failed}</div>
-                    </div>
-                  </div>
-
-                  {/* Stack Bar if total jobs > 0 */}
-                  {monitorStats.database.print_jobs.total > 0 && (
-                    <div>
-                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '0.5rem', fontWeight: '500' }}>
-                        Total Queue Distribution ({monitorStats.database.print_jobs.total} jobs)
-                      </div>
-                      <div style={{ display: 'flex', height: '18px', width: '100%', borderRadius: '9px', overflow: 'hidden', background: 'rgba(255,255,255,0.02)' }}>
-                        {monitorStats.database.print_jobs.completed > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.completed / monitorStats.database.print_jobs.total) * 100}%`, background: '#10b981', transition: 'width 0.5s ease' }} title={`Completed: ${monitorStats.database.print_jobs.completed}`} />
-                        )}
-                        {monitorStats.database.print_jobs.printing > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.printing / monitorStats.database.print_jobs.total) * 100}%`, background: '#f59e0b', transition: 'width 0.5s ease' }} title={`Printing: ${monitorStats.database.print_jobs.printing}`} />
-                        )}
-                        {monitorStats.database.print_jobs.queued > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.queued / monitorStats.database.print_jobs.total) * 100}%`, background: '#3b82f6', transition: 'width 0.5s ease' }} title={`Queued: ${monitorStats.database.print_jobs.queued}`} />
-                        )}
-                        {monitorStats.database.print_jobs.assigned > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.assigned / monitorStats.database.print_jobs.total) * 100}%`, background: '#8b5cf6', transition: 'width 0.5s ease' }} title={`Assigned: ${monitorStats.database.print_jobs.assigned}`} />
-                        )}
-                        {monitorStats.database.print_jobs.failed > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.failed / monitorStats.database.print_jobs.total) * 100}%`, background: '#ef4444', transition: 'width 0.5s ease' }} title={`Failed: ${monitorStats.database.print_jobs.failed}`} />
-                        )}
-                      </div>
-                    </div>
-                  )}
+                    );
+                  })()}
                 </div>
 
               </div>
