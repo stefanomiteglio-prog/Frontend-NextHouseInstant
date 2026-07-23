@@ -43,19 +43,19 @@ function AdminDashboard({
   const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
   const [hoveredPoint, setHoveredPoint] = useState(null);
 
-  const renderHistoryChart = () => {
+  const renderCompletedPrintsChart = () => {
     const historyData = monitorStats?.history || [];
 
     if (historyData.length === 0) {
       return (
         <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '3rem' }}>
-          No historical data recorded yet. Statistics will start appearing daily.
+          No historical print job data recorded yet.
         </div>
       );
     }
 
     const width = 800;
-    const height = 280;
+    const height = 240;
     const paddingLeft = 40;
     const paddingRight = 20;
     const paddingTop = 20;
@@ -65,26 +65,21 @@ function AdminDashboard({
     const chartHeight = height - paddingTop - paddingBottom;
 
     const maxVal = Math.max(
-      10,
-      ...historyData.map(d => Math.max(d.sessions_count || 0, d.selections_count || 0))
+      5,
+      ...historyData.map(d => d.selections_count || 0)
     );
 
     const points = historyData.map((d, i) => {
       const x = paddingLeft + (i / (historyData.length - 1 || 1)) * chartWidth;
-      const ySessions = height - paddingBottom - ((d.sessions_count || 0) / maxVal) * chartHeight;
-      const ySelections = height - paddingBottom - ((d.selections_count || 0) / maxVal) * chartHeight;
-      return { x, ySessions, ySelections, date: d.date, raw: d };
+      const yCompleted = height - paddingBottom - ((d.selections_count || 0) / maxVal) * chartHeight;
+      return { x, yCompleted, date: d.date, raw: d };
     });
 
-    const sessionsPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.ySessions}`).join(' ');
-    const selectionsPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.ySelections}`).join(' ');
-
-    const sessionsAreaPath = `${sessionsPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
-    const selectionsAreaPath = `${selectionsPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
+    const completedPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.yCompleted}`).join(' ');
+    const completedAreaPath = `${completedPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
 
     const labelStep = Math.max(1, Math.floor(historyData.length / 5));
     const xLabels = points.filter((_, idx) => idx % labelStep === 0 || idx === points.length - 1);
-
     const gridLines = [0, 0.25, 0.5, 0.75, 1];
 
     const formatDate = (dateStr) => {
@@ -105,320 +100,198 @@ function AdminDashboard({
       }
     };
 
-    // Calculate tooltip coordinates if active
     let tooltipX = 0;
     let tooltipY = 0;
     let showBelow = false;
     const tooltipWidth = 150;
-    const tooltipHeight = 75;
+    const tooltipHeight = 55;
 
     if (hoveredPoint) {
       tooltipX = hoveredPoint.x - tooltipWidth / 2;
       const minTooltipX = 10;
       const maxTooltipX = width - tooltipWidth - 10;
-      if (tooltipX < minTooltipX) {
-        tooltipX = minTooltipX;
-      } else if (tooltipX > maxTooltipX) {
-        tooltipX = maxTooltipX;
-      }
+      if (tooltipX < minTooltipX) tooltipX = minTooltipX;
+      if (tooltipX > maxTooltipX) tooltipX = maxTooltipX;
 
-      // Collect Y coordinates of only the dots actually rendered (count > 0)
-      const activeYs = [];
-      if (hoveredPoint.raw.sessions_count > 0) activeYs.push(hoveredPoint.ySessions);
-      if (hoveredPoint.raw.selections_count > 0) activeYs.push(hoveredPoint.ySelections);
-
-      const minY = activeYs.length > 0 ? Math.min(...activeYs) : height - paddingBottom;
-      const maxY = activeYs.length > 0 ? Math.max(...activeYs) : height - paddingBottom;
-
-      tooltipY = minY - tooltipHeight - 15;
+      tooltipY = hoveredPoint.yCompleted - tooltipHeight - 12;
       if (tooltipY < paddingTop) {
-        tooltipY = maxY + 15;
+        tooltipY = hoveredPoint.yCompleted + 12;
         showBelow = true;
       }
     }
 
     return (
-      <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left', marginTop: '1.5rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(168, 85, 247, 0.15)', color: '#a855f7', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
-              </svg>
-            </div>
-            <h3 className="admin-subsection-title">
-              30-Day Activity History
-            </h3>
-          </div>
-          <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span>
-              <span className="chart-legend-text">Sessions Created</span>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#a855f7' }}></span>
-              <span className="chart-legend-text">Print Requests</span>
-            </div>
-          </div>
-        </div>
+      <div style={{ width: '100%', overflowX: 'auto', position: 'relative' }}>
+        <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', minWidth: '600px', height: 'auto', display: 'block' }}>
+          <defs>
+            <linearGradient id="completedGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor="#10b981" stopOpacity="0.25" />
+              <stop offset="100%" stopColor="#10b981" stopOpacity="0.0" />
+            </linearGradient>
+          </defs>
 
-        <div style={{ width: '100%', overflowX: 'auto', position: 'relative' }}>
-          <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', minWidth: '600px', height: 'auto', display: 'block' }}>
-            <defs>
-              <linearGradient id="sessionsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
-              </linearGradient>
-              <linearGradient id="selectionsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#a855f7" stopOpacity="0.0" />
-              </linearGradient>
-            </defs>
-
-            {gridLines.map((ratio, i) => {
-              const y = height - paddingBottom - ratio * chartHeight;
-              const value = Math.round(ratio * maxVal);
-              return (
-                <g key={i}>
-                  <line
-                    x1={paddingLeft}
-                    y1={y}
-                    x2={width - paddingRight}
-                    y2={y}
-                    stroke="rgba(0, 0, 0, 0.06)"
-                    strokeWidth="1"
-                    strokeDasharray={ratio === 0 ? "0" : "4 4"}
-                  />
-                  <text
-                    x={paddingLeft - 8}
-                    y={y + 4}
-                    fill="#64748b"
-                    fontSize="10"
-                    fontWeight="500"
-                    fontFamily="'Inter', sans-serif"
-                    textAnchor="end"
-                  >
-                    {value}
-                  </text>
-                </g>
-              );
-            })}
-
-            {/* Vertical hover guide line */}
-            {hoveredPoint && (
-              <line
-                x1={hoveredPoint.x}
-                y1={paddingTop}
-                x2={hoveredPoint.x}
-                y2={height - paddingBottom}
-                stroke="#cbd5e1"
-                strokeWidth="1.5"
-                strokeDasharray="4 4"
-                pointerEvents="none"
-              />
-            )}
-
-            <path d={sessionsAreaPath} fill="url(#sessionsGrad)" />
-            <path d={selectionsAreaPath} fill="url(#selectionsGrad)" />
-
-            <path d={sessionsPath} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d={selectionsPath} fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-
-            {/* Interactive Circles / Dots */}
-            {points.map((p, idx) => {
-              const isHovered = hoveredPoint && hoveredPoint.date === p.date;
-              return (
-                <g key={idx}>
-                  {p.raw.sessions_count > 0 && (
-                    <circle
-                      cx={p.x}
-                      cy={p.ySessions}
-                      r={isHovered ? "6" : "4"}
-                      fill="#ffffff"
-                      stroke="#3b82f6"
-                      strokeWidth={isHovered ? "3" : "2"}
-                      style={{ transition: 'all 0.1s ease' }}
-                    />
-                  )}
-                  {p.raw.selections_count > 0 && (
-                    <circle
-                      cx={p.x}
-                      cy={p.ySelections}
-                      r={isHovered ? "6" : "4"}
-                      fill="#ffffff"
-                      stroke="#a855f7"
-                      strokeWidth={isHovered ? "3" : "2"}
-                      style={{ transition: 'all 0.1s ease' }}
-                    />
-                  )}
-                </g>
-              );
-            })}
-
-            {/* X Axis Labels */}
-            {xLabels.map((p, idx) => (
-              <text
-                key={idx}
-                x={p.x}
-                y={height - 12}
-                fill="#64748b"
-                fontSize="10"
-                fontWeight="500"
-                fontFamily="'Inter', sans-serif"
-                textAnchor="middle"
-              >
-                {formatDate(p.date)}
-              </text>
-            ))}
-
-            {/* Invisible hover zones/bars */}
-            {points.map((p, idx) => {
-              const colWidth = chartWidth / (points.length - 1 || 1);
-              return (
-                <rect
-                  key={`hover-zone-${idx}`}
-                  x={p.x - colWidth / 2}
-                  y={paddingTop}
-                  width={colWidth}
-                  height={chartHeight}
-                  fill="transparent"
-                  style={{ cursor: 'pointer' }}
-                  onMouseEnter={() => setHoveredPoint(p)}
-                  onMouseMove={() => setHoveredPoint(p)}
-                  onMouseLeave={() => setHoveredPoint(null)}
-                />
-              );
-            })}
-
-            {/* Tooltip Group */}
-            {hoveredPoint && (
-              <g style={{ pointerEvents: 'none' }}>
-                {/* Tooltip Background Card with subtle shadow */}
-                <rect
-                  x={tooltipX}
-                  y={tooltipY}
-                  width={tooltipWidth}
-                  height={tooltipHeight}
-                  rx="8"
-                  ry="8"
-                  fill="#ffffff"
-                  stroke="#e2e8f0"
-                  strokeWidth="1.5"
-                  style={{ filter: 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.1))' }}
-                />
-
-                {/* Tooltip Caret */}
-                {showBelow ? (
-                  <polygon
-                    points={`${hoveredPoint.x},${tooltipY} ${hoveredPoint.x - 6},${tooltipY - 6} ${hoveredPoint.x + 6},${tooltipY - 6}`}
-                    fill="#ffffff"
-                    stroke="#e2e8f0"
-                    strokeWidth="1.5"
-                  />
-                ) : (
-                  <polygon
-                    points={`${hoveredPoint.x},${tooltipY + tooltipHeight} ${hoveredPoint.x - 6},${tooltipY + tooltipHeight + 6} ${hoveredPoint.x + 6},${tooltipY + tooltipHeight + 6}`}
-                    fill="#ffffff"
-                    stroke="#e2e8f0"
-                    strokeWidth="1.5"
-                  />
-                )}
-                {/* Clean Caret Base Cover */}
-                {showBelow ? (
-                  <polygon
-                    points={`${hoveredPoint.x - 5},${tooltipY} ${hoveredPoint.x + 5},${tooltipY} ${hoveredPoint.x},${tooltipY + 1}`}
-                    fill="#ffffff"
-                  />
-                ) : (
-                  <polygon
-                    points={`${hoveredPoint.x - 5},${tooltipY + tooltipHeight} ${hoveredPoint.x + 5},${tooltipY + tooltipHeight} ${hoveredPoint.x},${tooltipY + tooltipHeight - 1}`}
-                    fill="#ffffff"
-                  />
-                )}
-
-                {/* Tooltip Header Date */}
-                <text
-                  x={tooltipX + 12}
-                  y={tooltipY + 20}
-                  fontSize="11.5"
-                  fontWeight="700"
-                  fill="#1e293b"
-                  fontFamily="'Inter', sans-serif"
-                >
-                  {formatTooltipDate(hoveredPoint.date)}
-                </text>
-
-                {/* Divider Line */}
+          {gridLines.map((ratio, i) => {
+            const y = height - paddingBottom - ratio * chartHeight;
+            const value = Math.round(ratio * maxVal);
+            return (
+              <g key={i}>
                 <line
-                  x1={tooltipX + 12}
-                  y1={tooltipY + 28}
-                  x2={tooltipX + tooltipWidth - 12}
-                  y2={tooltipY + 28}
-                  stroke="#f1f5f9"
-                  strokeWidth="1.2"
-                />
-
-                {/* Sessions Detail Row */}
-                <circle
-                  cx={tooltipX + 18}
-                  cy={tooltipY + 42}
-                  r="3.5"
-                  fill="#3b82f6"
+                  x1={paddingLeft}
+                  y1={y}
+                  x2={width - paddingRight}
+                  y2={y}
+                  stroke="rgba(255, 255, 255, 0.08)"
+                  strokeWidth="1"
+                  strokeDasharray={ratio === 0 ? "0" : "4 4"}
                 />
                 <text
-                  x={tooltipX + 28}
-                  y={tooltipY + 45}
+                  x={paddingLeft - 8}
+                  y={y + 4}
+                  fill="#64748b"
                   fontSize="10"
                   fontWeight="500"
-                  fill="#64748b"
-                  fontFamily="'Inter', sans-serif"
-                >
-                  Sessions:
-                </text>
-                <text
-                  x={tooltipX + tooltipWidth - 14}
-                  y={tooltipY + 45}
-                  fontSize="10.5"
-                  fontWeight="700"
-                  fill="#1e293b"
                   fontFamily="'Inter', sans-serif"
                   textAnchor="end"
                 >
-                  {hoveredPoint.raw.sessions_count || 0}
-                </text>
-
-                {/* Selections/Prints Detail Row */}
-                <circle
-                  cx={tooltipX + 18}
-                  cy={tooltipY + 58}
-                  r="3.5"
-                  fill="#a855f7"
-                />
-                <text
-                  x={tooltipX + 28}
-                  y={tooltipY + 61}
-                  fontSize="10"
-                  fontWeight="500"
-                  fill="#64748b"
-                  fontFamily="'Inter', sans-serif"
-                >
-                  Prints:
-                </text>
-                <text
-                  x={tooltipX + tooltipWidth - 14}
-                  y={tooltipY + 61}
-                  fontSize="10.5"
-                  fontWeight="700"
-                  fill="#1e293b"
-                  fontFamily="'Inter', sans-serif"
-                  textAnchor="end"
-                >
-                  {hoveredPoint.raw.selections_count || 0}
+                  {value}
                 </text>
               </g>
-            )}
-          </svg>
-        </div>
+            );
+          })}
+
+          {/* Vertical hover guide line */}
+          {hoveredPoint && (
+            <line
+              x1={hoveredPoint.x}
+              y1={paddingTop}
+              x2={hoveredPoint.x}
+              y2={height - paddingBottom}
+              stroke="#10b981"
+              strokeWidth="1.5"
+              strokeDasharray="4 4"
+              pointerEvents="none"
+              opacity="0.5"
+            />
+          )}
+
+          <path d={completedAreaPath} fill="url(#completedGrad)" />
+          <path d={completedPath} fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+          {/* Interactive Circles */}
+          {points.map((p, idx) => {
+            const isHovered = hoveredPoint && hoveredPoint.date === p.date;
+            return (
+              <circle
+                key={idx}
+                cx={p.x}
+                cy={p.yCompleted}
+                r={isHovered ? "6" : "4"}
+                fill="#ffffff"
+                stroke="#10b981"
+                strokeWidth={isHovered ? "3" : "2"}
+                style={{ transition: 'all 0.1s ease', cursor: 'pointer' }}
+              />
+            );
+          })}
+
+          {/* X Axis Labels */}
+          {xLabels.map((p, idx) => (
+            <text
+              key={idx}
+              x={p.x}
+              y={height - 12}
+              fill="#64748b"
+              fontSize="10"
+              fontWeight="500"
+              fontFamily="'Inter', sans-serif"
+              textAnchor="middle"
+            >
+              {formatDate(p.date)}
+            </text>
+          ))}
+
+          {/* Invisible hover zones */}
+          {points.map((p, idx) => {
+            const colWidth = chartWidth / (points.length - 1 || 1);
+            return (
+              <rect
+                key={`hover-zone-${idx}`}
+                x={p.x - colWidth / 2}
+                y={paddingTop}
+                width={colWidth}
+                height={chartHeight}
+                fill="transparent"
+                style={{ cursor: 'pointer' }}
+                onMouseEnter={() => setHoveredPoint(p)}
+                onMouseMove={() => setHoveredPoint(p)}
+                onMouseLeave={() => setHoveredPoint(null)}
+              />
+            );
+          })}
+
+          {/* Tooltip Group */}
+          {hoveredPoint && (
+            <g style={{ pointerEvents: 'none' }}>
+              <rect
+                x={tooltipX}
+                y={tooltipY}
+                width={tooltipWidth}
+                height={tooltipHeight}
+                rx="8"
+                ry="8"
+                fill="#ffffff"
+                stroke="#10b981"
+                strokeWidth="1.5"
+                style={{ filter: 'drop-shadow(0 4px 10px rgba(0, 0, 0, 0.15))' }}
+              />
+              <text
+                x={tooltipX + 12}
+                y={tooltipY + 19}
+                fontSize="11"
+                fontWeight="700"
+                fill="#1e293b"
+                fontFamily="'Inter', sans-serif"
+              >
+                {formatTooltipDate(hoveredPoint.date)}
+              </text>
+              <line
+                x1={tooltipX + 12}
+                y1={tooltipY + 26}
+                x2={tooltipX + tooltipWidth - 12}
+                y2={tooltipY + 26}
+                stroke="#e2e8f0"
+                strokeWidth="1"
+              />
+              <circle
+                cx={tooltipX + 18}
+                cy={tooltipY + 40}
+                r="3.5"
+                fill="#10b981"
+              />
+              <text
+                x={tooltipX + 28}
+                y={tooltipY + 43}
+                fontSize="10"
+                fontWeight="500"
+                fill="#64748b"
+                fontFamily="'Inter', sans-serif"
+              >
+                Completed:
+              </text>
+              <text
+                x={tooltipX + tooltipWidth - 14}
+                y={tooltipY + 43}
+                fontSize="11"
+                fontWeight="700"
+                fill="#10b981"
+                fontFamily="'Inter', sans-serif"
+                textAnchor="end"
+              >
+                {hoveredPoint.raw.selections_count || 0}
+              </text>
+            </g>
+          )}
+        </svg>
       </div>
     );
   };
@@ -873,14 +746,11 @@ function AdminDashboard({
             {monitorStats && (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', marginTop: '1rem' }}>
 
-                {/* Monthly History SVG Chart */}
-                {renderHistoryChart()}
-
                 {/* Print Jobs Queue Breakdown */}
                 <div className="admin-upload-section" style={{ padding: '1.5rem', textAlign: 'left' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '1rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-                      <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(245, 158, 11, 0.15)', color: '#f59e0b', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(16, 185, 129, 0.15)', color: '#10b981', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                         <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
                         </svg>
@@ -888,75 +758,20 @@ function AdminDashboard({
                       <h3 className="admin-subsection-title">Print Jobs Queue Distribution</h3>
                     </div>
 
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', padding: '0.4rem 0.85rem', background: 'rgba(139, 92, 246, 0.12)', border: '1px solid rgba(139, 92, 246, 0.25)', borderRadius: '20px', color: '#8b5cf6', fontSize: '0.85rem', fontWeight: '600' }}>
-                      <svg width="15" height="15" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
-                      </svg>
-                      <span>Active Printers: {monitorStats.database.printers_active} / {monitorStats.database.printers_count}</span>
+                    {/* Active Printers indicator card */}
+                    <div className="status-legend-card" style={{ padding: '0.5rem 1rem', borderColor: monitorStats.database.printers_active > 0 ? 'rgba(16, 185, 129, 0.3)' : 'rgba(239, 68, 68, 0.3)', background: monitorStats.database.printers_active > 0 ? 'rgba(16, 185, 129, 0.06)' : 'rgba(239, 68, 68, 0.06)', display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: monitorStats.database.printers_active > 0 ? '#10b981' : '#ef4444', display: 'inline-block' }}></span>
+                      <span className="status-legend-label" style={{ fontWeight: '500' }}>Active Printers:</span>
+                      <strong style={{ color: monitorStats.database.printers_active > 0 ? '#10b981' : '#ef4444', fontSize: '1rem' }}>{monitorStats.database.printers_active} / {monitorStats.database.printers_count}</strong>
                     </div>
                   </div>
 
-                  {/* Status Legends Grid including Active Printers */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))', gap: '1rem', marginBottom: monitorStats.database.print_jobs.total > 0 ? '1.5rem' : '0' }}>
-                    <div className="status-legend-card" style={{ borderColor: 'rgba(139, 92, 246, 0.3)', background: 'rgba(139, 92, 246, 0.05)' }}>
-                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', marginRight: '6px' }}></span>
-                      <span className="status-legend-label">Active Printers</span>
-                      <div className="status-legend-value" style={{ color: '#8b5cf6' }}>{monitorStats.database.printers_active} / {monitorStats.database.printers_count}</div>
-                    </div>
-
-                    <div className="status-legend-card">
-                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#10b981', marginRight: '6px' }}></span>
-                      <span className="status-legend-label">Completed</span>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.completed}</div>
-                    </div>
-
-                    <div className="status-legend-card">
-                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#f59e0b', marginRight: '6px' }}></span>
-                      <span className="status-legend-label">Printing</span>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.printing}</div>
-                    </div>
-
-                    <div className="status-legend-card">
-                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#3b82f6', marginRight: '6px' }}></span>
-                      <span className="status-legend-label">Queued</span>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.queued}</div>
-                    </div>
-
-                    <div className="status-legend-card">
-                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#8b5cf6', marginRight: '6px' }}></span>
-                      <span className="status-legend-label">Assigned</span>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.assigned}</div>
-                    </div>
-
-                    <div className="status-legend-card">
-                      <span style={{ display: 'inline-block', width: '8px', height: '8px', borderRadius: '50%', background: '#ef4444', marginRight: '6px' }}></span>
-                      <span className="status-legend-label">Failed</span>
-                      <div className="status-legend-value">{monitorStats.database.print_jobs.failed}</div>
-                    </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '1.25rem' }}>
+                    <span style={{ display: 'inline-block', width: '10px', height: '10px', borderRadius: '50%', background: '#10b981' }}></span>
+                    <span className="chart-legend-text" style={{ fontSize: '0.9rem', fontWeight: '600' }}>Completed Print Jobs History</span>
                   </div>
 
-                  {monitorStats.database.print_jobs.total > 0 && (
-                    <div>
-                      {/* Proportion Stack Bar */}
-                      <div style={{ display: 'flex', height: '18px', width: '100%', borderRadius: '9px', overflow: 'hidden', background: 'rgba(255,255,255,0.02)' }}>
-                        {monitorStats.database.print_jobs.completed > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.completed / monitorStats.database.print_jobs.total) * 100}%`, background: '#10b981', transition: 'width 0.5s ease' }} title={`Completed: ${monitorStats.database.print_jobs.completed}`} />
-                        )}
-                        {monitorStats.database.print_jobs.printing > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.printing / monitorStats.database.print_jobs.total) * 100}%`, background: '#f59e0b', transition: 'width 0.5s ease' }} title={`Printing: ${monitorStats.database.print_jobs.printing}`} />
-                        )}
-                        {monitorStats.database.print_jobs.queued > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.queued / monitorStats.database.print_jobs.total) * 100}%`, background: '#3b82f6', transition: 'width 0.5s ease' }} title={`Queued: ${monitorStats.database.print_jobs.queued}`} />
-                        )}
-                        {monitorStats.database.print_jobs.assigned > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.assigned / monitorStats.database.print_jobs.total) * 100}%`, background: '#8b5cf6', transition: 'width 0.5s ease' }} title={`Assigned: ${monitorStats.database.print_jobs.assigned}`} />
-                        )}
-                        {monitorStats.database.print_jobs.failed > 0 && (
-                          <div style={{ width: `${(monitorStats.database.print_jobs.failed / monitorStats.database.print_jobs.total) * 100}%`, background: '#ef4444', transition: 'width 0.5s ease' }} title={`Failed: ${monitorStats.database.print_jobs.failed}`} />
-                        )}
-                      </div>
-                    </div>
-                  )}
+                  {renderCompletedPrintsChart()}
                 </div>
 
               </div>
