@@ -45,7 +45,11 @@ export const translations = {
     confirmCancelRequest: "Are you sure you want to cancel this print request?",
     toastCancelSuccess: "Print request cancelled successfully!",
     cancelError: "Unable to cancel print request.",
-    printNotActiveYet: "The print request function is not active yet."
+    printNotActiveYet: "The print request function is not active yet.",
+    printPin: "Print PIN:",
+    printPinPlaceholder: "4-digit PIN",
+    printPinAlert: "Please enter the 4-digit PIN provided by staff.",
+    invalidPinError: "Invalid PIN code. Please check with reception staff."
   },
   it: {
     session: "Sessione",
@@ -92,7 +96,11 @@ export const translations = {
     confirmCancelRequest: "Sei sicuro di voler annullare questa richiesta di stampa?",
     toastCancelSuccess: "Richiesta di stampa annullata con successo!",
     cancelError: "Impossibile annullare la richiesta di stampa.",
-    printNotActiveYet: "La funzione di richiesta di stampa non è ancora attiva."
+    printNotActiveYet: "La funzione di richiesta di stampa non è ancora attiva.",
+    printPin: "PIN di Stampa:",
+    printPinPlaceholder: "PIN a 4 cifre",
+    printPinAlert: "Inserisci il PIN a 4 cifre fornito dallo staff.",
+    invalidPinError: "Codice PIN non valido. Verifica con lo staff della reception."
   },
   de: {
     session: "Sitzung",
@@ -139,7 +147,11 @@ export const translations = {
     confirmCancelRequest: "Sind Sie sicher, dass Sie diese Druckanfrage stornieren möchten?",
     toastCancelSuccess: "Druckanfrage erfolgreich storniert!",
     cancelError: "Druckanfrage konnte nicht storniert werden.",
-    printNotActiveYet: "Die Druckanfragefunktion ist noch nicht aktiv."
+    printNotActiveYet: "Die Druckanfragefunktion ist noch nicht aktiv.",
+    printPin: "Druck-PIN:",
+    printPinPlaceholder: "4-stelliger PIN",
+    printPinAlert: "Bitte geben Sie den 4-stelligen PIN vom Personal ein.",
+    invalidPinError: "Ungültiger PIN-Code. Bitte beim Rezeptionsteam nachfragen."
   },
   da: {
     session: "Session",
@@ -186,7 +198,11 @@ export const translations = {
     confirmCancelRequest: "Er du sikker på, at du vil annullere denne printanmodning?",
     toastCancelSuccess: "Printanmodning blev annulleret med succes!",
     cancelError: "Kunne ikke annullere printanmodningen.",
-    printNotActiveYet: "Printanmodningsfunktionen er ikke aktiv endnu."
+    printNotActiveYet: "Printanmodningsfunktionen er ikke aktiv endnu.",
+    printPin: "Print PIN:",
+    printPinPlaceholder: "4-cifret PIN",
+    printPinAlert: "Indtast venligst den 4-cifrede PIN fra personalet.",
+    invalidPinError: "Ugyldig PIN-kode. Spørg venligst personalet i receptionen."
   },
   es: {
     session: "Sesión",
@@ -233,7 +249,11 @@ export const translations = {
     confirmCancelRequest: "¿Estás seguro de que deseas cancelar esta solicitud de impresión?",
     toastCancelSuccess: "¡Solicitud de impresión cancelada con éxito!",
     cancelError: "No se pudo cancelar la solicitud de impresión.",
-    printNotActiveYet: "La función de solicitud de impresión aún no está activa."
+    printNotActiveYet: "La función de solicitud de impresión aún no está activa.",
+    printPin: "PIN de Impresión:",
+    printPinPlaceholder: "PIN de 4 dígitos",
+    printPinAlert: "Por favor ingresa el PIN de 4 dígitos proporcionado por el personal.",
+    invalidPinError: "Código PIN no válido. Por favor consulta con la recepción."
   },
   fr: {
     session: "Session",
@@ -280,7 +300,11 @@ export const translations = {
     confirmCancelRequest: "Êtes-vous sûr de vouloir annuler cette demande d'impression ?",
     toastCancelSuccess: "Demande d'impression annulée avec succès !",
     cancelError: "Impossible d'annuler la demande d'impression.",
-    printNotActiveYet: "La fonction de demande d'impression n'est pas encore active."
+    printNotActiveYet: "La fonction de demande d'impression n'est pas encore active.",
+    printPin: "PIN d'impression :",
+    printPinPlaceholder: "PIN à 4 chiffres",
+    printPinAlert: "Veuillez saisir le PIN à 4 chiffres fourni par le personnel.",
+    invalidPinError: "Code PIN invalide. Veuillez vérifier auprès de la réception."
   },
 };
 

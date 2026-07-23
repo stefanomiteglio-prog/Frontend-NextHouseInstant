@@ -22,9 +22,11 @@ function CustomerDownloadView({
 }) {
   const t = (key) => (translations[lang] && translations[lang][key]) || translations['en'][key] || key;
   const [guestName, setGuestName] = useState('');
+  const [printPin, setPrintPin] = useState('');
   const [isPrintMode, setIsPrintMode] = useState(false);
   const [activeLightboxPhotoId, setActiveLightboxPhotoId] = useState(null);
   const [nameError, setNameError] = useState(false);
+  const [pinError, setPinError] = useState(false);
 
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
@@ -111,14 +113,28 @@ function CustomerDownloadView({
 
   const onSubmit = () => {
     const guestNameVal = guestName.trim();
+    const pinVal = printPin.trim();
+
+    let hasError = false;
     if (!guestNameVal) {
       setNameError(true);
-      return;
+      hasError = true;
+    } else {
+      setNameError(false);
     }
-    setNameError(false);
 
-    handleSubmitPrintRequest(guestNameVal, () => {
+    if (!pinVal || pinVal.length !== 4 || !/^\d{4}$/.test(pinVal)) {
+      setPinError(true);
+      hasError = true;
+    } else {
+      setPinError(false);
+    }
+
+    if (hasError) return;
+
+    handleSubmitPrintRequest(guestNameVal, pinVal, () => {
       setGuestName('');
+      setPrintPin('');
       setIsPrintMode(false);
     });
   };
@@ -126,7 +142,9 @@ function CustomerDownloadView({
   const onCancel = () => {
     handleClearActiveSelection();
     setGuestName('');
+    setPrintPin('');
     setNameError(false);
+    setPinError(false);
     setIsPrintMode(false);
   };
 
@@ -325,6 +343,31 @@ function CustomerDownloadView({
                 </div>
               )}
 
+              <div className="customer-info-row" style={{ marginTop: '0.75rem' }}>
+                <span className="customer-info-label">{t("printPin")}</span>
+                <input
+                  type="password"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={4}
+                  className={`customer-input-field ${pinError ? 'input-error' : ''}`}
+                  placeholder={t("printPinPlaceholder")}
+                  value={printPin}
+                  onChange={(e) => {
+                    const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                    setPrintPin(val);
+                    if (pinError && val.length === 4) {
+                      setPinError(false);
+                    }
+                  }}
+                />
+              </div>
+              {pinError && (
+                <div className="customer-input-error-msg">
+                  {t("printPinAlert")}
+                </div>
+              )}
+
               {/* Submit Button */}
               <button
                 type="button"
@@ -351,7 +394,7 @@ function CustomerDownloadView({
           <button
             type="button"
             className="customer-btn-print-mode"
-            onClick={() => alert(t("printNotActiveYet"))}
+            onClick={() => setIsPrintMode(true)}
           >
             {t("printRequest")}
             <svg width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">

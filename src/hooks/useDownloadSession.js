@@ -67,8 +67,8 @@ export function useDownloadSession() {
     }
   }, [token]);
 
-  const handleSubmitPrintRequest = async (guestName, onSuccess) => {
-    if (activeSelectedPhotoIds.size === 0) return;
+  const handleSubmitPrintRequest = async (guestName, pin, onSuccess) => {
+    if (activeSelectedPhotoIds.size === 0) return false;
     setSubmittingSelection(true);
     setSelectionMessage('');
     try {
@@ -77,7 +77,9 @@ export function useDownloadSession() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
           photo_ids: Array.from(activeSelectedPhotoIds),
-          name: guestName
+          name: guestName,
+          pin: pin,
+          password: pin
         })
       });
       if (response.ok) {
@@ -87,6 +89,7 @@ export function useDownloadSession() {
         if (onSuccess) onSuccess();
         // Clear message after 4 seconds
         setTimeout(() => setSelectionMessage(''), 4000);
+        return true;
       } else {
         let errorDetails = `HTTP ${response.status} ${response.statusText}`;
         let responseBody = '';
@@ -102,14 +105,19 @@ export function useDownloadSession() {
         }
         
         console.error("Print submission failed:", errorDetails, responseBody);
-        
-        alert(
-          `Print Request Error:\n` +
-          `---------------------\n` +
-          `Status: ${errorDetails}\n` +
-          `Response: ${responseBody.substring(0, 300)}${responseBody.length > 300 ? '...' : ''}\n\n` +
-          `Please share this error message with your developer.`
-        );
+
+        if (response.status === 401 || response.status === 403) {
+          alert(`Invalid PIN Code:\n---------------------\n${responseBody || 'The entered PIN is incorrect. Please check with reception staff.'}`);
+        } else {
+          alert(
+            `Print Request Error:\n` +
+            `---------------------\n` +
+            `Status: ${errorDetails}\n` +
+            `Response: ${responseBody.substring(0, 300)}${responseBody.length > 300 ? '...' : ''}\n\n` +
+            `Please share this error message with your developer.`
+          );
+        }
+        return false;
       }
     } catch (err) {
       console.error("Error sending print request:", err);
@@ -119,6 +127,7 @@ export function useDownloadSession() {
         `Message: ${err.message || err}\n\n` +
         `Please check your internet connection or backend server status.`
       );
+      return false;
     } finally {
       setSubmittingSelection(false);
     }
