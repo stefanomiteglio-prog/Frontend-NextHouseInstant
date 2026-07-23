@@ -3715,6 +3715,56 @@ button.clickable-thumbnail:focus-visible {
   animation: spin 1s linear infinite;
 }
 
+/* Premium Refresh Button Animations */
+.btn-refresh {
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.btn-refresh:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25) !important;
+}
+
+.btn-refresh:active:not(:disabled) {
+  transform: translateY(0) scale(0.96) !important;
+}
+
+.btn-refresh.is-refreshing {
+  border-color: rgba(249, 115, 22, 0.6) !important;
+  background: rgba(249, 115, 22, 0.12) !important;
+  color: #f97316 !important;
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.35) !important;
+  animation: refreshPulse 1.2s cubic-bezier(0.4, 0, 0.6, 1) infinite alternate !important;
+}
+
+.btn-refresh.is-refreshing svg {
+  animation: refreshSpin 0.85s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite !important;
+  transform-origin: center;
+  filter: drop-shadow(0 0 4px rgba(249, 115, 22, 0.6)) !important;
+}
+
+@keyframes refreshSpin {
+  0% {
+    transform: rotate(0deg) scale(1);
+  }
+  50% {
+    transform: rotate(180deg) scale(1.25);
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+  }
+}
+
+@keyframes refreshPulse {
+  0% {
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.2);
+  }
+  100% {
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.5);
+  }
+}
+
 /* Admin Dashboard Section Titles & Metrics Styling */
 .admin-section-title {
   font-family: 'Outfit', sans-serif;
