@@ -536,7 +536,7 @@ function AdminDashboard({
 
 
         {/* Admin Navigation Tabs */}
-        <div className="admin-tabs">
+        <div className="admin-tabs" style={{ marginBottom: activeTab === 'stickers' ? '0.4rem' : undefined }}>
           <button
             className={`admin-tab-btn ${activeTab === 'monitor' ? 'active' : ''}`}
             onClick={() => setActiveTab('monitor')}
@@ -571,9 +571,8 @@ function AdminDashboard({
             {/* Compact Informational Banner */}
             <div
               style={{
-                padding: '0.5rem 0.85rem',
-                marginTop: '0.5rem',
-                marginBottom: '0.75rem',
+                padding: '0.4rem 0.85rem',
+                margin: '0 0 0.4rem 0',
                 display: 'flex',
                 alignItems: 'center',
                 gap: '0.6rem',
