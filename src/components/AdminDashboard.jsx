@@ -164,12 +164,23 @@ function AdminDashboard({
       if (hoveredPoint.raw.selections_count > 0) activeYs.push(hoveredPoint.ySelections);
 
       const minY = activeYs.length > 0 ? Math.min(...activeYs) : height - paddingBottom;
-      const maxY = activeYs.length > 0 ? Math.max(...activeYs) : height - paddingBottom;
 
-      tooltipY = minY - tooltipHeight - 15;
+      // Primary position: show above the highest active dot
+      tooltipY = minY - tooltipHeight - 12;
+
+      // If showing above puts the tooltip card too close to or above the top margin
       if (tooltipY < paddingTop) {
-        tooltipY = maxY + 15;
+        tooltipY = minY + 12;
         showBelow = true;
+      }
+
+      // Clamp tooltipY to strictly stay within visible SVG boundary [10, height - tooltipHeight - 10]
+      const minTooltipY = 10;
+      const maxTooltipY = height - tooltipHeight - 10;
+      if (tooltipY < minTooltipY) {
+        tooltipY = minTooltipY;
+      } else if (tooltipY > maxTooltipY) {
+        tooltipY = maxTooltipY;
       }
     }
 
@@ -346,14 +357,14 @@ function AdminDashboard({
                 {/* Tooltip Caret */}
                 {showBelow ? (
                   <polygon
-                    points={`${hoveredPoint.x},${tooltipY} ${hoveredPoint.x - 6},${tooltipY - 6} ${hoveredPoint.x + 6},${tooltipY - 6}`}
+                    points={`${hoveredPoint.x},${tooltipY - 6} ${hoveredPoint.x - 6},${tooltipY} ${hoveredPoint.x + 6},${tooltipY}`}
                     fill="#ffffff"
                     stroke="#e2e8f0"
                     strokeWidth="1.5"
                   />
                 ) : (
                   <polygon
-                    points={`${hoveredPoint.x},${tooltipY + tooltipHeight} ${hoveredPoint.x - 6},${tooltipY + tooltipHeight + 6} ${hoveredPoint.x + 6},${tooltipY + tooltipHeight + 6}`}
+                    points={`${hoveredPoint.x},${tooltipY + tooltipHeight + 6} ${hoveredPoint.x - 6},${tooltipY + tooltipHeight} ${hoveredPoint.x + 6},${tooltipY + tooltipHeight}`}
                     fill="#ffffff"
                     stroke="#e2e8f0"
                     strokeWidth="1.5"
