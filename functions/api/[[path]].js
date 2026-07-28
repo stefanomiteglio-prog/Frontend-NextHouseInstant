@@ -18,6 +18,7 @@ export async function onRequest(context) {
         headers.delete("host");
         headers.delete("origin");
         headers.delete("referer");
+        headers.delete("content-length");
 
         for (const key of [...headers.keys()]) {
             if (key.toLowerCase().startsWith("sec-")) headers.delete(key);
