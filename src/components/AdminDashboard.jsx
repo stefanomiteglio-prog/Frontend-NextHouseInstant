@@ -80,9 +80,9 @@ function AdminDashboard({
   };
 
   const renderHistoryChart = () => {
-    const historyData = monitorStats?.history || [];
+    const rawHistoryData = monitorStats?.history || [];
 
-    if (historyData.length === 0) {
+    if (!rawHistoryData || rawHistoryData.length === 0) {
       return (
         <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '3rem' }}>
           No historical data recorded yet. Statistics will start appearing daily.
@@ -90,11 +90,83 @@ function AdminDashboard({
       );
     }
 
+    const getDayKey = (dateStr) => {
+      if (!dateStr) return '';
+      const parts = String(dateStr).split('T')[0].split('-');
+      if (parts.length === 3) {
+        return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
+      }
+      const d = new Date(dateStr);
+      if (isNaN(d.getTime())) return String(dateStr);
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    // Index raw history data by YYYY-MM-DD
+    const historyMap = {};
+    const parsedDates = [];
+
+    rawHistoryData.forEach(item => {
+      const key = getDayKey(item.date);
+      if (key) {
+        historyMap[key] = item;
+      }
+      const d = new Date(item.date);
+      if (!isNaN(d.getTime())) {
+        parsedDates.push(d);
+      }
+    });
+
+    // End date: today at end of day, or max date in data if in future
+    let endDate = new Date();
+    endDate.setHours(23, 59, 59, 999);
+    if (parsedDates.length > 0) {
+      const maxParsed = new Date(Math.max(...parsedDates));
+      if (maxParsed > endDate) endDate = new Date(maxParsed);
+    }
+
+    // Start date: 29 days before end date (30 days window), or min date in data if earlier
+    let startDate = new Date(endDate);
+    startDate.setDate(startDate.getDate() - 29);
+    startDate.setHours(0, 0, 0, 0);
+    if (parsedDates.length > 0) {
+      const minParsed = new Date(Math.min(...parsedDates));
+      minParsed.setHours(0, 0, 0, 0);
+      if (minParsed < startDate) {
+        startDate = new Date(minParsed);
+      }
+    }
+
+    // Fill continuous sequence of days so days without data are included
+    const historyData = [];
+    let curr = new Date(startDate);
+    while (curr <= endDate) {
+      const year = curr.getFullYear();
+      const month = String(curr.getMonth() + 1).padStart(2, '0');
+      const day = String(curr.getDate()).padStart(2, '0');
+      const key = `${year}-${month}-${day}`;
+      const existing = historyMap[key];
+
+      const sCount = existing ? (existing.sessions_count || 0) : 0;
+      const pCount = existing ? (existing.selections_count || 0) : 0;
+
+      historyData.push({
+        date: key,
+        sessions_count: sCount,
+        selections_count: pCount,
+        hasData: sCount > 0 || pCount > 0
+      });
+
+      curr.setDate(curr.getDate() + 1);
+    }
+
     const width = 800;
     const height = 280;
     const paddingLeft = 40;
     const paddingRight = 20;
-    const paddingTop = 20;
+    const paddingTop = 25;
     const paddingBottom = 40;
 
     const chartWidth = width - paddingLeft - paddingRight;
@@ -102,29 +174,56 @@ function AdminDashboard({
 
     const maxVal = Math.max(
       10,
-      ...historyData.map(d => Math.max(d.sessions_count || 0, d.selections_count || 0))
+      ...historyData.map(d => Math.max(d.sessions_count, d.selections_count))
     );
 
+    const n = historyData.length;
+    const slotWidth = chartWidth / n;
+    const barGap = 1.5;
+    const maxGroupWidth = slotWidth * 0.75;
+    const singleBarWidth = Math.max(2.5, Math.floor((maxGroupWidth - barGap) / 2));
+    const totalGroupWidth = singleBarWidth * 2 + barGap;
+
     const points = historyData.map((d, i) => {
-      const x = paddingLeft + (i / (historyData.length - 1 || 1)) * chartWidth;
-      const ySessions = height - paddingBottom - ((d.sessions_count || 0) / maxVal) * chartHeight;
-      const ySelections = height - paddingBottom - ((d.selections_count || 0) / maxVal) * chartHeight;
-      return { x, ySessions, ySelections, date: d.date, raw: d };
+      const slotX = paddingLeft + i * slotWidth;
+      const xCenter = slotX + slotWidth / 2;
+      const xSessions = xCenter - totalGroupWidth / 2;
+      const xSelections = xSessions + singleBarWidth + barGap;
+
+      const sessionsH = (d.sessions_count / maxVal) * chartHeight;
+      const selectionsH = (d.selections_count / maxVal) * chartHeight;
+
+      const ySessions = height - paddingBottom - sessionsH;
+      const ySelections = height - paddingBottom - selectionsH;
+
+      return {
+        xCenter,
+        slotX,
+        slotWidth,
+        xSessions,
+        xSelections,
+        singleBarWidth,
+        sessionsH,
+        selectionsH,
+        ySessions,
+        ySelections,
+        date: d.date,
+        raw: d
+      };
     });
 
-    const sessionsPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.ySessions}`).join(' ');
-    const selectionsPath = points.map((p, i) => `${i === 0 ? 'M' : 'L'} ${p.x} ${p.ySelections}`).join(' ');
-
-    const sessionsAreaPath = `${sessionsPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
-    const selectionsAreaPath = `${selectionsPath} L ${points[points.length - 1].x} ${height - paddingBottom} L ${points[0].x} ${height - paddingBottom} Z`;
-
-    const labelStep = Math.max(1, Math.floor(historyData.length / 5));
-    const xLabels = points.filter((_, idx) => idx % labelStep === 0 || idx === points.length - 1);
+    const labelStep = Math.max(1, Math.floor(n / 6));
+    const xLabels = points.filter((_, idx) => idx % labelStep === 0 || idx === n - 1);
 
     const gridLines = [0, 0.25, 0.5, 0.75, 1];
 
     const formatDate = (dateStr) => {
       try {
+        const parts = String(dateStr).split('-');
+        if (parts.length === 3) {
+          const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          return d.toLocaleDateString('da-DK', { day: '2-digit', month: 'short' });
+        }
         const d = new Date(dateStr);
         return d.toLocaleDateString('da-DK', { day: '2-digit', month: 'short' });
       } catch {
@@ -134,6 +233,11 @@ function AdminDashboard({
 
     const formatTooltipDate = (dateStr) => {
       try {
+        const parts = String(dateStr).split('-');
+        if (parts.length === 3) {
+          const d = new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10));
+          return d.toLocaleDateString('da-DK', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
         const d = new Date(dateStr);
         return d.toLocaleDateString('da-DK', { day: '2-digit', month: 'short', year: 'numeric' });
       } catch {
@@ -145,11 +249,12 @@ function AdminDashboard({
     let tooltipX = 0;
     let tooltipY = 0;
     let showBelow = false;
-    const tooltipWidth = 150;
-    const tooltipHeight = 75;
+    const tooltipWidth = 155;
+    const hasNoDataNote = hoveredPoint && !hoveredPoint.raw.hasData;
+    const tooltipHeight = hasNoDataNote ? 90 : 76;
 
     if (hoveredPoint) {
-      tooltipX = hoveredPoint.x - tooltipWidth / 2;
+      tooltipX = hoveredPoint.xCenter - tooltipWidth / 2;
       const minTooltipX = 10;
       const maxTooltipX = width - tooltipWidth - 10;
       if (tooltipX < minTooltipX) {
@@ -158,23 +263,16 @@ function AdminDashboard({
         tooltipX = maxTooltipX;
       }
 
-      // Collect Y coordinates of only the dots actually rendered (count > 0)
-      const activeYs = [];
-      if (hoveredPoint.raw.sessions_count > 0) activeYs.push(hoveredPoint.ySessions);
-      if (hoveredPoint.raw.selections_count > 0) activeYs.push(hoveredPoint.ySelections);
+      const maxBarH = Math.max(hoveredPoint.sessionsH, hoveredPoint.selectionsH);
+      const topYOfBars = height - paddingBottom - maxBarH;
 
-      const minY = activeYs.length > 0 ? Math.min(...activeYs) : height - paddingBottom;
+      tooltipY = topYOfBars - tooltipHeight - 12;
 
-      // Primary position: show above the highest active dot
-      tooltipY = minY - tooltipHeight - 12;
-
-      // If showing above puts the tooltip card too close to or above the top margin
       if (tooltipY < paddingTop) {
-        tooltipY = minY + 12;
+        tooltipY = topYOfBars + 12;
         showBelow = true;
       }
 
-      // Clamp tooltipY to strictly stay within visible SVG boundary [10, height - tooltipHeight - 10]
       const minTooltipY = 10;
       const maxTooltipY = height - tooltipHeight - 10;
       if (tooltipY < minTooltipY) {
@@ -190,11 +288,11 @@ function AdminDashboard({
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
             <div style={{ padding: '0.4rem', borderRadius: '8px', background: 'rgba(168, 85, 247, 0.15)', color: '#a855f7', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
               <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
               </svg>
             </div>
             <h3 className="admin-subsection-title">
-              30-Day Activity History
+              30-Day Activity History (Istogramma)
             </h3>
           </div>
           <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
@@ -212,13 +310,17 @@ function AdminDashboard({
         <div style={{ width: '100%', overflowX: 'auto', position: 'relative' }}>
           <svg viewBox={`0 0 ${width} ${height}`} style={{ width: '100%', minWidth: '600px', height: 'auto', display: 'block' }}>
             <defs>
-              <linearGradient id="sessionsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.0" />
+              <linearGradient id="barSessionsGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#60a5fa" />
+                <stop offset="100%" stopColor="#2563eb" />
               </linearGradient>
-              <linearGradient id="selectionsGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="#a855f7" stopOpacity="0.15" />
-                <stop offset="100%" stopColor="#a855f7" stopOpacity="0.0" />
+              <linearGradient id="barSelectionsGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#c084fc" />
+                <stop offset="100%" stopColor="#9333ea" />
+              </linearGradient>
+              <linearGradient id="hoverColGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="rgba(59, 130, 246, 0.12)" />
+                <stop offset="100%" stopColor="rgba(59, 130, 246, 0.02)" />
               </linearGradient>
             </defs>
 
@@ -251,51 +353,76 @@ function AdminDashboard({
               );
             })}
 
-            {/* Vertical hover guide line */}
-            {hoveredPoint && (
-              <line
-                x1={hoveredPoint.x}
-                y1={paddingTop}
-                x2={hoveredPoint.x}
-                y2={height - paddingBottom}
-                stroke="#cbd5e1"
-                strokeWidth="1.5"
-                strokeDasharray="4 4"
-                pointerEvents="none"
-              />
-            )}
-
-            <path d={sessionsAreaPath} fill="url(#sessionsGrad)" />
-            <path d={selectionsAreaPath} fill="url(#selectionsGrad)" />
-
-            <path d={sessionsPath} fill="none" stroke="#3b82f6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-            <path d={selectionsPath} fill="none" stroke="#a855f7" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-
-            {/* Interactive Circles / Dots */}
+            {/* Column Hover Background Highlight */}
             {points.map((p, idx) => {
               const isHovered = hoveredPoint && hoveredPoint.date === p.date;
+              if (!isHovered) return null;
               return (
-                <g key={idx}>
-                  {p.raw.sessions_count > 0 && (
-                    <circle
-                      cx={p.x}
-                      cy={p.ySessions}
-                      r={isHovered ? "6" : "4"}
-                      fill="#ffffff"
-                      stroke="#3b82f6"
-                      strokeWidth={isHovered ? "3" : "2"}
-                      style={{ transition: 'all 0.1s ease' }}
+                <rect
+                  key={`hover-bg-${idx}`}
+                  x={p.slotX}
+                  y={paddingTop}
+                  width={p.slotWidth}
+                  height={chartHeight}
+                  fill="url(#hoverColGrad)"
+                  rx="4"
+                  pointerEvents="none"
+                />
+              );
+            })}
+
+            {/* Histogram Bars */}
+            {points.map((p, idx) => {
+              const isHovered = hoveredPoint && hoveredPoint.date === p.date;
+              const opacity = hoveredPoint ? (isHovered ? 1 : 0.65) : 1;
+
+              return (
+                <g key={idx} style={{ transition: 'opacity 0.15s ease' }} opacity={opacity}>
+                  {/* Sessions Bar */}
+                  {p.raw.sessions_count > 0 ? (
+                    <rect
+                      x={p.xSessions}
+                      y={p.ySessions}
+                      width={p.singleBarWidth}
+                      height={Math.max(3, p.sessionsH)}
+                      fill="url(#barSessionsGrad)"
+                      rx={Math.min(3, p.sessionsH / 2)}
+                      ry={Math.min(3, p.sessionsH / 2)}
+                    />
+                  ) : (
+                    /* Subtle 2px zero indicator tick for 0 sessions */
+                    <rect
+                      x={p.xSessions}
+                      y={height - paddingBottom - 2}
+                      width={p.singleBarWidth}
+                      height={2}
+                      fill="rgba(59, 130, 246, 0.35)"
+                      rx="1"
+                      ry="1"
                     />
                   )}
-                  {p.raw.selections_count > 0 && (
-                    <circle
-                      cx={p.x}
-                      cy={p.ySelections}
-                      r={isHovered ? "6" : "4"}
-                      fill="#ffffff"
-                      stroke="#a855f7"
-                      strokeWidth={isHovered ? "3" : "2"}
-                      style={{ transition: 'all 0.1s ease' }}
+
+                  {/* Selections / Print Requests Bar */}
+                  {p.raw.selections_count > 0 ? (
+                    <rect
+                      x={p.xSelections}
+                      y={p.ySelections}
+                      width={p.singleBarWidth}
+                      height={Math.max(3, p.selectionsH)}
+                      fill="url(#barSelectionsGrad)"
+                      rx={Math.min(3, p.selectionsH / 2)}
+                      ry={Math.min(3, p.selectionsH / 2)}
+                    />
+                  ) : (
+                    /* Subtle 2px zero indicator tick for 0 prints */
+                    <rect
+                      x={p.xSelections}
+                      y={height - paddingBottom - 2}
+                      width={p.singleBarWidth}
+                      height={2}
+                      fill="rgba(168, 85, 247, 0.35)"
+                      rx="1"
+                      ry="1"
                     />
                   )}
                 </g>
@@ -306,7 +433,7 @@ function AdminDashboard({
             {xLabels.map((p, idx) => (
               <text
                 key={idx}
-                x={p.x}
+                x={p.xCenter}
                 y={height - 12}
                 fill="#64748b"
                 fontSize="10"
@@ -318,24 +445,21 @@ function AdminDashboard({
               </text>
             ))}
 
-            {/* Invisible hover zones/bars */}
-            {points.map((p, idx) => {
-              const colWidth = chartWidth / (points.length - 1 || 1);
-              return (
-                <rect
-                  key={`hover-zone-${idx}`}
-                  x={p.x - colWidth / 2}
-                  y={paddingTop}
-                  width={colWidth}
-                  height={chartHeight}
-                  fill="transparent"
-                  style={{ cursor: 'pointer' }}
-                  onMouseEnter={() => setHoveredPoint(p)}
-                  onMouseMove={() => setHoveredPoint(p)}
-                  onMouseLeave={() => setHoveredPoint(null)}
-                />
-              );
-            })}
+            {/* Invisible hover zones/bars for smooth mouse tracking */}
+            {points.map((p, idx) => (
+              <rect
+                key={`hover-zone-${idx}`}
+                x={p.slotX}
+                y={paddingTop}
+                width={p.slotWidth}
+                height={chartHeight}
+                fill="transparent"
+                style={{ cursor: 'pointer' }}
+                onMouseEnter={() => setHoveredPoint(p)}
+                onMouseMove={() => setHoveredPoint(p)}
+                onMouseLeave={() => setHoveredPoint(null)}
+              />
+            ))}
 
             {/* Tooltip Group */}
             {hoveredPoint && (
@@ -357,14 +481,14 @@ function AdminDashboard({
                 {/* Tooltip Caret */}
                 {showBelow ? (
                   <polygon
-                    points={`${hoveredPoint.x},${tooltipY - 6} ${hoveredPoint.x - 6},${tooltipY} ${hoveredPoint.x + 6},${tooltipY}`}
+                    points={`${hoveredPoint.xCenter},${tooltipY - 6} ${hoveredPoint.xCenter - 6},${tooltipY} ${hoveredPoint.xCenter + 6},${tooltipY}`}
                     fill="#ffffff"
                     stroke="#e2e8f0"
                     strokeWidth="1.5"
                   />
                 ) : (
                   <polygon
-                    points={`${hoveredPoint.x},${tooltipY + tooltipHeight + 6} ${hoveredPoint.x - 6},${tooltipY + tooltipHeight} ${hoveredPoint.x + 6},${tooltipY + tooltipHeight}`}
+                    points={`${hoveredPoint.xCenter},${tooltipY + tooltipHeight + 6} ${hoveredPoint.xCenter - 6},${tooltipY + tooltipHeight} ${hoveredPoint.xCenter + 6},${tooltipY + tooltipHeight}`}
                     fill="#ffffff"
                     stroke="#e2e8f0"
                     strokeWidth="1.5"
@@ -373,12 +497,12 @@ function AdminDashboard({
                 {/* Clean Caret Base Cover */}
                 {showBelow ? (
                   <polygon
-                    points={`${hoveredPoint.x - 5},${tooltipY} ${hoveredPoint.x + 5},${tooltipY} ${hoveredPoint.x},${tooltipY + 1}`}
+                    points={`${hoveredPoint.xCenter - 5},${tooltipY} ${hoveredPoint.xCenter + 5},${tooltipY} ${hoveredPoint.xCenter},${tooltipY + 1}`}
                     fill="#ffffff"
                   />
                 ) : (
                   <polygon
-                    points={`${hoveredPoint.x - 5},${tooltipY + tooltipHeight} ${hoveredPoint.x + 5},${tooltipY + tooltipHeight} ${hoveredPoint.x},${tooltipY + tooltipHeight - 1}`}
+                    points={`${hoveredPoint.xCenter - 5},${tooltipY + tooltipHeight} ${hoveredPoint.xCenter + 5},${tooltipY + tooltipHeight} ${hoveredPoint.xCenter},${tooltipY + tooltipHeight - 1}`}
                     fill="#ffffff"
                   />
                 )}
@@ -386,7 +510,7 @@ function AdminDashboard({
                 {/* Tooltip Header Date */}
                 <text
                   x={tooltipX + 12}
-                  y={tooltipY + 20}
+                  y={tooltipY + 18}
                   fontSize="11.5"
                   fontWeight="700"
                   fill="#1e293b"
@@ -398,9 +522,9 @@ function AdminDashboard({
                 {/* Divider Line */}
                 <line
                   x1={tooltipX + 12}
-                  y1={tooltipY + 28}
+                  y1={tooltipY + 25}
                   x2={tooltipX + tooltipWidth - 12}
-                  y2={tooltipY + 28}
+                  y2={tooltipY + 25}
                   stroke="#f1f5f9"
                   strokeWidth="1.2"
                 />
@@ -408,13 +532,13 @@ function AdminDashboard({
                 {/* Sessions Detail Row */}
                 <circle
                   cx={tooltipX + 18}
-                  cy={tooltipY + 42}
+                  cy={tooltipY + 38}
                   r="3.5"
                   fill="#3b82f6"
                 />
                 <text
                   x={tooltipX + 28}
-                  y={tooltipY + 45}
+                  y={tooltipY + 41}
                   fontSize="10"
                   fontWeight="500"
                   fill="#64748b"
@@ -424,26 +548,26 @@ function AdminDashboard({
                 </text>
                 <text
                   x={tooltipX + tooltipWidth - 14}
-                  y={tooltipY + 45}
+                  y={tooltipY + 41}
                   fontSize="10.5"
                   fontWeight="700"
                   fill="#1e293b"
                   fontFamily="'Inter', sans-serif"
                   textAnchor="end"
                 >
-                  {hoveredPoint.raw.sessions_count || 0}
+                  {hoveredPoint.raw.sessions_count}
                 </text>
 
                 {/* Selections/Prints Detail Row */}
                 <circle
                   cx={tooltipX + 18}
-                  cy={tooltipY + 58}
+                  cy={tooltipY + 54}
                   r="3.5"
                   fill="#a855f7"
                 />
                 <text
                   x={tooltipX + 28}
-                  y={tooltipY + 61}
+                  y={tooltipY + 57}
                   fontSize="10"
                   fontWeight="500"
                   fill="#64748b"
@@ -453,15 +577,30 @@ function AdminDashboard({
                 </text>
                 <text
                   x={tooltipX + tooltipWidth - 14}
-                  y={tooltipY + 61}
+                  y={tooltipY + 57}
                   fontSize="10.5"
                   fontWeight="700"
                   fill="#1e293b"
                   fontFamily="'Inter', sans-serif"
                   textAnchor="end"
                 >
-                  {hoveredPoint.raw.selections_count || 0}
+                  {hoveredPoint.raw.selections_count}
                 </text>
+
+                {/* No activity indicator line if 0 activity */}
+                {!hoveredPoint.raw.hasData && (
+                  <text
+                    x={tooltipX + 12}
+                    y={tooltipY + 74}
+                    fontSize="9"
+                    fontWeight="500"
+                    fill="#94a3b8"
+                    fontStyle="italic"
+                    fontFamily="'Inter', sans-serif"
+                  >
+                    Nessuna attività registrata
+                  </text>
+                )}
               </g>
             )}
           </svg>
