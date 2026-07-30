@@ -49,7 +49,16 @@ export const translations = {
     printPin: "Print PIN:",
     printPinPlaceholder: "4-digit PIN",
     printPinAlert: "Please enter the 4-digit PIN provided by staff.",
-    invalidPinError: "Invalid PIN code. Please check with reception staff."
+    invalidPinError: "Invalid PIN code. Please check with reception staff.",
+    settings: "Settings",
+    printSettings: "Print Settings",
+    requirePinLabel: "Require PIN for Print Requests",
+    requirePinDesc: "When enabled, guests must enter a 4-digit PIN to submit print requests. When disabled, print requests can be sent directly without a PIN.",
+    pinStatusActive: "PIN Required",
+    pinStatusInactive: "PIN Disabled (Direct submission)",
+    currentPin: "Current 4-digit PIN:",
+    saveSettings: "Save Settings",
+    settingsUpdated: "Settings updated successfully!"
   },
   it: {
     session: "Sessione",
@@ -100,7 +109,16 @@ export const translations = {
     printPin: "PIN di Stampa:",
     printPinPlaceholder: "PIN a 4 cifre",
     printPinAlert: "Inserisci il PIN a 4 cifre fornito dallo staff.",
-    invalidPinError: "Codice PIN non valido. Verifica con lo staff della reception."
+    invalidPinError: "Codice PIN non valido. Verifica con lo staff della reception.",
+    settings: "Impostazioni",
+    printSettings: "Impostazioni di Stampa",
+    requirePinLabel: "Richiedi PIN per le richieste di stampa",
+    requirePinDesc: "Se attivo, gli ospiti devono inserire un PIN a 4 cifre per inviare le richieste di stampa. Se disattivato, le richieste possono essere inviate direttamente senza PIN.",
+    pinStatusActive: "PIN Richiesto",
+    pinStatusInactive: "PIN Disattivato (Invio libero)",
+    currentPin: "PIN a 4 cifre attuale:",
+    saveSettings: "Salva Impostazioni",
+    settingsUpdated: "Impostazioni aggiornate con successo!"
   },
   de: {
     session: "Sitzung",

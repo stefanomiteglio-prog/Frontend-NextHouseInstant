@@ -111,6 +111,8 @@ function CustomerDownloadView({
     return { name: fullName, booking: '' };
   };
 
+  const requirePrintPin = session?.require_print_pin !== false;
+
   const onSubmit = () => {
     const guestNameVal = guestName.trim();
     const pinVal = printPin.trim();
@@ -123,9 +125,13 @@ function CustomerDownloadView({
       setNameError(false);
     }
 
-    if (!pinVal || pinVal.length !== 4 || !/^\d{4}$/.test(pinVal)) {
-      setPinError(true);
-      hasError = true;
+    if (requirePrintPin) {
+      if (!pinVal || pinVal.length !== 4 || !/^\d{4}$/.test(pinVal)) {
+        setPinError(true);
+        hasError = true;
+      } else {
+        setPinError(false);
+      }
     } else {
       setPinError(false);
     }
@@ -343,29 +349,33 @@ function CustomerDownloadView({
                 </div>
               )}
 
-              <div className="customer-info-row" style={{ marginTop: '0.75rem' }}>
-                <span className="customer-info-label">{t("printPin")}</span>
-                <input
-                  type="password"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  maxLength={4}
-                  className={`customer-input-field ${pinError ? 'input-error' : ''}`}
-                  placeholder={t("printPinPlaceholder")}
-                  value={printPin}
-                  onChange={(e) => {
-                    const val = e.target.value.replace(/\D/g, '').slice(0, 4);
-                    setPrintPin(val);
-                    if (pinError && val.length === 4) {
-                      setPinError(false);
-                    }
-                  }}
-                />
-              </div>
-              {pinError && (
-                <div className="customer-input-error-msg">
-                  {t("printPinAlert")}
-                </div>
+              {requirePrintPin && (
+                <>
+                  <div className="customer-info-row" style={{ marginTop: '0.75rem' }}>
+                    <span className="customer-info-label">{t("printPin")}</span>
+                    <input
+                      type="password"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
+                      maxLength={4}
+                      className={`customer-input-field ${pinError ? 'input-error' : ''}`}
+                      placeholder={t("printPinPlaceholder")}
+                      value={printPin}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                        setPrintPin(val);
+                        if (pinError && val.length === 4) {
+                          setPinError(false);
+                        }
+                      }}
+                    />
+                  </div>
+                  {pinError && (
+                    <div className="customer-input-error-msg">
+                      {t("printPinAlert")}
+                    </div>
+                  )}
+                </>
               )}
 
               {/* Submit Button */}

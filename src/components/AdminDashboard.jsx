@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import nexthouseLogo from '../assets/nexthouse_logo.png';
+import { useAdminAuth } from '../hooks/useAdminAuth';
 
 function AdminDashboard({
   handleLogout,
@@ -40,10 +41,63 @@ function AdminDashboard({
   theme = 'system',
   toggleTheme
 }) {
-  const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
-  const [hoveredPoint, setHoveredPoint] = useState(null);
-  const [manualRefreshingMonitor, setManualRefreshingMonitor] = useState(false);
-  const [manualRefreshingPrints, setManualRefreshingPrints] = useState(false);
+  const { authenticatedFetch } = useAdminAuth();
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [settingsSaving, setSettingsSaving] = useState(false);
+  const [requirePrintPin, setRequirePrintPin] = useState(true);
+  const [printPin, setPrintPin] = useState('2314');
+  const [settingsToast, setSettingsToast] = useState('');
+
+  const fetchSettings = useCallback(async () => {
+    setSettingsLoading(true);
+    try {
+      const res = await authenticatedFetch(`${API_URL}/api/settings`);
+      if (res.ok) {
+        const data = await res.json();
+        setRequirePrintPin(data.require_print_pin);
+        setPrintPin(data.print_pin || '2314');
+      }
+    } catch (err) {
+      console.error("Error fetching settings:", err);
+    } finally {
+      setSettingsLoading(false);
+    }
+  }, [authenticatedFetch, API_URL]);
+
+  useEffect(() => {
+    if (activeTab === 'settings') {
+      fetchSettings();
+    }
+  }, [activeTab, fetchSettings]);
+
+  const handleSaveSettings = async (newRequirePin, newPin) => {
+    setSettingsSaving(true);
+    try {
+      const res = await authenticatedFetch(`${API_URL}/api/settings`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          require_print_pin: newRequirePin,
+          print_pin: newPin
+        })
+      });
+      if (res.ok) {
+        const data = await res.json();
+        setRequirePrintPin(data.require_print_pin);
+        setPrintPin(data.print_pin);
+        setSettingsToast('Impostazioni aggiornate con successo!');
+        setTimeout(() => setSettingsToast(''), 4000);
+      } else {
+        const err = await res.json();
+        alert(`Errore: ${err.detail || 'Impossibile salvare le impostazioni.'}`);
+      }
+    } catch (err) {
+      console.error("Error updating settings:", err);
+      alert("Errore di connessione durante il salvataggio.");
+    } finally {
+      setSettingsSaving(false);
+    }
+  };
 
   const handleManualRefreshMonitor = async () => {
     if (manualRefreshingMonitor || monitorLoading) return;
@@ -714,6 +768,16 @@ function AdminDashboard({
             </svg>
             Decorative Stickers
           </button>
+          <button
+            className={`admin-tab-btn ${activeTab === 'settings' ? 'active' : ''}`}
+            onClick={() => setActiveTab('settings')}
+          >
+            <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            Impostazioni
+          </button>
         </div>
 
         {activeTab === 'stickers' && (
@@ -1161,6 +1225,171 @@ function AdminDashboard({
                   })()}
                 </div>
 
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'settings' && (
+          <div className="card" style={{ padding: '2rem', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div>
+                <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
+                  Impostazioni di Stampa
+                </h2>
+                <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
+                  Gestisci i requisiti di sicurezza per l'invio delle richieste di stampa da parte dei clienti.
+                </p>
+              </div>
+              {settingsToast && (
+                <div style={{
+                  padding: '0.6rem 1.2rem',
+                  background: 'rgba(16, 185, 129, 0.15)',
+                  border: '1px solid rgba(16, 185, 129, 0.4)',
+                  borderRadius: '8px',
+                  color: '#10b981',
+                  fontSize: '0.9rem',
+                  fontWeight: 600,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem'
+                }}>
+                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                  {settingsToast}
+                </div>
+              )}
+            </div>
+
+            {settingsLoading ? (
+              <div style={{ padding: '3rem', textAlign: 'center' }}>
+                <div className="spinner" style={{ margin: '0 auto 1rem auto' }}></div>
+                <p style={{ color: 'var(--text-muted)' }}>Caricamento impostazioni...</p>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+                {/* Requirement Toggle Card */}
+                <div style={{
+                  background: 'rgba(255, 255, 255, 0.02)',
+                  border: '1px solid var(--card-border)',
+                  borderRadius: '16px',
+                  padding: '1.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  gap: '1.5rem',
+                  flexWrap: 'wrap'
+                }}>
+                  <div style={{ flex: 1, minWidth: '260px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                      <span style={{
+                        padding: '0.25rem 0.75rem',
+                        borderRadius: '9999px',
+                        fontSize: '0.8rem',
+                        fontWeight: 600,
+                        background: requirePrintPin ? 'rgba(249, 115, 22, 0.15)' : 'rgba(16, 185, 129, 0.15)',
+                        color: requirePrintPin ? '#f97316' : '#10b981',
+                        border: `1px solid ${requirePrintPin ? 'rgba(249, 115, 22, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`
+                      }}>
+                        {requirePrintPin ? 'PIN Richiesto' : 'PIN Disattivato (Accesso Libero)'}
+                      </span>
+                    </div>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.4rem' }}>
+                      Richiedi PIN per inviare richieste di stampa
+                    </h3>
+                    <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
+                      Se attivo, gli ospiti devono inserire un codice PIN a 4 cifre per poter confermare e inviare la richiesta di stampa. Se disattivato, qualsiasi ospite con un link valido può inviare richieste senza inserire alcun PIN.
+                    </p>
+                  </div>
+
+                  <label style={{ display: 'inline-flex', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}>
+                    <input
+                      type="checkbox"
+                      checked={requirePrintPin}
+                      onChange={(e) => {
+                        const nextVal = e.target.checked;
+                        setRequirePrintPin(nextVal);
+                        handleSaveSettings(nextVal, printPin);
+                      }}
+                      style={{ display: 'none' }}
+                    />
+                    <div style={{
+                      width: '56px',
+                      height: '30px',
+                      borderRadius: '9999px',
+                      background: requirePrintPin ? '#f97316' : 'rgba(255, 255, 255, 0.15)',
+                      position: 'relative',
+                      transition: 'all 0.3s ease',
+                      boxShadow: requirePrintPin ? '0 0 12px rgba(249, 115, 22, 0.4)' : 'none'
+                    }}>
+                      <div style={{
+                        width: '24px',
+                        height: '24px',
+                        borderRadius: '50%',
+                        background: '#ffffff',
+                        position: 'absolute',
+                        top: '3px',
+                        left: requirePrintPin ? '29px' : '3px',
+                        transition: 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+                        boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                      }} />
+                    </div>
+                  </label>
+                </div>
+
+                {/* PIN Code Configuration */}
+                {requirePrintPin && (
+                  <div style={{
+                    background: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid var(--card-border)',
+                    borderRadius: '16px',
+                    padding: '1.5rem',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem'
+                  }}>
+                    <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', margin: 0 }}>
+                      Codice PIN di Stampa
+                    </h3>
+                    <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: 0 }}>
+                      Inserisci il PIN a 4 cifre che lo staff fornirà agli ospiti alla reception.
+                    </p>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
+                      <input
+                        type="text"
+                        inputMode="numeric"
+                        maxLength={4}
+                        value={printPin}
+                        onChange={(e) => {
+                          const val = e.target.value.replace(/\D/g, '').slice(0, 4);
+                          setPrintPin(val);
+                        }}
+                        style={{
+                          width: '140px',
+                          padding: '0.65rem 1rem',
+                          fontSize: '1.2rem',
+                          fontWeight: 700,
+                          letterSpacing: '0.2rem',
+                          textAlign: 'center',
+                          background: 'rgba(0, 0, 0, 0.3)',
+                          border: '1px solid var(--card-border)',
+                          borderRadius: '10px',
+                          color: 'var(--text-main)'
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => handleSaveSettings(requirePrintPin, printPin)}
+                        disabled={settingsSaving || printPin.length !== 4}
+                        className="btn btn-download"
+                        style={{ padding: '0.65rem 1.5rem' }}
+                      >
+                        {settingsSaving ? 'Salvataggio...' : 'Aggiorna PIN'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
