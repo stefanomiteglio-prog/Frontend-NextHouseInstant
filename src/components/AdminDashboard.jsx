@@ -47,6 +47,10 @@ function AdminDashboard({
   const [requirePrintPin, setRequirePrintPin] = useState(true);
   const [printPin, setPrintPin] = useState('2314');
   const [settingsToast, setSettingsToast] = useState('');
+  const [expandedSelectionIds, setExpandedSelectionIds] = useState(new Set());
+  const [hoveredPoint, setHoveredPoint] = useState(null);
+  const [manualRefreshingMonitor, setManualRefreshingMonitor] = useState(false);
+  const [manualRefreshingPrints, setManualRefreshingPrints] = useState(false);
 
   const fetchSettings = useCallback(async () => {
     setSettingsLoading(true);
