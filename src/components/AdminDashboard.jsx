@@ -1174,9 +1174,9 @@ function AdminDashboard({
                   </div>
 
                   {(() => {
-                    const isActive = monitorStats.database.printers_active > 0;
-                    const isPrinting = monitorStats.database.print_jobs.printing > 0;
-                    const isQueued = (monitorStats.database.print_jobs.queued > 0 || monitorStats.database.print_jobs.assigned > 0);
+                    const isActive = (monitorStats?.database?.printers_active || 0) > 0;
+                    const isPrinting = (monitorStats?.database?.print_jobs?.printing || 0) > 0;
+                    const isQueued = ((monitorStats?.database?.print_jobs?.queued || 0) > 0 || (monitorStats?.database?.print_jobs?.assigned || 0) > 0);
 
                     let statusState = 'Active';
                     let statusColor = '#10b981';

@@ -3,6 +3,7 @@ import AdminLogin from './components/AdminLogin';
 import AdminDashboard from './components/AdminDashboard';
 import CustomerDownloadView from './components/CustomerDownloadView';
 import PrivacyPolicy from './components/PrivacyPolicy';
+import ErrorBoundary from './components/ErrorBoundary';
 import { translations } from './translations';
 import { getLanguage, API_URL } from './utils/api';
 import { AdminAuthProvider } from './context/AdminAuthProvider';
@@ -195,9 +196,11 @@ function AppContent() {
 
 function App() {
   return (
-    <AdminAuthProvider>
-      <AppContent />
-    </AdminAuthProvider>
+    <ErrorBoundary>
+      <AdminAuthProvider>
+        <AppContent />
+      </AdminAuthProvider>
+    </ErrorBoundary>
   );
 }
 
