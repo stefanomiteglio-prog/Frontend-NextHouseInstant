@@ -89,15 +89,15 @@ function AdminDashboard({
         const data = await res.json();
         setRequirePrintPin(data.require_print_pin);
         setPrintPin(data.print_pin);
-        setSettingsToast('Impostazioni aggiornate con successo!');
+        setSettingsToast('Settings updated successfully!');
         setTimeout(() => setSettingsToast(''), 4000);
       } else {
         const err = await res.json();
-        alert(`Errore: ${err.detail || 'Impossibile salvare le impostazioni.'}`);
+        alert(`Error: ${err.detail || 'Unable to save settings.'}`);
       }
     } catch (err) {
       console.error("Error updating settings:", err);
-      alert("Errore di connessione durante il salvataggio.");
+      alert("Connection error while saving.");
     } finally {
       setSettingsSaving(false);
     }
@@ -780,7 +780,7 @@ function AdminDashboard({
               <path strokeLinecap="round" strokeLinejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
               <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            Impostazioni
+            Settings
           </button>
         </div>
 
@@ -1239,10 +1239,10 @@ function AdminDashboard({
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
               <div>
                 <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.25rem' }}>
-                  Impostazioni di Stampa
+                  Print Settings
                 </h2>
                 <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)' }}>
-                  Gestisci i requisiti di sicurezza per l'invio delle richieste di stampa da parte dei clienti.
+                  Manage security requirements for guest print request submissions.
                 </p>
               </div>
               {settingsToast && (
@@ -1269,7 +1269,7 @@ function AdminDashboard({
             {settingsLoading ? (
               <div style={{ padding: '3rem', textAlign: 'center' }}>
                 <div className="spinner" style={{ margin: '0 auto 1rem auto' }}></div>
-                <p style={{ color: 'var(--text-muted)' }}>Caricamento impostazioni...</p>
+                <p style={{ color: 'var(--text-muted)' }}>Loading settings...</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
@@ -1296,14 +1296,14 @@ function AdminDashboard({
                         color: requirePrintPin ? '#f97316' : '#10b981',
                         border: `1px solid ${requirePrintPin ? 'rgba(249, 115, 22, 0.3)' : 'rgba(16, 185, 129, 0.3)'}`
                       }}>
-                        {requirePrintPin ? 'PIN Richiesto' : 'PIN Disattivato (Accesso Libero)'}
+                        {requirePrintPin ? 'PIN Required' : 'PIN Disabled (Direct access)'}
                       </span>
                     </div>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.4rem' }}>
-                      Richiedi PIN per inviare richieste di stampa
+                      Require PIN for print requests
                     </h3>
                     <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', lineHeight: 1.5 }}>
-                      Se attivo, gli ospiti devono inserire un codice PIN a 4 cifre per poter confermare e inviare la richiesta di stampa. Se disattivato, qualsiasi ospite con un link valido può inviare richieste senza inserire alcun PIN.
+                      When enabled, guests must enter a 4-digit PIN to confirm and submit print requests. When disabled, any guest with a valid link can send requests without entering a PIN.
                     </p>
                   </div>
 
@@ -1354,10 +1354,10 @@ function AdminDashboard({
                     gap: '1rem'
                   }}>
                     <h3 style={{ fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-main)', margin: 0 }}>
-                      Codice PIN di Stampa
+                      Print PIN Code
                     </h3>
                     <p style={{ fontSize: '0.88rem', color: 'var(--text-muted)', margin: 0 }}>
-                      Inserisci il PIN a 4 cifre che lo staff fornirà agli ospiti alla reception.
+                      Enter the 4-digit PIN provided to guests by staff at reception.
                     </p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', flexWrap: 'wrap', marginTop: '0.5rem' }}>
                       <input
@@ -1389,7 +1389,7 @@ function AdminDashboard({
                         className="btn btn-download"
                         style={{ padding: '0.65rem 1.5rem' }}
                       >
-                        {settingsSaving ? 'Salvataggio...' : 'Aggiorna PIN'}
+                        {settingsSaving ? 'Saving...' : 'Update PIN'}
                       </button>
                     </div>
                   </div>

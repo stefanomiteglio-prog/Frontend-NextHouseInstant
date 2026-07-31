@@ -169,7 +169,16 @@ export const translations = {
     printPin: "Druck-PIN:",
     printPinPlaceholder: "4-stelliger PIN",
     printPinAlert: "Bitte geben Sie den 4-stelligen PIN vom Personal ein.",
-    invalidPinError: "Ungültiger PIN-Code. Bitte beim Rezeptionsteam nachfragen."
+    invalidPinError: "Ungültiger PIN-Code. Bitte beim Rezeptionsteam nachfragen.",
+    settings: "Einstellungen",
+    printSettings: "Druckeinstellungen",
+    requirePinLabel: "PIN für Druckanfragen erforderlich",
+    requirePinDesc: "Wenn aktiviert, müssen Gäste einen 4-stelligen PIN eingeben, um Druckanfragen zu senden. Wenn deaktiviert, können Druckanfragen direkt ohne PIN gesendet werden.",
+    pinStatusActive: "PIN erforderlich",
+    pinStatusInactive: "PIN deaktiviert (Direktes Senden)",
+    currentPin: "Aktueller 4-stelliger PIN:",
+    saveSettings: "Einstellungen speichern",
+    settingsUpdated: "Einstellungen erfolgreich aktualisiert!"
   },
   da: {
     session: "Session",
@@ -220,7 +229,16 @@ export const translations = {
     printPin: "Print PIN:",
     printPinPlaceholder: "4-cifret PIN",
     printPinAlert: "Indtast venligst den 4-cifrede PIN fra personalet.",
-    invalidPinError: "Ugyldig PIN-kode. Spørg venligst personalet i receptionen."
+    invalidPinError: "Ugyldig PIN-kode. Spørg venligst personalet i receptionen.",
+    settings: "Indstillinger",
+    printSettings: "Printindstillinger",
+    requirePinLabel: "Kræv PIN til printanmodninger",
+    requirePinDesc: "Når aktiveret, skal gæster indtaste en 4-cifret PIN for at sende printanmodninger. Når deaktiveret, kan printanmodninger sendes direkte uden PIN.",
+    pinStatusActive: "PIN påkrævet",
+    pinStatusInactive: "PIN deaktiveret (Direkte afsendelse)",
+    currentPin: "Nuværende 4-cifrede PIN:",
+    saveSettings: "Gem indstillinger",
+    settingsUpdated: "Indstillinger opdateret med succes!"
   },
   es: {
     session: "Sesión",
@@ -271,7 +289,16 @@ export const translations = {
     printPin: "PIN de Impresión:",
     printPinPlaceholder: "PIN de 4 dígitos",
     printPinAlert: "Por favor ingresa el PIN de 4 dígitos proporcionado por el personal.",
-    invalidPinError: "Código PIN no válido. Por favor consulta con la recepción."
+    invalidPinError: "Código PIN no válido. Por favor consulta con la recepción.",
+    settings: "Ajustes",
+    printSettings: "Ajustes de Impresión",
+    requirePinLabel: "Requerir PIN para solicitudes de impresión",
+    requirePinDesc: "Cuando está activado, los huéspedes deben ingresar un PIN de 4 dígitos para enviar solicitudes de impresión. Cuando está desactivado, las solicitudes se pueden enviar directamente sin PIN.",
+    pinStatusActive: "PIN Requerido",
+    pinStatusInactive: "PIN Desactivado (Envío directo)",
+    currentPin: "PIN actual de 4 dígitos:",
+    saveSettings: "Guardar Ajustes",
+    settingsUpdated: "¡Ajustes actualizados con éxito!"
   },
   fr: {
     session: "Session",
@@ -322,7 +349,16 @@ export const translations = {
     printPin: "PIN d'impression :",
     printPinPlaceholder: "PIN à 4 chiffres",
     printPinAlert: "Veuillez saisir le PIN à 4 chiffres fourni par le personnel.",
-    invalidPinError: "Code PIN invalide. Veuillez vérifier auprès de la réception."
+    invalidPinError: "Code PIN invalide. Veuillez vérifier auprès de la réception.",
+    settings: "Paramètres",
+    printSettings: "Paramètres d'impression",
+    requirePinLabel: "Exiger un PIN pour les demandes d'impression",
+    requirePinDesc: "Lorsqu'elle est activée, les clients doivent saisir un PIN à 4 chiffres pour envoyer des demandes d'impression. Lorsqu'elle est désactivée, les demandes peuvent être envoyées directement sans PIN.",
+    pinStatusActive: "PIN requis",
+    pinStatusInactive: "PIN désactivé (Envoi direct)",
+    currentPin: "PIN à 4 chiffres actuel :",
+    saveSettings: "Enregistrer les paramètres",
+    settingsUpdated: "Paramètres mis à jour avec succès !"
   },
 };
 

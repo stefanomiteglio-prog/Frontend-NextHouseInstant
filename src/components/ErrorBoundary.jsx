@@ -25,10 +25,10 @@ export class ErrorBoundary extends Component {
               </svg>
             </div>
             <h2 style={{ fontSize: '1.4rem', fontWeight: 600, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
-              Si è verificato un errore di rendering
+              A rendering error occurred
             </h2>
             <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
-              {this.state.error?.message || "Un errore imprevisto ha impedito il caricamento dell'interfaccia."}
+              {this.state.error?.message || "An unexpected error prevented loading the interface."}
             </p>
             <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center' }}>
               <button
@@ -37,7 +37,7 @@ export class ErrorBoundary extends Component {
                 className="btn btn-download"
                 style={{ padding: '0.6rem 1.2rem' }}
               >
-                Ricarica Pagina
+                Reload Page
               </button>
               <button
                 type="button"
@@ -48,7 +48,7 @@ export class ErrorBoundary extends Component {
                 className="btn btn-secondary"
                 style={{ padding: '0.6rem 1.2rem' }}
               >
-                Reset Sessione Admin
+                Reset Admin Session
               </button>
             </div>
           </div>
