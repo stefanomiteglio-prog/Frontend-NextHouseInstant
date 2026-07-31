@@ -58,7 +58,9 @@ export const translations = {
     pinStatusInactive: "PIN Disabled (Direct submission)",
     currentPin: "Current 4-digit PIN:",
     saveSettings: "Save Settings",
-    settingsUpdated: "Settings updated successfully!"
+    settingsUpdated: "Settings updated successfully!",
+    exportCsv: "Export CSV",
+    exportCsvTooltip: "Export daily usage and print statistics to CSV"
   },
   it: {
     session: "Sessione",
@@ -118,7 +120,9 @@ export const translations = {
     pinStatusInactive: "PIN Disattivato (Invio libero)",
     currentPin: "PIN a 4 cifre attuale:",
     saveSettings: "Salva Impostazioni",
-    settingsUpdated: "Impostazioni aggiornate con successo!"
+    settingsUpdated: "Impostazioni aggiornate con successo!",
+    exportCsv: "Esporta CSV",
+    exportCsvTooltip: "Esporta le statistiche giornaliere di utilizzo e stampa in CSV"
   },
   de: {
     session: "Sitzung",

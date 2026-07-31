@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import nexthouseLogo from '../assets/nexthouse_logo.png';
 import { useAdminAuth } from '../hooks/useAdminAuth';
+import { exportDailyHistoryCSV, exportSelectionsCSV } from '../utils/csvExport';
 
 function AdminDashboard({
   handleLogout,
@@ -353,7 +354,7 @@ function AdminDashboard({
               30-Day Activity History
             </h3>
           </div>
-          <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
+          <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', flexWrap: 'wrap', fontSize: '0.85rem' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#3b82f6' }}></span>
               <span className="chart-legend-text">Sessions Created</span>
@@ -362,6 +363,24 @@ function AdminDashboard({
               <span style={{ display: 'inline-block', width: '12px', height: '12px', borderRadius: '3px', background: '#a855f7' }}></span>
               <span className="chart-legend-text">Print Requests</span>
             </div>
+            <button
+              onClick={() => exportDailyHistoryCSV(rawHistoryData)}
+              className="btn btn-secondary"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '0.35rem 0.75rem',
+                fontSize: '0.8rem',
+                height: 'auto'
+              }}
+              title="Esporta statistiche giornaliere di utilizzo e stampa in CSV"
+            >
+              <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2.2" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              Esporta CSV
+            </button>
           </div>
         </div>
 
@@ -978,6 +997,18 @@ function AdminDashboard({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
                   </svg>
                   Refresh
+                </button>
+                <button
+                  onClick={() => exportSelectionsCSV(selections)}
+                  className="btn btn-secondary"
+                  disabled={selectionsLoading || !selections || selections.length === 0}
+                  style={{ padding: '0.4rem 0.8rem', fontSize: '0.8rem', height: 'auto', display: 'flex', alignItems: 'center', gap: '4px' }}
+                  title="Esporta richieste di stampa in CSV"
+                >
+                  <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                  </svg>
+                  Esporta CSV
                 </button>
               </div>
             </div>
