@@ -21,7 +21,7 @@ export const getDayKey = (dateStr) => {
  */
 export const exportDailyHistoryCSV = (rawHistoryData) => {
   if (!rawHistoryData || rawHistoryData.length === 0) {
-    alert("Nessun dato storico disponibile per l'esportazione.");
+    alert("No history data available for export.");
     return;
   }
 
@@ -58,7 +58,7 @@ export const exportDailyHistoryCSV = (rawHistoryData) => {
   }
 
   const rows = [
-    ["Data (Date)", "Sessioni Create - Utilizzo (Sessions)", "Richieste Stampa (Print Requests)"]
+    ["Date", "Sessions Created", "Print Requests"]
   ];
 
   let curr = new Date(startDate);
@@ -84,7 +84,7 @@ export const exportDailyHistoryCSV = (rawHistoryData) => {
   const link = document.createElement("a");
   const todayStr = new Date().toISOString().split('T')[0];
   link.setAttribute("href", url);
-  link.setAttribute("download", `nexthouse_utilizzo_e_stampe_${todayStr}.csv`);
+  link.setAttribute("download", `nexthouse_daily_usage_and_prints_${todayStr}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -97,12 +97,12 @@ export const exportDailyHistoryCSV = (rawHistoryData) => {
  */
 export const exportSelectionsCSV = (selections) => {
   if (!selections || selections.length === 0) {
-    alert("Nessuna richiesta di stampa disponibile per l'esportazione.");
+    alert("No print requests available for export.");
     return;
   }
 
   const rows = [
-    ["ID", "Data e Ora (Date/Time)", "Nome Ospite (Guest Name)", "Numero Prenotazione (Booking Number)", "Stato (Status)", "Numero Foto (Photo Count)"]
+    ["ID", "Date and Time", "Guest Name", "Booking Number", "Status", "Photo Count"]
   ];
 
   selections.forEach(sel => {
@@ -135,7 +135,7 @@ export const exportSelectionsCSV = (selections) => {
   const link = document.createElement("a");
   const todayStr = new Date().toISOString().split('T')[0];
   link.setAttribute("href", url);
-  link.setAttribute("download", `nexthouse_richieste_stampa_${todayStr}.csv`);
+  link.setAttribute("download", `nexthouse_print_requests_${todayStr}.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
