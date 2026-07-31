@@ -350,7 +350,7 @@ function AdminDashboard({
               </svg>
             </div>
             <h3 className="admin-subsection-title">
-              30-Day Activity History (Istogramma)
+              30-Day Activity History
             </h3>
           </div>
           <div style={{ display: 'flex', gap: '1.25rem', fontSize: '0.85rem' }}>
